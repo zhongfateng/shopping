@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_height="wrap_content" >
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+    	android:orientation="vertical"
+    	android:paddingTop="10dp"
+   	    android:id="@+id/hot_type_bg_id"
+        >
+    <com.liuwa.shopping.view.CircleImageView android:layout_height="@dimen/dp_51"
+        android:id="@+id/hot_type_image"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="fitCenter"
+        android:layout_width="@dimen/dp_51"/>
+
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/hot_type_name_id"
+        android:text="@string/app_name"
+        android:textSize="@dimen/sp_11"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/sp_12"
+        android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+</LinearLayout>

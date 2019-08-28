@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <include layout="@layout/activity_top_title_layout"></include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:background="@color/bg_address_color"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/sp_14"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingRight="@dimen/sp_14">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/sp_14"
+                android:paddingBottom="@dimen/sp_14"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="67dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="fill_horizontal"
+                    android:text="@string/name"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/tab_color"
+                    android:textSize="15sp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_color"></View>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/sp_14"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingRight="@dimen/sp_14">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/sp_14"
+                    android:paddingBottom="@dimen/sp_14"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="67dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="fill_horizontal"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/link_num"
+                        android:textColor="@color/tab_color"
+                        android:textSize="15sp" />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"></View>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/sp_14"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingRight="@dimen/sp_14">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/sp_14"
+                    android:paddingBottom="@dimen/sp_14"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="67dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="fill_horizontal"
+                        android:text="@string/address"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/tab_color"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        android:drawableRight="@mipmap/address_icon"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"></View>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/sp_14"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingRight="@dimen/sp_14">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/sp_14"
+                    android:paddingBottom="@dimen/sp_14"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="67dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="fill_horizontal"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/detail_address"
+                        android:textColor="@color/tab_color"
+                        android:textSize="15sp" />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:layout_gravity="center_vertical"
+                        android:hint="@string/detail_address_hint"
+                        android:gravity="center_vertical"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/line_color"></View>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/sp_14"
+                android:background="@color/white"
+                android:layout_marginTop="@dimen/sp_12"
+                android:orientation="vertical"
+                android:paddingRight="@dimen/sp_14">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/sp_14"
+                    android:paddingBottom="@dimen/sp_14"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="67dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="fill_horizontal"
+                        android:text="@string/default_address"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/tab_color"
+                        android:textSize="15sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:gravity="right"
+                        android:layout_height="match_parent">
+                        <CheckBox android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:checked="false"
+                            android:id="@+id/ck_detail_address"
+                            android:button="@drawable/address_checkbox"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_height="45dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@color/address_cancel_color"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:text="@string/address_cancel"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:background="@color/confirm"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:text="@string/confrim"
+                    android:gravity="center"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,50 @@
+package com.liuwa.shopping.client;
+
+public class Constants {
+	
+	// 要相应的更新string.xml中的 versionstr 字段
+	// 当前系统的版本号
+	public static final String VERSION					= "1.3.6";
+	//微信key
+	public static final String APP_ID                   = "wxdcd80da641faa3ae";
+	public static final String DESCRIPTOR              = "com.liuwa.shopping";
+	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
+	public static final String USER_ID					= "user_id";
+	public static final String kHOSTNAME 				= "hostName";
+	public static final String kREALHOST				= "RealHost"; // 存储真正的连网地址
+	public static final String kMETHODNAME 				= "methodName";
+	public static final String kPARAMNAME 				= "paramName";
+	public static final String TOKEN               		= "token";
+	//用户反馈--xx
+	public static final String content                  = "content";
+	//签名key值
+	public static final String keySecret               	= "keySecret";
+	//签名value值
+	public static final String VALUE                    = "jklw";
+	//信息返回CODE值 100表示正确
+	public static final int CODE                        = 100;
+	public static class Config {
+		public static final boolean DEVELOPER_MODE    = false;
+	}
+	//接口 获取分类
+	public static final String GETCATEGORY              = "proclassesjson";
+	//接口 获取特别分类
+	public static final String GETSPECIALCATEGORY      = "proclassestjson";
+	//接口 首页团购数据
+	public static final String GETTUANGOU               = "tuanlist";
+	//接口 查询公告接口
+	public static final String GETNOTICES               = "newsjson";
+	//点击获取验证码
+	public static final String GETVDCODE                = "zhucedx";
+	//校验输入验证码接口地址
+	public static final String VALIDATEMOBILECODE      = "regist/ValiateMobileCode.do";
+	//特殊分类商品列表接口
+	public static final String SPECIALPRODUCTLIST      = "productlisttjson";
+	//分类商品列表
+	public static final String PRODUCTLIST      		 = "productlistjson";
+	//登录接口
+	public static final String LOGIN      				 =  "logindo";
+	//注册接口
+	public static final String REGISTER      			 =  "zhucedo";
+
+}

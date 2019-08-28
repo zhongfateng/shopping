@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--CircleImageView-->
+    <declare-styleable name="CircleImageView">
+        <attr name="border_circle_width" format="dimension" />
+        <attr name="border_circle_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="Search_View">
+        <attr name="textSizeSearch" format="dimension"  />
+        <attr name="textColorSearch" format="color" />
+        <attr name="textHintSearch" format="string" />
+        <attr name="searchBlockHeight" format="integer" />
+        <attr name="searchBlockColor" format="color" />
+    </declare-styleable>
+    <!-- Defines the custom XML attributes supported for a HorizontalListView -->
+    <declare-styleable name="HorizontalListView">
+        <attr name="dividerWidth" format="dimension" />
+        <attr name="android:divider" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:fadingEdgeLength" />
+    </declare-styleable>
+    <declare-styleable name="RoundImageView">
+        <!-- 描边宽度-->
+        <attr name="border_width" format="dimension" />
+        <!-- 描边颜色-->
+        <attr name="border_color" format="color" />
+        <!--圆角大小-->
+        <attr name="corner_radius" format="dimension" />
+        <!--左上圆角大小-->
+        <attr name="leftTop_corner_radius" format="dimension" />
+        <!--右上圆角大小-->
+        <attr name="rightTop_corner_radius" format="dimension" />
+        <!--左下圆角大小-->
+        <attr name="leftBottom_corner_radius" format="dimension" />
+        <!--右下圆角大小-->
+        <attr name="rightBottom_corner_radius" format="dimension" />
+        <!--图片类型：圆角或者圆形-->
+        <attr name="type" format="enum">
+            <enum name="oval" value="2" />
+            <enum name="round" value="1" />
+            <enum name="circle" value="0" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="EditTextPassword">
+        <attr name="showPasswordIcon" format="reference" />
+        <attr name="hidePasswordIcon" format="reference" />
+        <attr name="iconPosition" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+        <attr name="fontPath" format="string" />
+    </declare-styleable>
+    <declare-styleable name="StateView">
+        <!--加载动画-->
+        <attr name="loadingViewAnimation" format="reference" />
+        <!--加载提示-->
+        <attr name="loadingText" format="string" />
+        <!--空布局显示图片-->
+        <attr name="emptyImage" format="reference" />
+        <attr name="emptyText" format="string" />
+        <!--断网显示图片-->
+        <attr name="disConnectImage" format="reference" />
+        <attr name="disConnectText" format="string" />
+        <!-- 文字大小 -->
+        <attr name="tipTextSize" format="dimension" />
+        <!-- 文字颜色 -->
+        <attr name="tipTextColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="ColorfulProgressbar">
+        <attr name="style" format="string|reference" />
+        <attr name="animation" format="boolean" />
+        <attr name="max" format="integer|reference" />
+        <attr name="progress" format="integer|reference" />
+        <attr name="secondProgress" format="integer|reference" />
+        <attr name="backgroundColor" format="color|reference" />
+        <attr name="progressColor1" format="color|reference" />
+        <attr name="progressColor2" format="color|reference" />
+    </declare-styleable>
+    <!--标签-->
+    <declare-styleable name="labels_view">
+        <attr name="selectType" format="enum">
+            <enum name="NONE" value="1" />
+            <enum name="SINGLE" value="2" />
+            <enum name="SINGLE_IRREVOCABLY" value="3" />
+            <enum name="MULTI" value="4" />
+        </attr>
+        <attr name="maxSelect" format="integer" />
+        <attr name="labelTextColor" format="reference" />
+        <attr name="labelTextSize" format="dimension" />
+        <attr name="labelTextPaddingLeft" format="dimension" />
+        <attr name="labelTextPaddingTop" format="dimension" />
+        <attr name="labelTextPaddingRight" format="dimension" />
+        <attr name="labelTextPaddingBottom" format="dimension" />
+        <attr name="lineMargin" format="dimension" />
+        <attr name="wordMargin" format="dimension" />
+        <attr name="labelBackground" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="CircleBtnView">
+        <attr name="minTime" format="integer"></attr>
+        <attr name="maxTime" format="integer"></attr>
+        <attr name="progressColor" format="color"></attr>
+        <attr name="progressWidth" format="dimension"></attr>
+    </declare-styleable>
+    <!--NineGridImageView-->
+    <declare-styleable name="NineGridImageView">
+        <attr name="singleImgSize" format="dimension" />
+        <attr name="imgGap" format="dimension" />
+        <attr name="maxSize" format="integer" />
+        <attr name="showStyle" format="enum">
+            <enum name="grid" value="0" />
+            <enum name="fill" value="1" />
+        </attr>
+    </declare-styleable>
+    <!--ExcelPanel-->
+    <declare-styleable name="ExcelPanel">
+        <attr name="left_cell_width" format="dimension" />
+        <attr name="top_cell_height" format="dimension" />
+        <attr name="normal_cell_width" format="dimension" />
+    </declare-styleable>
+</resources>

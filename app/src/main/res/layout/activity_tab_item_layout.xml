@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/qianggou"
+                android:layout_height="wrap_content" />
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tb_time"
+                android:layout_width="wrap_content"
+                app:tabIndicatorHeight="0dp"
+                app:tabBackground="@drawable/bg_tab"
+                android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:padding="@dimen/sp_8"
+            android:background="@mipmap/corner_bg"
+            android:layout_height="wrap_content">
+            <com.liuwa.shopping.view.MyGridView
+                android:id="@+id/mgw_guangou"
+                android:layout_width="match_parent"
+                android:numColumns="3"
+                android:layout_height="wrap_content"></com.liuwa.shopping.view.MyGridView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:ems="1"
+                android:text="@string/show_more"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>

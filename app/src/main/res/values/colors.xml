@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="pay_success_color">#2F2F2F</color>
+    <color name="hint_color">#B0BCC1</color>
+    <color name="title_color">#27313A</color>
+    <color name="line_color">#D4D4D4</color>
+    <color name="bg_address_color">#FFF7F7F7</color>
+    <color name="get_code_color">#28903B</color>
+    <color name="main_tab_color">#898989</color>
+    <color name="main_tab_selected_color">#f13c76</color>
+    <color name="transparent">#00000000</color>
+    <color name="black">#000000</color>
+    <color name="top_title_color">#111111</color>
+    <color name="money_color">#EC654A</color>
+    <color name="market_money_color">#A9A9A9</color>
+    <color name="bg_favorite">#D1DBE5</color>
+    <color name="bg_special">#80D1DBE5</color>
+    <color name="tab_line">#28903B</color>
+    <color name="tab_color">#666666</color>
+    <color name="guess_like_color">#5EA8D7</color>
+    <color name="rexiao_color">#35BA12</color>
+    <color name="address_cancel_color">#606060</color>
+    <color name="tab_select_color">#28903B</color>
+    <color name="confirm">#28903B</color>
+    <color name="thanks_buy">#8C8C8C</color>
+    <color name="product_name_color">#333333</color>
+    <color name="miaosha">#FF6000</color>
+    <color name="money_show_color">#EC654A</color>
+    <color name="market_price">#A9A9A9</color>
+    <color name="tab_select">#F3E292</color>
+
+</resources>
