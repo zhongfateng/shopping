@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dip"
             android:textSize="@dimen/sp_12"
-            android:textColor="@mipmap/tab_nav_text_color_selector" />
+            android:textColor="@drawable/tab_nav_text_color_selector" />
     </LinearLayout>
 
     <ImageView

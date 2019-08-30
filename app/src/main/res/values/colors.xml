@@ -14,6 +14,7 @@
     <color name="main_tab_selected_color">#f13c76</color>
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
+    <color name="view_color">#A4A4A4</color>
     <color name="top_title_color">#111111</color>
     <color name="money_color">#EC654A</color>
     <color name="market_money_color">#A9A9A9</color>
@@ -32,5 +33,7 @@
     <color name="money_show_color">#EC654A</color>
     <color name="market_price">#A9A9A9</color>
     <color name="tab_select">#F3E292</color>
+    <color name="view_line">#F3F3F3</color>
+
 
 </resources>

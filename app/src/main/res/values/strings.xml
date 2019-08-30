@@ -19,6 +19,8 @@
     <string name="go_to_order">查看订单</string>
     <string name="changxiao">畅销</string>
     <string name="xiangou">限购</string>
+    <string name="show_all_order">查看全部订单</string>
+    <string name="my_order">我的订单</string>
     <string name="show_more">查看更多</string>
     <string name="buy_in_time">限时抢购</string>
     <string name="go_to_index">返回首页</string>
@@ -41,6 +43,10 @@
     <string name="goumai">购买更多实惠</string>
     <string name="thanksbuy">感谢您的购买，我们会尽快为您处理。</string>
     <string name="bgiang">必抢</string>
+    <string name="daifukuan">待付款</string>
+    <string name="daitihuo">待提货</string>
+    <string name="daifahuo">待发货</string>
+    <string name="comment">评价</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
