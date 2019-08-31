@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingTop="@dimen/sp_12"
-    android:paddingBottom="@dimen/sp_12"
-    android:layout_height="wrap_content">
+    android:background="@color/white"
+    android:layout_height="45dp">
     <ImageView
         android:id="@+id/img_back"
         android:layout_width="20dp"

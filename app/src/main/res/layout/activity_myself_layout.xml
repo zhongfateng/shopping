@@ -269,6 +269,7 @@
             android:background="@drawable/bg_myself_top"
             android:layout_height="wrap_content">
             <RelativeLayout
+                android:id="@+id/rl_applay_head"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
                 <TextView
@@ -293,6 +294,7 @@
                 android:background="@color/view_line"
                 android:layout_height="1dp"></View>
             <RelativeLayout
+                android:id="@+id/rl_address"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
                 <TextView

@@ -5,38 +5,72 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.adapter.AddressAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
+import com.liuwa.shopping.model.AddressModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 
-public class MySelfActivity extends BaseActivity{
+
+public class MyAddressActivity extends BaseActivity implements AddressAdapter.OnClick{
 	private Context context;
-	private RelativeLayout rl_address,rl_applay_head;
+	private ImageView imageView;
+	private TextView  tv_title;
+	private PullToRefreshListView pullToRefreshListView;
+	private AddressAdapter addressAdapter;
+	private ListView listView;
+	private ArrayList<AddressModel> addressModels=new ArrayList<AddressModel>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_myself_layout);
+		setContentView(R.layout.activity_my_address_list_layout);
 		this.context=this;
 		initViews();
 		initEvent();
 	}
 
 	public void initViews() {
-		rl_address=(RelativeLayout)findViewById(R.id.rl_address);
-		rl_applay_head=(RelativeLayout)findViewById(R.id.rl_applay_head);
+		for (int i=0;i<4;i++){
+			AddressModel model=new AddressModel();
+			model.address_name="asdfasd"+i;
+			addressModels.add(model);
+		}
+		imageView=(ImageView)findViewById(R.id.img_back);
+		pullToRefreshListView=(PullToRefreshListView)findViewById(R.id.ptr_listView);
+		listView=pullToRefreshListView.getRefreshableView();
+		addressAdapter=new AddressAdapter(context,addressModels);
+		addressAdapter.setOnClick(this);
+		listView.setAdapter(addressAdapter);
+		addressAdapter.notifyDataSetChanged();
+
 	}
 	
 	public void initEvent(){
-		rl_address.setOnClickListener(onClickListener);
-		rl_applay_head.setOnClickListener(onClickListener);
+		tv_title=(TextView)findViewById(R.id.tv_title);
+		tv_title.setText("收货地址");
+		imageView.setOnClickListener(onClickListener);
+		pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+			@Override
+			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+			}
+
+			@Override
+			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+			}
+		});
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -45,14 +79,9 @@ public class MySelfActivity extends BaseActivity{
 		public void onClick(View v) {
 			Intent intent;
 			switch (v.getId()) {
-			    case R.id.rl_address:
-			    	intent=new Intent(context,MyAddressActivity.class);
-			    	startActivity(intent);
+			    case R.id.img_back:
+				 MyAddressActivity.this.finish();
 				break;
-				case R.id.rl_applay_head:
-					intent=new Intent(context,CommentActivity.class);
-					startActivity(intent);
-					break;
 				case R.id.tv_go_to_order:
 					intent=new Intent(context,LoginActivity.class);
 					startActivity(intent);
@@ -62,7 +91,7 @@ public class MySelfActivity extends BaseActivity{
 					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
 					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,3);
 					sendBroadcast(intent);//发送标准广播
-					MySelfActivity.this.finish();
+					MyAddressActivity.this.finish();
 					break;
 			}
 		}
@@ -122,5 +151,15 @@ public class MySelfActivity extends BaseActivity{
 
 			}
 		};
+	}
+
+	@Override
+	public void editClick(AddressModel model) {
+		//编辑
+	}
+
+	@Override
+	public void deleteClick(AddressModel model) {
+		//删除
 	}
 }

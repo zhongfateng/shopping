@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.liuwa.shopping.R;
@@ -16,27 +16,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MySelfActivity extends BaseActivity{
+public class CommentActivity extends BaseActivity{
 	private Context context;
-	private RelativeLayout rl_address,rl_applay_head;
-
+	private ImageView img_back;
+	private TextView tv_title;
+	private RatingBar rate_id;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_myself_layout);
+		setContentView(R.layout.activity_comment_layout);
 		this.context=this;
 		initViews();
 		initEvent();
 	}
 
 	public void initViews() {
-		rl_address=(RelativeLayout)findViewById(R.id.rl_address);
-		rl_applay_head=(RelativeLayout)findViewById(R.id.rl_applay_head);
+		img_back=(ImageView)findViewById(R.id.img_back);
+		tv_title=(TextView)findViewById(R.id.tv_title);
+		tv_title.setText("评价");
+		rate_id=(RatingBar)findViewById(R.id.rate_id);
 	}
 	
 	public void initEvent(){
-		rl_address.setOnClickListener(onClickListener);
-		rl_applay_head.setOnClickListener(onClickListener);
+		img_back.setOnClickListener(onClickListener);
+		rate_id.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+			@Override
+			public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+				int num=(int)rating;
+			}
+		});
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -45,14 +53,9 @@ public class MySelfActivity extends BaseActivity{
 		public void onClick(View v) {
 			Intent intent;
 			switch (v.getId()) {
-			    case R.id.rl_address:
-			    	intent=new Intent(context,MyAddressActivity.class);
-			    	startActivity(intent);
+			    case R.id.img_back:
+				 CommentActivity.this.finish();
 				break;
-				case R.id.rl_applay_head:
-					intent=new Intent(context,CommentActivity.class);
-					startActivity(intent);
-					break;
 				case R.id.tv_go_to_order:
 					intent=new Intent(context,LoginActivity.class);
 					startActivity(intent);
@@ -62,7 +65,7 @@ public class MySelfActivity extends BaseActivity{
 					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
 					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,3);
 					sendBroadcast(intent);//发送标准广播
-					MySelfActivity.this.finish();
+					CommentActivity.this.finish();
 					break;
 			}
 		}

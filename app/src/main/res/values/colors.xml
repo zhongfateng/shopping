@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
+    <color name="shouhuoren">#3C3C3C</color>
     <color name="pay_success_color">#2F2F2F</color>
     <color name="hint_color">#B0BCC1</color>
     <color name="title_color">#27313A</color>
@@ -15,6 +16,7 @@
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
     <color name="view_color">#A4A4A4</color>
+    <color name="detail_address_color">#AAAAAA</color>
     <color name="top_title_color">#111111</color>
     <color name="money_color">#EC654A</color>
     <color name="market_money_color">#A9A9A9</color>
@@ -34,6 +36,9 @@
     <color name="market_price">#A9A9A9</color>
     <color name="tab_select">#F3E292</color>
     <color name="view_line">#F3F3F3</color>
-
-
+    <color name="delete_color">#3C3C3C</color>
+    <color name="bg_all">#EEEEEE</color>
+    <color name="name_color">#444444</color>
+    <color name="m_color">#FF2A00</color>
+    <color name="h_color">#B2B2B2</color>
 </resources>

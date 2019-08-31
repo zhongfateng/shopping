@@ -17,6 +17,8 @@ public class Constants {
 	public static final String TOKEN               		= "token";
 	//用户反馈--xx
 	public static final String content                  = "content";
+	//用户手机号
+	public static final String Phone                  	= "phone";
 	//签名key值
 	public static final String keySecret               	= "keySecret";
 	//签名value值
