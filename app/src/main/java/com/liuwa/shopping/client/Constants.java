@@ -48,5 +48,7 @@ public class Constants {
 	public static final String LOGIN      				 =  "logindo";
 	//注册接口
 	public static final String REGISTER      			 =  "zhucedo";
+	//3.5.2支付订单/api/stu/order/pay
+	public static final String PayOrder                  = "api/stu2/order/pay";
 
 }

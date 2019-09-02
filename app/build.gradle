@@ -34,4 +34,6 @@ dependencies {
     compile project(path: ':pulltorefreshlibrary')
     implementation 'com.google.code.gson:gson:2.2.4'
     implementation 'com.android.support:design:26.1.0'
+    implementation files('libs/alipaySdk-20160516.jar')
+    implementation project(':social_sdk_library_project')
 }

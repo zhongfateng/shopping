@@ -50,7 +50,7 @@ public class MySelfActivity extends BaseActivity{
 			    	startActivity(intent);
 				break;
 				case R.id.rl_applay_head:
-					intent=new Intent(context,CommentActivity.class);
+					intent=new Intent(context,IntegralActivity.class);
 					startActivity(intent);
 					break;
 				case R.id.tv_go_to_order:
