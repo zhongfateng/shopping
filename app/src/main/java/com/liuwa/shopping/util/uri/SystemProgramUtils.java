@@ -1,5 +1,6 @@
 package com.liuwa.shopping.util.uri;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,6 +37,13 @@ public class SystemProgramUtils {
         intent.setAction("android.intent.action.PICK");
         intent.addCategory("android.intent.category.DEFAULT");
         activity.startActivityForResult(intent, REQUEST_CODE_ZHAOPIAN);
+    }
+    @SuppressLint("MissingPermission")
+    public static void call(Activity activity){
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        Uri data = Uri.parse("tel:" + "13181279271");
+        intent.setData(data);
+        activity.startActivity(intent);
     }
 
     public static void Caiqie(Activity activity, Uri uri, File outputFile) {

@@ -1,5 +1,6 @@
 package com.liuwa.shopping.activity;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;

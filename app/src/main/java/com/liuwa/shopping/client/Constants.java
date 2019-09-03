@@ -19,6 +19,8 @@ public class Constants {
 	public static final String content                  = "content";
 	//用户手机号
 	public static final String Phone                  	= "phone";
+	//联系人
+	public static final String CONNECTNUM               = "40089191919";
 	//签名key值
 	public static final String keySecret               	= "keySecret";
 	//签名value值

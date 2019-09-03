@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 if(!requestPermissions()){
                     return;
                 }
-                SystemProgramUtils.paizhao(MainActivity.this, new File("/mnt/sdcard/tupian.jpg"));
+                //SystemProgramUtils.paizhao(MainActivity.this, new File("/mnt/sdcard/tupian.jpg"));
+                SystemProgramUtils.call(MainActivity.this);
             }
         });
 
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     //请求权限
     private boolean requestPermissions(){
         //需要请求的权限
-        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+        String[] permissions = {Manifest.permission.CALL_PHONE};
         //开始请求权限
         return requestPermissions.requestPermissions(
                 this,

@@ -71,18 +71,22 @@
             android:layout_marginRight="@dimen/sp_12"
             android:background="@drawable/bg_ac_item_down">
             <TextView
+                android:id="@+id/tv_my_integral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="13dp"
                 android:drawableLeft="@mipmap/jfen"
                 android:drawablePadding="6dp"
                 android:textSize="@dimen/sp_12" />
 
             <TextView
+                android:id="@+id/tv_my_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="13dp"
                 android:layout_centerVertical="true"
                 android:textSize="@dimen/sp_12" />
         </RelativeLayout>
@@ -100,6 +104,7 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
         <RelativeLayout
+            android:id="@+id/rl_my_order"
             android:layout_width="match_parent"
             android:paddingRight="9dp"
             android:paddingLeft="9dp"
@@ -319,6 +324,7 @@
                 android:background="@color/view_line"
                 android:layout_height="1dp"></View>
             <RelativeLayout
+                android:id="@+id/rl_integral_shop"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
                 <TextView
@@ -343,6 +349,7 @@
                 android:background="@color/view_line"
                 android:layout_height="1dp"></View>
             <RelativeLayout
+                android:id="@+id/rl_money"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
                 <TextView
@@ -391,6 +398,7 @@
                 android:background="@color/view_line"
                 android:layout_height="1dp"></View>
             <RelativeLayout
+                android:id="@+id/rl_connect"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
                 <TextView
