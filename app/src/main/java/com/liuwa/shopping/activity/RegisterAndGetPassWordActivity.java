@@ -175,7 +175,7 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 				map.put("code", "1234");
 				map.put("password", MD5.GetMD5Code(input_password));
 				map.put("timespan",System.currentTimeMillis()+"");
-				Log.i("====",map.toString());
+				map.put("sign",Md5SecurityUtil.getSignature(map));
 				HashMap<String, Object> mapend2 = new HashMap<String, Object>();
 				mapend2.put(Constants.kMETHODNAME,Constants.REGISTER);
 				mapend2.put(Constants.kPARAMNAME, map);

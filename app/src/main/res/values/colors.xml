@@ -49,4 +49,6 @@
     <color name="integral_count_color">#FD1200</color>
     <color name="i_color">#404040</color>
     <color name="l_color">#ADADAD</color>
+    <color name="ship_color">#999999</color>
+    <color name="gray">#7F7F7F</color>
 </resources>

@@ -75,7 +75,9 @@ public class MySelfActivity extends BaseActivity {
 			Intent intent;
 			switch (v.getId()) {
 				case R.id.tv_my_integral:
-					intent=new Intent(context,IntegralActivity.class);
+
+					intent=new Intent(context,ProductDetailActivity.class);
+					//intent=new Intent(context,IntegralActivity.class);
 					startActivity(intent);
 					break;
 				case R.id.tv_my_money:

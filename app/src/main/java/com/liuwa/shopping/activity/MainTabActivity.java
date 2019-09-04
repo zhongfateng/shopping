@@ -78,7 +78,12 @@ public class MainTabActivity extends TabActivity {
 						mTabHost.setCurrentTab(2);
 					}
 					if(id==3) {
-						mTabHost.setCurrentTab(3);
+						if(uid==null||uid.length()==0){
+							Intent intent =new Intent(context,LoginActivity.class);
+							startActivity(intent);
+						}else {
+							mTabHost.setCurrentTab(3);
+						}
 					}
 					
 				}

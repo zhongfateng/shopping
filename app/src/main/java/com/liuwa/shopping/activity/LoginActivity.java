@@ -50,8 +50,7 @@ public class LoginActivity extends BaseActivity {
 		initEvent();
 	}
 
-	public void initViews()
-	{
+	public void initViews() {
 		et_login_input_phone=(EditText) findViewById(R.id.et_login_input_phone);
 		et_login_input_pass=(EditText) findViewById(R.id.et_login_input_pass);
 		btn_login_commit=(Button) findViewById(R.id.btn_login_commit);
@@ -155,18 +154,14 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void successAction(Object obj) {
 				String str=(String)obj;
-				
 				try {
 					JSONObject object=new JSONObject(str);
-					String  code=  object.getString("code");
-					if(code.equals("1"))
-					{
+					int  code=  object.getInt("code");
+					if(code==Constants.CODE) {
 
 					}
-					else
-					{
+					else {
 						Toast.makeText(context, object.getString("msg"), Toast.LENGTH_SHORT).show();
-						
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

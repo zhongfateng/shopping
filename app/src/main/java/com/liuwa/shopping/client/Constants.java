@@ -46,11 +46,14 @@ public class Constants {
 	public static final String SPECIALPRODUCTLIST      = "productlisttjson";
 	//分类商品列表
 	public static final String PRODUCTLIST      		 = "productlistjson";
+	//分类商品列表
+	public static final String PRODUCTDETAIL      		 = "productinfojson";
 	//登录接口
 	public static final String LOGIN      				 =  "logindo";
 	//注册接口
 	public static final String REGISTER      			 =  "zhucedo";
 	//3.5.2支付订单/api/stu/order/pay
 	public static final String PayOrder                  = "api/stu2/order/pay";
-
+	//邻居购买
+	public static final String NEIBORBUY                  = "linjvbuyjson";
 }
