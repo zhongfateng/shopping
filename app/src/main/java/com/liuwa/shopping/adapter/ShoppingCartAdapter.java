@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ShoppingCartAdapter extends BaseAdapter {
 
-    private boolean isShow = true;//是否显示编辑/完成
+    private boolean isShow = false;//是否显示编辑/完成
     private List<ShoppingCartModel> shoppingCartModelList;
     private CheckInterface checkInterface;
     private ModifyCountInterface modifyCountInterface;
@@ -107,10 +107,10 @@ public class ShoppingCartAdapter extends BaseAdapter {
         }else{
             holder.tvCommodityAttr.setText(shoppingCartModel.getDressSize()+"");
         }
-        holder.tvCommodityName.setText(shoppingCartModel.getShoppingName());
-        holder.tvCommodityPrice.setText(shoppingCartModel.getPrice()+"");
-        holder.tvCommodityNum.setText(" X"+ shoppingCartModel.getCount()+"");
-        holder.tvCommodityShowNum.setText(shoppingCartModel.getCount()+"");
+        holder.tvCommodityName.setText(shoppingCartModel.getProName());
+        holder.tvCommodityPrice.setText(shoppingCartModel.getSalePrice()+"");
+        holder.tvCommodityNum.setText(" X"+ shoppingCartModel.getNum()+"");
+        holder.tvCommodityShowNum.setText(shoppingCartModel.getNum()+"");
         ImageLoader.getInstance().displayImage(shoppingCartModel.getImageUrl(),holder.ivShowPic);
         //单选框按钮
         holder.ckOneChose.setOnClickListener(

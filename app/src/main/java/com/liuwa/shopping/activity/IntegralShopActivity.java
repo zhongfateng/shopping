@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -89,6 +91,13 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 		integralProductAdapter=new IntegralProductAdapter(context,proList);
 		gw_list.setAdapter(integralProductAdapter);
 		integralProductAdapter.notifyDataSetChanged();
+		gw_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent =new Intent(context,IntegralProductDetailActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	public void initEvent() {

@@ -2,6 +2,7 @@ package com.liuwa.shopping.util;
 
 import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.MoneyModel;
+import com.liuwa.shopping.model.ProductChildModel;
 import com.liuwa.shopping.model.ProductModel;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class DatasUtils {
     public static ArrayList<ImageItemModel> imageList=new ArrayList<ImageItemModel>();
     public static ArrayList<MoneyModel> moneyList=new ArrayList<MoneyModel>();
     public static ArrayList<ProductModel> productModels=new ArrayList<ProductModel>();
+    public static ArrayList<ProductChildModel> productChildModels=new ArrayList<ProductChildModel>();
     public static ArrayList<String> strings=new ArrayList<String>();
     static {
         ImageItemModel model1=new ImageItemModel();
@@ -56,5 +58,12 @@ public class DatasUtils {
         for(int i=0;i<5;i++){
             strings.add("http://pic1.win4000.com/wallpaper/c/53cdd1f7c1f21.jpg");
         }
+        for(int i=0;i<3;i++){
+            ProductChildModel model=new ProductChildModel();
+            model.guiGe="测试"+i;
+            model.productId="1";
+            productChildModels.add(model);
+        }
+
     }
 }

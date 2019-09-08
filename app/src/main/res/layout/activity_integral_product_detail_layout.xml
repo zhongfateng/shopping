@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"
+        android:layout_height="45dp"
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        ></include>
+    <ScrollView
+        android:layout_below="@+id/rl_top"
+        android:layout_above="@+id/tv_duihuan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_below="@+id/rl_top"
+                android:layout_above="@+id/tv_duihuan"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <com.liuwa.shopping.view.AutoScrollViewPager
+                    android:id="@+id/index_auto_scroll_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:padding="16dp"
+                    android:layout_height="wrap_content">
+                    <com.liuwa.shopping.view.indicator.CirclePageIndicator
+                        android:id="@+id/cpi_indicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:text="豆浆机家用小型实"
+                            android:textSize="13sp"
+                            android:textColor="@color/black"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/ceshi"
+                            android:textSize="10sp"
+                            android:textColor="@color/main_tab_color"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:textColor="@color/tab_line"
+                        android:textSize="12sp"
+                        android:text="@string/ceshi"
+                        android:layout_marginTop="17dp"
+                        android:gravity="left"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:padding="16dp"
+                        android:layout_width="match_parent"
+                        android:lines="2"
+                        android:layout_marginTop="15dp"
+                        android:textColor="@color/black"
+                        android:textSize="13dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="不支持配送区域：内蒙古自治区.西藏自治区.甘肃省.青海省.宁夏回族自治区.新疆维吾尔自治区"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+<TextView
+    android:id="@+id/tv_duihuan"
+    android:layout_width="match_parent"
+    android:text="立即兑换"
+    android:textSize="16sp"
+    android:layout_alignParentBottom="true"
+    android:textColor="@color/white"
+    android:gravity="center"
+    android:background="@color/tab_line"
+    android:layout_height="47dp" />
+</RelativeLayout>

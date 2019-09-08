@@ -2,6 +2,7 @@ package com.liuwa.shopping.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -158,7 +159,13 @@ public class LoginActivity extends BaseActivity {
 					JSONObject object=new JSONObject(str);
 					int  code=  object.getInt("code");
 					if(code==Constants.CODE) {
-
+						String token = object.getString("data");
+						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+						editor.putString(Constants.TOKEN, token);
+						boolean flag =editor.commit();
+						if(flag==true) {
+							LoginActivity.this.finish();
+						}
 					}
 					else {
 						Toast.makeText(context, object.getString("msg"), Toast.LENGTH_SHORT).show();

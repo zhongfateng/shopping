@@ -55,5 +55,11 @@ public class Constants {
 	//3.5.2支付订单/api/stu/order/pay
 	public static final String PayOrder                  = "api/stu2/order/pay";
 	//邻居购买
-	public static final String NEIBORBUY                  = "linjvbuyjson";
+	public static final String NEIBORBUY                 = "linjvbuyjson";
+	//加入购物车
+	public static final String ADDCART                   = "addcartjson";
+	//购物车列表
+	public static final String CARTLIST                  = "memcartjson";
+
+
 }

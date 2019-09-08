@@ -1,29 +1,28 @@
 package com.liuwa.shopping.activity;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.liuwa.shopping.R;
-import com.liuwa.shopping.activity.fragment.IntegralFragment;
+import com.liuwa.shopping.activity.fragment.DialogFragmentFromBottom;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.ImageAdapter;
 import com.liuwa.shopping.adapter.NeiborBuyAdapter;
+import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
@@ -37,16 +36,14 @@ import com.liuwa.shopping.view.MyGridView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TreeMap;
 
 
-public class ProductDetailActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick{
+public class ProductDetailActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,DialogFragmentFromBottom.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
@@ -61,6 +58,12 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private GridView gw_toumai;
 	private ArrayList<String> urls;
 	private ImageAdapter imageAdapter;
+	private int num=1;
+	private String token;
+	//区分立即购买还是加入购物车
+	private String tag;
+	private ArrayList<String> list=new ArrayList<>();
+	DialogFragmentFromBottom newFragment;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,7 +78,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 
 	public void init() {
-
+		token= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.TOKEN, "");
 	}
 
 	public void initViews() {
@@ -104,9 +107,15 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		tv_add_cart=(TextView)findViewById(R.id.tv_add_cart);
 		tv_buy=(TextView)findViewById(R.id.tv_buy);
 
-
 	}
+	public PopupWindow.OnDismissListener  dissmiss=new PopupWindow.OnDismissListener() {
 
+		@Override
+		public void onDismiss() {
+			// TODO Auto-generated method stub
+
+		}
+	};
 	public void initEvent() {
 		img_back.setOnClickListener(onClickListener);
 		ll_left.setOnClickListener(onClickListener);
@@ -141,14 +150,34 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 					break;
 				case R.id.tv_add_cart:
 					//加入购物车
+					tag="1";
+					DialogFragmentFromBottom();
 					break;
 				case R.id.tv_buy:
 					//立即购买
+					tag="0";
+					DialogFragmentFromBottom();
 					break;
 
 			}
 		}
 	};
+	private void DialogFragmentFromBottom() {
+		showDialog();
+	}
+	void showDialog() {
+
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		DialogFragmentFromBottom	newFragment = DialogFragmentFromBottom.newInstance("商品名称", DatasUtils.productChildModels);
+		newFragment.show(ft, "dialog");
+	}
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("proheadid",proheadid);
@@ -211,6 +240,51 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 			}
 		};
 	}
+	private void doAddCart(String prochildid,int num){
+		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
+		baseParam.put("proheadid","1");
+		baseParam.put("prochildid",prochildid);
+		baseParam.put("num",num);
+		baseParam.put("timespan", System.currentTimeMillis()+"");
+		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
+		HashMap<String, Object> requestMap = new HashMap<String, Object>();
+		requestMap.put(Constants.kMETHODNAME,Constants.ADDCART);
+		requestMap.put(Constants.kPARAMNAME, baseParam);
+		LKHttpRequest cartReq = new LKHttpRequest(requestMap, addHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(cartReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+	private LKAsyncHttpResponseHandler addHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code== Constants.CODE) {
+						Toast.makeText(context,"添加购物车成功!!!",Toast.LENGTH_SHORT).show();
+					}
+					else {
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	private LKAsyncHttpResponseHandler getNeiborHandler(){
 		return new LKAsyncHttpResponseHandler(){
 
@@ -250,6 +324,22 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	@Override
 	public void cartOnClick(ProductModel model) {
 
+	}
+
+	@Override
+	public void onFragmentInteraction(String proheadid,int num) {
+		if(newFragment!=null){
+			newFragment.dismiss();
+		}
+		this.proheadid=proheadid;
+		this.num=num;
+		if(tag.equals("0")){
+			//立即购买
+			Intent intent =new Intent(context,LoginActivity.class);
+		}else if(tag.equals("1")){
+			//加入购物车
+			doAddCart(proheadid,num);
+		}
 	}
 }
 

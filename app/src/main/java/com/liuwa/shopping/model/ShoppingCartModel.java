@@ -3,24 +3,81 @@ package com.liuwa.shopping.model;
 /**
  * Created by AYD on 2016/11/22.
  * <p>
+ *     "salePrice": 1,
+ "cartId": 129,
+ "num": 1,
+ "kuCun": "201",
+ "proChildId": 1,
+ "proName": "测试商品",
+ "guiGe": "1",
+ "proHeadId": 1,
+ "type": "1",
+ "memberId": 7,
+ "createDate": {
+ "date": 5,
+ "hours": 15,
+ "seconds": 46,
+ "month": 8,
+ "nanos": 0,
+ "timezoneOffset": -480,
+ "year": 119,
+ "minutes": 24,
+ "time": 1567668286000,
+ "day": 4
+ }
  * 购物车
  */
 public class ShoppingCartModel {
 
     private int id;
-    private String imageUrl;
+    private String imageUrl="http://pic25.nipic.com/20121112/9252150_150552938000_2.jpg";
     private String shoppingName;
 
     private int dressSize;
     private String attribute;
 
-    private double price;
+    private double salePrice;
 
     public boolean isChoosed;
     public boolean isCheck = false;
-    private int count;
+    private int num;
 
+    public String proName;
+    public String proHeadId;
+    public String proChildId;
+    public String cartId;
 
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
+    }
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public String getProName() {
+        return proName;
+    }
+
+    public String getProHeadId() {
+        return proHeadId;
+    }
+
+    public String getProChildId() {
+        return proChildId;
+    }
+
+    public void setProName(String proName) {
+        this.proName = proName;
+    }
+
+    public void setProHeadId(String proHeadId) {
+        this.proHeadId = proHeadId;
+    }
+
+    public void setProChildId(String proChildId) {
+        this.proChildId = proChildId;
+    }
 
     public String getAttribute() {
         return attribute;
@@ -34,22 +91,22 @@ public class ShoppingCartModel {
     }
 
     public ShoppingCartModel(int id, String shoppingName, String attribute, int dressSize,
-                             double price, int count) {
+                             double salePrice, int num) {
         this.id = id;
         this.shoppingName = shoppingName;
         this.attribute = attribute;
         this.dressSize = dressSize;
-        this.price = price;
-        this.count = count;
+        this.salePrice = salePrice;
+        this.num = num;
 
     }
 
-    public int getCount() {
-        return count;
+    public int getNum() {
+        return num;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public boolean isChoosed() {
@@ -94,12 +151,12 @@ public class ShoppingCartModel {
     }
 
 
-    public double getPrice() {
-        return price;
+    public double getSalePrice() {
+        return salePrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 
 

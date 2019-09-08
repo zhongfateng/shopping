@@ -4,37 +4,30 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
-import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.ShoppingCartAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
-import com.liuwa.shopping.model.BaseDataModel;
-import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.ShoppingCartModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
-import com.liuwa.shopping.util.ToastUtil;
-import com.liuwa.shopping.view.MyGridView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -80,7 +73,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		shoppingCartAdapter.setCheckInterface(this);
 		shoppingCartAdapter.setModifyCountInterface(this);
 		list_shopping_cart.setAdapter(shoppingCartAdapter);
-		shoppingCartAdapter.setShoppingCartModelList(shoppingCartBeanList);
+
 
 	}
 	
@@ -130,26 +123,22 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
-//		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-//		productParam.put("start",page);
-//		productParam.put("rows",pageSize);
-//		productParam.put("classesid","1");
-//		productParam.put("type",1);
-//		productParam.put("timespan", System.currentTimeMillis()+"");
-//		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
-//		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-//		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
-//		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
-//		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-//		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-//				.executeQueue(null, new LKHttpRequestQueueDone(){
-//
-//					@Override
-//					public void onComplete() {
-//						super.onComplete();
-//					}
-//
-//				});
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.CARTLIST);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
 	}
 
 	private LKAsyncHttpResponseHandler getNoticeHandler(){
@@ -187,14 +176,14 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-//						JSONObject jsonObject = job.getJSONObject("data");
-//						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-//								.create();
-//						baseModel = localGson.fromJson(jsonObject.toString(),
-//								new TypeToken<BaseDataModel<ProductModel>>() {
-//								}.getType());
-//						proList.addAll(baseModel.list);
-//						fpAdapter.notifyDataSetChanged();
+						JSONArray jsonObject = job.getJSONArray("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						shoppingCartBeanList.clear();
+						shoppingCartBeanList.addAll((Collection<? extends ShoppingCartModel>)localGson.fromJson(jsonObject.toString(),
+								new TypeToken<ArrayList<ShoppingCartModel>>() {
+								}.getType()));
+						shoppingCartAdapter.setShoppingCartModelList(shoppingCartBeanList);
 
 					}
 					else
@@ -218,8 +207,8 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 			boolean choosed = bean.isChoosed();
 			if (choosed){
 				String shoppingName = bean.getShoppingName();
-				int count = bean.getCount();
-				double price = bean.getPrice();
+				int count = bean.getNum();
+				double price = bean.getSalePrice();
 				int size = bean.getDressSize();
 				String attribute = bean.getAttribute();
 				int id = bean.getId();
@@ -269,7 +258,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 			ShoppingCartModel shoppingCartBean = shoppingCartBeanList.get(i);
 			if (shoppingCartBean.isChoosed()) {
 				totalCount++;
-				totalPrice += shoppingCartBean.getPrice() * shoppingCartBean.getCount();
+				totalPrice += shoppingCartBean.getSalePrice() * shoppingCartBean.getNum();
 			}
 		}
 		tv_show_price.setText("合计:" + totalPrice);
@@ -284,9 +273,9 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	@Override
 	public void doIncrease(int position, View showCountView, boolean isChecked) {
 		ShoppingCartModel shoppingCartBean = shoppingCartBeanList.get(position);
-		int currentCount = shoppingCartBean.getCount();
+		int currentCount = shoppingCartBean.getNum();
 		currentCount++;
-		shoppingCartBean.setCount(currentCount);
+		shoppingCartBean.setNum(currentCount);
 		((TextView) showCountView).setText(currentCount + "");
 		shoppingCartAdapter.notifyDataSetChanged();
 		statistics();
@@ -301,12 +290,12 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	@Override
 	public void doDecrease(int position, View showCountView, boolean isChecked) {
 		ShoppingCartModel shoppingCartBean = shoppingCartBeanList.get(position);
-		int currentCount = shoppingCartBean.getCount();
+		int currentCount = shoppingCartBean.getNum();
 		if (currentCount == 1) {
 			return;
 		}
 		currentCount--;
-		shoppingCartBean.setCount(currentCount);
+		shoppingCartBean.setNum(currentCount);
 		((TextView) showCountView).setText(currentCount + "");
 		shoppingCartAdapter.notifyDataSetChanged();
 		statistics();

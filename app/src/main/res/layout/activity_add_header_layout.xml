@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"></include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/bg_all"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:background="@color/white"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginTop="31dp"
+                android:layout_marginBottom="31dp"
+                android:src="@mipmap/qr_code"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="用户扫码即可成为你的副团长"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="副团长可替你完成订单核销、商品签收"
+                android:textSize="12sp"
+                android:textColor="@color/gray"
+                android:layout_marginBottom="31dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tb_top"
+            android:layout_width="match_parent"
+            app:tabIndicatorColor="@color/tab_line"
+            app:tabTextColor="@color/tab_color"
+            app:tabSelectedTextColor="@color/tab_select_color"
+            app:tabIndicatorHeight="2dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+    </LinearLayout>
+</LinearLayout>

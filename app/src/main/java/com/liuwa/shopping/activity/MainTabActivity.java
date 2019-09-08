@@ -30,7 +30,6 @@ public class MainTabActivity extends TabActivity {
 	private long exitTime = 0;
 
 	private TabReceiver mTabReceiver;
-	private String uid;
 	private String token;
 	public static  Context context;
 
@@ -53,7 +52,6 @@ public class MainTabActivity extends TabActivity {
 
 	
 	public void init(){
-		 uid= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.USER_ID, "");
 		 token=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.TOKEN, "");
 	}
 	
@@ -61,7 +59,7 @@ public class MainTabActivity extends TabActivity {
 		mTabHost = (TabHost) getTabHost();
 		TabsUtil.addTab(mTabHost, "首页", R.drawable.tab_nav_index_selector, 0, new Intent(this, IndexActivity.class));
 		TabsUtil.addTab(mTabHost, "分类", R.drawable.tab_nav_cate_selector, 1, new Intent(this, RegisterAndGetPassWordActivity.class));
-		TabsUtil.addTab(mTabHost, "购物车", R.drawable.tab_nav_cart_selector, 2, new Intent(this, FavoriateActivity.class));
+		TabsUtil.addTab(mTabHost, "购物车", R.drawable.tab_nav_cart_selector, 2, new Intent(this, CartShopActivity.class));
 		TabsUtil.addTab(mTabHost, "我的", R.drawable.tab_nav_myself_selector, 3, new Intent(this, MySelfActivity.class));
 
 		for (int i = 0; i < 4; i++) {
@@ -75,10 +73,15 @@ public class MainTabActivity extends TabActivity {
 						mTabHost.setCurrentTab(1);
 					}
 					if(id==2) {
+						if(token==null||token.length()==0){
+							Intent intent =new Intent(context,LoginActivity.class);
+							startActivity(intent);
+							return;
+						}
 						mTabHost.setCurrentTab(2);
 					}
 					if(id==3) {
-						if(uid==null||uid.length()==0){
+						if(token==null||token.length()==0){
 							Intent intent =new Intent(context,LoginActivity.class);
 							startActivity(intent);
 						}else {
@@ -125,7 +128,6 @@ public class MainTabActivity extends TabActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		 uid= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.USER_ID, "");
 		 token=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.TOKEN, "");
 	}
 	

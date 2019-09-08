@@ -1,0 +1,97 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48.0dip"
+        android:id="@+id/search_top"
+        android:orientation="horizontal"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/btn_back"
+            />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/search_bg"
+            android:drawableLeft="@mipmap/search_icon"
+            android:drawablePadding="8dp"
+            android:paddingLeft="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="start|center_vertical"
+            android:hint="输入查询的关键字"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:textColor="@color/gray"
+            android:textSize="14sp" />
+    </LinearLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"
+                    android:gravity="left|center_vertical"
+                    android:text="历史搜索" />
+                    <ImageView
+                        android:id="@+id/img_delete"
+                        android:layout_width="40dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/delete_cion"
+                        android:layout_centerVertical="true"
+                        android:scaleType="centerInside"
+                        android:layout_height="35dp" />
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"></View>
+
+                <com.liuwa.shopping.view.MyGridView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:horizontalSpacing="20dp"
+                    android:layout_height="wrap_content"></com.liuwa.shopping.view.MyGridView>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

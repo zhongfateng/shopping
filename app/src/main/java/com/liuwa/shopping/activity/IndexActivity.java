@@ -148,6 +148,15 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		indexProductAdapter=new IndexProductAdapter(context,productList);
 		indexProductAdapter.setOnCartClick(this);
 		lv_show_list.setAdapter(indexProductAdapter);
+		lv_show_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ProductModel model=(ProductModel) parent.getAdapter().getItem(position);
+				Intent intent =new Intent(context,ProductDetailActivity.class);
+				intent.putExtra("proheadid",model.proHeadId);
+				startActivity(intent);
+			}
+		});
 
 	}
 	public void initEvent(){
@@ -187,10 +196,13 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			Intent intent;
 			switch(v.getId()){
 			case R.id.tv_go_search:
-				intent = new Intent();
-				intent.setAction("android.intent.action.CALL");
-				intent.setData(Uri.parse("tel:" + "13181279291"));
+				intent=new Intent(context,SearchActivity.class);
 				startActivity(intent);
+
+//				intent = new Intent();
+//				intent.setAction("android.intent.action.CALL");
+//				intent.setData(Uri.parse("tel:" + "13181279291"));
+//				startActivity(intent);
 				break;
 //			case R.id.ab_register_btn_id:
 //				goToRegister();

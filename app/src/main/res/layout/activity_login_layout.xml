@@ -95,15 +95,17 @@
                 android:text="@string/btn_forget_pass"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
+
         <Button
             android:id="@+id/btn_login_commit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_60"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_14"
+            android:background="@mipmap/btn_register"
             android:gravity="center"
-            android:background="@mipmap/btn_register"/>
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14" />
     </LinearLayout>
 </LinearLayout>

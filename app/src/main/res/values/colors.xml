@@ -23,6 +23,7 @@
     <color name="bg_favorite">#D1DBE5</color>
     <color name="bg_special">#80D1DBE5</color>
     <color name="tab_line">#28903B</color>
+    <color name="tr_tab_line">#8028903B</color>
     <color name="tab_color">#666666</color>
     <color name="guess_like_color">#5EA8D7</color>
     <color name="rexiao_color">#35BA12</color>
@@ -51,4 +52,8 @@
     <color name="l_color">#ADADAD</color>
     <color name="ship_color">#999999</color>
     <color name="gray">#7F7F7F</color>
+    <color name="b_gray">#8B8B8B</color>
+    <color name="warning">#FF0000</color>
+    <color name="gray_d">#969696</color>
+
 </resources>
