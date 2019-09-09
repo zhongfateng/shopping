@@ -2,6 +2,7 @@ package com.liuwa.shopping.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -22,7 +23,10 @@ import android.widget.TextView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.util.RecordSQLiteOpenHelper;
 import com.liuwa.shopping.util.ScreenUtil;
+import com.liuwa.shopping.view.FlowLayout;
 import com.liuwa.shopping.view.MyGridView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -30,11 +34,11 @@ import java.util.ArrayList;
 public class SearchActivity extends BaseActivity{
 	private Context context;
 	EditText et_search;
-	MyGridView listView;
 	ImageView tv_clear;
 	ImageView back;
 	TextView tv_tip;
 	public int colnum;
+	private FlowLayout ll_flow;
 	private RecordSQLiteOpenHelper helper = new RecordSQLiteOpenHelper(this);;
 	private SQLiteDatabase db;
 	private BaseAdapter adapter;
@@ -50,9 +54,7 @@ public class SearchActivity extends BaseActivity{
 	public void initViews() {
 		back=(ImageView)findViewById(R.id.back);
 		et_search=findViewById(R.id.et_search);
-		listView=findViewById(R.id.listView);
-		colnum =  (int) (((getResources().getDisplayMetrics().widthPixels  )) / 400 );
-		listView.setNumColumns(colnum);
+		ll_flow=findViewById(R.id.ll_flow);
 		tv_tip=findViewById(R.id.tv_tip);
 		tv_clear=(ImageView) findViewById(R.id.img_delete);
 		// 清空搜索历史
@@ -110,16 +112,6 @@ public class SearchActivity extends BaseActivity{
 
 			}
 		});
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView textView = (TextView) view.findViewById(android.R.id.text1);
-				String name = textView.getText().toString();
-				et_search.setText(name);
-				//setBackValue(name);
-				// TODO 获取到item上面的文字，根据该关键字跳转到另一个页面查询，由你自己去实现
-			}
-		});
 		// 第一次进入查询所有的历史记录
 		queryData("");
 
@@ -158,18 +150,24 @@ public class SearchActivity extends BaseActivity{
 		// 创建adapter适配器对象
 //		adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
 //				new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-		ArrayList<String> strings=new ArrayList<>();
+		ll_flow.removeAllViews();
 		if (cursor.moveToFirst()) {
 			do{
 				//取出数据,调用cursor.getInt/getString等方法
-				strings.add(cursor.getString(1));
+				final TextView label=(TextView) View.inflate(context,R.layout.search_list_item_layout,null);
+				label.setText(cursor.getString(1));
+				label.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent=new Intent(SearchActivity.this,LoginActivity.class);
+						intent.putExtra("searchKey", label.getText().toString()+"");
+						startActivity(intent);
+						SearchActivity.this.finish();
+					}
+				});
+				ll_flow.addView(label);
 			}while(cursor.moveToNext());
 		}
-
-		adapter=new SearchListAdapter(context,strings);
-		// 设置适配器
-		listView.setAdapter(adapter);
-		adapter.notifyDataSetChanged();
 	}
 	/**
 	 * 检查数据库中是否已经有该条记录

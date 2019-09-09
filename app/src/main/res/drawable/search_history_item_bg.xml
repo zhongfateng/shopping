@@ -3,6 +3,6 @@
     <!--背景颜色-->
     <solid android:color="@color/bg_special" />
     <!--角的半径-->
-    <corners android:radius="7dp"/>
+    <corners android:radius="15dp"/>
     <!--边框颜色-->
 </shape>

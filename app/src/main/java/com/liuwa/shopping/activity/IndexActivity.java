@@ -71,9 +71,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private CirclePageIndicator     cpi_indicator;
 	private  ImagePagerAdapter      imageAdatper;
 	private MyGridView              index_category_type;
-	private TextView                tv_go_search;
+	private LinearLayout                tv_go_search;
 	private TabLayout               tb_time;
 	private MyGridView              mgw_guangou;
+	private TextView tv_title;
 	private IndexTuanGouProductAdapter indexTuanGouProductAdapter;
 	private ArrayList<TuanProductModel> tuanItemList=new ArrayList<TuanProductModel>();
 	private ArrayList<CategoryModel> cateList =new ArrayList<CategoryModel>();
@@ -99,7 +100,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	
 	public void initViews()
 	{
-		tv_go_search				= (TextView)findViewById(R.id.tv_go_search);
+		ImageView img_back=(ImageView)findViewById(R.id.img_back);
+		img_back.setVisibility(View.GONE);
+		tv_title=(TextView)findViewById(R.id.tv_title);
+		tv_title.setText("首页");
+		tv_go_search				= (LinearLayout)findViewById(R.id.tv_go_search);
 		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
 		index_auto_scroll_view  = (AutoScrollViewPager)findViewById(R.id.index_auto_scroll_view);
 		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);

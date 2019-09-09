@@ -5,6 +5,10 @@
     android:id="@+id/tv_text"
     android:textColor="@color/tab_color"
     android:gravity="center"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:background="@drawable/search_history_item_bg"
     android:layout_height="36dp">
 

@@ -84,12 +84,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#EEEEEE"></View>
-
-                <com.liuwa.shopping.view.MyGridView
-                    android:id="@+id/listView"
+                <com.liuwa.shopping.view.FlowLayout
+                    android:id="@+id/ll_flow"
                     android:layout_width="match_parent"
-                    android:horizontalSpacing="20dp"
-                    android:layout_height="wrap_content"></com.liuwa.shopping.view.MyGridView>
+                    android:layout_height="wrap_content"></com.liuwa.shopping.view.FlowLayout>
             </LinearLayout>
         </LinearLayout>
 
