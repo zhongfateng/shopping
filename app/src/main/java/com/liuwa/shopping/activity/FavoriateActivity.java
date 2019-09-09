@@ -41,7 +41,7 @@ import java.util.TreeMap;
 
 public class FavoriateActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick{
 	private Context context;
-	private ImageView img_favoriate_back;
+	private ImageView img_back;
 	private PullToRefreshScrollView pullToRefreshScrollView;
 	private MyGridView gv_favoriate_list;
 	private FavoriateProductAdapter fpAdapter;
@@ -61,7 +61,7 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 
 	public void initViews()
 	{
-		img_favoriate_back=(ImageView)findViewById(R.id.img_favoriate_back);
+		img_back=(ImageView)findViewById(R.id.img_back);
 		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
 		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
 		fpAdapter                 =  new FavoriateProductAdapter(this,proList);
@@ -77,7 +77,7 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 	}
 	
 	public void initEvent(){
-		img_favoriate_back.setOnClickListener(onClickListener);
+		img_back.setOnClickListener(onClickListener);
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
@@ -96,7 +96,7 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
-			case R.id.img_favoriate_back:
+			case R.id.img_back:
 				FavoriateActivity.this.finish();
 				break;
 			}

@@ -16,7 +16,7 @@ package com.liuwa.shopping.model;
  */
 
 public class ProductModel {
-    public String fristimg;
+    public String fristimg="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1568013542&di=ec02b3bfddbec283f24691deefa0f33d&src=http://b-ssl.duitang.com/uploads/item/201510/07/20151007151747_VLuRm.jpeg";
     public double showprice;
     public String proName;
     public double Price;

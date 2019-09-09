@@ -85,6 +85,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private ListView lv_show_list;
 	IndexProductAdapter indexProductAdapter;
 	public BaseDataModel<ProductModel>  baseModel;
+	private LinearLayout ll_left,ll_down,ll_content;
 
 	private int page=1;
 	private int pageSize=10;
@@ -123,6 +124,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		imageAdatper.notifyDataSetChanged();
 		myGridAdapter=new MyGridAdapter(this);
 		index_category_type.setAdapter(myGridAdapter);
+		//特殊分类实现
+		ll_left=(LinearLayout)findViewById(R.id.ll_left);
+		ll_down=(LinearLayout)findViewById(R.id.ll_down);
+		ll_content=(LinearLayout)findViewById(R.id.ll_content);
+
 		//团购tab实现
 		tb_time=(TabLayout)findViewById(R.id.tb_time);
 		mgw_guangou=(MyGridView)findViewById(R.id.mgw_guangou);
@@ -187,6 +193,9 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			}
 		});
 		tv_go_search.setOnClickListener(onClickListener);
+		ll_left.setOnClickListener(onClickListener);
+		ll_content.setOnClickListener(onClickListener);
+		ll_down.setOnClickListener(onClickListener);
 
 	}
 	@Override
@@ -209,12 +218,19 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 //				intent.setData(Uri.parse("tel:" + "13181279291"));
 //				startActivity(intent);
 				break;
-//			case R.id.ab_register_btn_id:
-//				goToRegister();
-//				break;
-//			case R.id.ab_forgetpw_btn_id:
-//				doForgetPassWord();
-//				break;
+			case R.id.ll_left:
+				intent=new Intent(context,TimeBuyActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.ll_content:
+				intent=new Intent(context,SearchActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.ll_down:
+				intent=new Intent(context,FavoriateActivity.class);
+				startActivity(intent);
+				break;
+
 				
 			}
 		}

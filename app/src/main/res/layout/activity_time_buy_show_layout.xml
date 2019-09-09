@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <include layout="@layout/activity_favoriate_title_layout"></include>
+    <include layout="@layout/activity_top_title_layout"></include>
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pullToScrollView"
@@ -17,10 +17,14 @@
         android:orientation="vertical">
         <ImageView
             android:layout_width="match_parent"
+            android:src="@mipmap/top_bg"
             android:layout_height="wrap_content" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:background="@color/white"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_height="31dp">
             <TextView
                 android:layout_width="wrap_content"
@@ -31,17 +35,38 @@
                 android:textColor="@color/black"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/tv_tag"
                 android:layout_width="wrap_content"
                 android:text="距结束"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/ll_right"
                 android:textColor="@color/jie"
                 android:layout_height="wrap_content" />
             <LinearLayout
+                android:id="@+id/ll_right"
                 android:layout_width="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_day"
+                    android:layout_width="wrap_content"
+                    android:background="@mipmap/time_bg"
+                    android:visibility="invisible"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    android:text="："
+                    android:visibility="invisible"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/tv_hour"
                     android:layout_width="wrap_content"
@@ -88,15 +113,14 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:background="@color/bg_favorite"
             android:orientation="vertical">
         <com.liuwa.shopping.view.MyGridView
             android:id="@+id/gv_favoriate_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:numColumns="2"
-            android:horizontalSpacing="0.5dp"
-            android:verticalSpacing="0.5dp"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="13dp"
             ></com.liuwa.shopping.view.MyGridView>
         </LinearLayout>
     </LinearLayout>

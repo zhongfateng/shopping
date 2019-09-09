@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="9dp"
+    android:paddingRight="9dp"
+    android:paddingBottom="@dimen/sp_12"
+    android:background="@drawable/bg_favoriate_item"
+    >
+    <ImageView
+        android:id="@+id/img_show"
+        android:layout_width="108dp"
+        android:layout_marginTop="11dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="143dp" />
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginTop="11dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:textSize="13sp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="26dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_show_price"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/money_color"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:textSize="9sp"
+            android:textColor="@color/market_money_color"
+            android:layout_toRightOf="@+id/tv_show_price"
+            android:layout_alignBottom="@+id/tv_show_price"
+            android:layout_marginLeft="6dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/img_buy"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/time_buy"
+            android:text="立即抢"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_marginTop="26dp"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="137dp"
-        android:layout_height="137dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_left"
         android:gravity="center"
+        android:paddingBottom="9dp"
+        android:paddingTop="14dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/bg_special_item"
         android:orientation="vertical">
         <TextView
@@ -39,23 +44,25 @@
             android:text="@string/zhuanshutequan"
             android:layout_height="wrap_content" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="@dimen/sp_14"
-        android:layout_weight="1"
-        android:layout_height="137dp">
         <LinearLayout
+            android:id="@+id/ll_top"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_special_item"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ll_left"
+            android:layout_toRightOf="@+id/ll_left"
+            android:layout_alignBottom="@+id/ll_left"
+            android:layout_marginLeft="7dp"
+            android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_special_item"
+                android:layout_height="match_parent">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_weight="1"
@@ -98,24 +105,22 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_weight="1"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/bg_special_item"
-            android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:id="@+id/ll_down"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:background="@drawable/bg_special_item"
+                android:layout_height="match_parent">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:src="@mipmap/icon_rexiao"
@@ -123,10 +128,10 @@
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
                     android:orientation="vertical"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="wrap_content"
                         android:text="@string/guess_like"
@@ -154,5 +159,5 @@
 
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>
