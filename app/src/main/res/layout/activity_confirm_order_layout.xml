@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"></include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:id="@+id/rl_add"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="暂无收货地址"
+                            android:textSize="14sp"
+                            android:layout_centerInParent="true"
+                            android:textColor="@color/gray"
+                            android:layout_height="wrap_content" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@mipmap/arrow"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+
+                    <!--  显示收货地址-->
+                    <LinearLayout
+                        android:id="@+id/rl_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="13dp"
+                        android:background="@color/white"
+                        android:paddingBottom="13dp"
+                        android:paddingLeft="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="收货人："
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/circle_item"
+                                android:gravity="left|center_vertical"
+                                android:text="收货人："
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/circle_item"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="7dp"
+                                android:text="13000000000"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/gray_d"
+                                android:textSize="10sp"
+                                android:text="提货地点"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/gray_d"
+                                android:textSize="10sp"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/gray_d"
+                                android:textSize="10sp"
+                                android:text="团长信息"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/gray_d"
+                                android:textSize="10sp"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <com.liuwa.shopping.view.MyListView
+                    android:id="@+id/lv_show_list"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:dividerHeight="10dp"
+                    android:divider="@color/transparent"
+                    android:layout_height="match_parent"></com.liuwa.shopping.view.MyListView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="9dp"
+                    android:background="@drawable/bg_favoriate_item"
+                    android:layout_height="81dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_height="41dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="商品活动"
+                            android:layout_alignParentLeft="true"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="商品活动"
+                            android:textSize="12sp"
+                            android:textColor="@color/money_color"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:background="@color/view_color"
+                        android:layout_height="0.2dp"></View>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_height="41dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="商品活动"
+                            android:layout_alignParentLeft="true"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="商品活动"
+                            android:textSize="12sp"
+                            android:textColor="@color/money_color"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+        <RelativeLayout
+            android:id="@+id/ll_bottom"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="50dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="合计"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="@string/ceshi"
+                        android:textColor="@color/money_color"
+                        android:textSize="12sp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="总额"
+                        android:textColor="@color/jie_d"
+                        android:textSize="11sp"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="总额"
+                        android:textColor="@color/jie_d"
+                        android:layout_marginLeft="3dp"
+                        android:textSize="11sp"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="优惠"
+                        android:textColor="@color/jie_d"
+                        android:textSize="12sp"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="总额"
+                        android:textColor="@color/jie_d"
+                        android:textSize="11sp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="125dp"
+                android:text="支付"
+                android:background="@color/tab_line"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>
