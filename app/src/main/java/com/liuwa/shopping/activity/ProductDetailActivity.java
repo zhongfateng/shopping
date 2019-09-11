@@ -240,6 +240,54 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 			}
 		};
 	}
+	private void doBuy(String prochildid,int num){
+		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
+		baseParam.put("leaderid","1");
+		baseParam.put("prochildid","1");
+		baseParam.put("buynum",num);
+		baseParam.put("timespan", System.currentTimeMillis()+"");
+		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
+		HashMap<String, Object> requestMap = new HashMap<String, Object>();
+		requestMap.put(Constants.kMETHODNAME,Constants.BUY);
+		requestMap.put(Constants.kPARAMNAME, baseParam);
+		LKHttpRequest cartReq = new LKHttpRequest(requestMap, buyHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(cartReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+	private LKAsyncHttpResponseHandler buyHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code== Constants.CODE) {
+						String order_id=job.getString("data");
+						Intent intent =new Intent(context,ConfirmOrderActivity.class);
+						intent.putExtra("order_id",order_id);
+						startActivity(intent);
+					}
+					else {
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	private void doAddCart(String prochildid,int num){
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
 		baseParam.put("proheadid","1");
@@ -327,18 +375,15 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 
 	@Override
-	public void onFragmentInteraction(String proheadid,int num) {
-		if(newFragment!=null){
-			newFragment.dismiss();
-		}
+	public void onFragmentInteraction(String prochildid,int num) {
 		this.proheadid=proheadid;
 		this.num=num;
 		if(tag.equals("0")){
 			//立即购买
-			Intent intent =new Intent(context,LoginActivity.class);
+			doBuy(prochildid,num);
 		}else if(tag.equals("1")){
 			//加入购物车
-			doAddCart(proheadid,num);
+			doAddCart(prochildid,num);
 		}
 	}
 }

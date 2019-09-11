@@ -59,5 +59,10 @@
     <color name="jie">#6B6B6B</color>
     <color name="jie_d">#5D5D5D</color>
     <color name="jie_c">#7A7A7A</color>
+    <color name="butten_green">#1AAC19</color>
+    <color name="check_butten_green">#19ad19</color>
+    <color name="title1">#4a4a4a</color>
+    <color name="title2">#a2a2a2</color>
+    <color name="line">#d1d1d1</color>
 
 </resources>

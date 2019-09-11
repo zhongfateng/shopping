@@ -25,6 +25,7 @@ import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
+import com.liuwa.shopping.model.AddressModel;
 import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ProductModel;
@@ -51,11 +52,13 @@ public class ConfirmOrderActivity extends BaseActivity{
 	private LinearLayout rl_address;
 	MyListView lv_show_list;
 	private ArrayList<OrderProductItem> orderProductItems =new ArrayList<OrderProductItem>();
+	private String order_id;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_confirm_order_layout);
 		this.context=this;
+		order_id=getIntent().getStringExtra("order_id");
 		initViews();
 		initEvent();
 		doGetDatas();
@@ -92,20 +95,26 @@ public class ConfirmOrderActivity extends BaseActivity{
 		}
 	};
 
-	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-//		productParam.put("start",page);
-//		productParam.put("rows",pageSize);
-		productParam.put("classesid","1");
-		productParam.put("type",1);
+		productParam.put("order_id",order_id);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.ORDERDETAIL);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
-		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getOrderHandler());
+
+		TreeMap<String, Object> param = new TreeMap<String, Object>();
+		param.put("isused","1");
+		param.put("timespan", System.currentTimeMillis()+"");
+		param.put("sign", Md5SecurityUtil.getSignature(param));
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put(Constants.kMETHODNAME,Constants.GETADDRESS);
+		map.put(Constants.kPARAMNAME, param);
+		LKHttpRequest areaReq = new LKHttpRequest(map, getAddressHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,areaReq)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -116,7 +125,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 				});
 	}
 
-	private LKAsyncHttpResponseHandler getNoticeHandler(){
+	private LKAsyncHttpResponseHandler getOrderHandler(){
 		return new LKAsyncHttpResponseHandler(){
 			@Override
 			public void successAction(Object obj) {
@@ -140,7 +149,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 		};
 	}
 
-	private LKAsyncHttpResponseHandler getProductHandler(){
+	private LKAsyncHttpResponseHandler getAddressHandler(){
 		return new LKAsyncHttpResponseHandler(){
 
 			@Override
@@ -151,15 +160,17 @@ public class ConfirmOrderActivity extends BaseActivity{
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-//						JSONObject jsonObject = job.getJSONObject("data");
-//						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-//								.create();
-//						baseModel = localGson.fromJson(jsonObject.toString(),
-//								new TypeToken<BaseDataModel<ProductModel>>() {
-//								}.getType());
-//						proList.addAll(baseModel.list);
-//						fpAdapter.notifyDataSetChanged();
+						JSONObject jsonObject = job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						ArrayList<AddressModel> addressModels=localGson.fromJson(jsonObject.toString(),
+								new TypeToken<ArrayList<AddressModel>>() {
+								}.getType());
+						if(addressModels.size()==0){
 
+						}else {
+
+						}
 					}
 					else
 					{

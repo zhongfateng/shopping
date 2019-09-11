@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,7 +83,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	IndexProductAdapter indexProductAdapter;
 	public BaseDataModel<ProductModel>  baseModel;
 	private LinearLayout ll_left,ll_down,ll_content;
-
+	public static final int ReqCode = 3;
 	private int page=1;
 	private int pageSize=10;
 	@Override
@@ -210,7 +207,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			Intent intent;
 			switch(v.getId()){
 			case R.id.tv_go_search:
-				intent=new Intent(context,SearchActivity.class);
+				intent=new Intent(context,SearchHistoryActivity.class);
 				startActivity(intent);
 
 //				intent = new Intent();
@@ -223,7 +220,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				startActivity(intent);
 				break;
 			case R.id.ll_content:
-				intent=new Intent(context,SearchActivity.class);
+				intent=new Intent(context,SearchHistoryActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.ll_down:

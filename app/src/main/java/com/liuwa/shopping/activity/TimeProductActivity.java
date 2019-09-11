@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.BlankFragment;
 import com.liuwa.shopping.activity.fragment.IntegralFragment;
+import com.liuwa.shopping.activity.fragment.WebFragment;
 import com.liuwa.shopping.adapter.ImagePagerAdapter;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.ScreenUtil;
@@ -29,11 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TimeProductActivity extends BaseActivity implements BlankFragment.OnFragmentInteractionListener{
+public class TimeProductActivity extends BaseActivity implements WebFragment.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
-	private MyViewPager vp_category;
+	private ViewPager vp_category;
 	private TabLayout tl_tabs;
 	private ArrayList fragmentList;
 	private ArrayList list_Title;
@@ -55,9 +56,9 @@ public class TimeProductActivity extends BaseActivity implements BlankFragment.O
 	public void init() {
 		fragmentList = new ArrayList<>();
 		list_Title = new ArrayList<>();
-		fragmentList.add(BlankFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(BlankFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(BlankFragment.newInstance("dsaf","BlankFragment"));
+		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
 		list_Title.add("详情");
 		list_Title.add("评价");
 		list_Title.add("售后");
@@ -77,7 +78,7 @@ public class TimeProductActivity extends BaseActivity implements BlankFragment.O
 		linearLayout.setDividerDrawable(ContextCompat.getDrawable(context,
 				R.drawable.divider)); //设置分割线的样式
 		linearLayout.setDividerPadding(ScreenUtil.dip2px(context,2)); //设置分割线间隔
-		vp_category = (MyViewPager) findViewById(R.id.vp_category);
+		vp_category = (ViewPager) findViewById(R.id.vp_category);
 		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
 		vp_category.setAdapter(adapter);
 		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动

@@ -4,6 +4,10 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/activity_top_title_layout"></include>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:scrollbars="none"
+        android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -45,8 +49,8 @@
         android:paddingRight="20dp"
         android:layout_below="@+id/rl_top"
         android:layout_marginTop="-20dp"
-        android:layout_height="275dp">
-        <LinearLayout
+        android:layout_height="wrap_content">
+        <RelativeLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
@@ -54,19 +58,100 @@
             <TextView
                 android:layout_width="88dp"
                 android:textSize="14sp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:id="@+id/tv_to"
+                android:layout_gravity="center_vertical"
+                android:text="所在城市"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_area"
+                android:layout_width="match_parent"
+                android:textColor="@color/detail_address_color"
+                android:layout_toRightOf="@+id/tv_to"
+                android:layout_centerVertical="true"
+                android:textSize="14sp"
+                android:hint="请选择城市"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/arrow_down"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/view_line"
+            android:layout_height="0.5dp"></View>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_height="55dp">
+            <TextView
+                android:layout_width="88dp"
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:id="@+id/tv_left"
+                android:layout_gravity="center_vertical"
+                android:text="所在区域"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_area_item"
+                android:layout_width="match_parent"
+                android:textColor="@color/detail_address_color"
+                android:layout_toRightOf="@+id/tv_left"
+                android:layout_centerVertical="true"
+                android:textSize="14sp"
+                android:hint="请选择区域"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/arrow_down"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/view_line"
+            android:layout_height="0.5dp"></View>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_height="55dp">
+            <TextView
+                android:id="@+id/tv_llfet"
+                android:layout_width="88dp"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 android:gravity="left"
                 android:layout_gravity="center_vertical"
-                android:text="选择地区"
+                android:text="社区"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/tv_address"
                 android:layout_width="match_parent"
+                android:layout_toRightOf="@+id/tv_llfet"
+                android:layout_centerVertical="true"
                 android:textColor="@color/detail_address_color"
                 android:textSize="14sp"
-                android:hint="请选择地区"
+                android:hint=""
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/shequ"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:background="@color/view_line"
@@ -82,14 +167,14 @@
                 android:textColor="@color/black"
                 android:gravity="left"
                 android:layout_gravity="center_vertical"
-                android:text="小区名称"
+                android:text="详细地址"
                 android:layout_height="wrap_content" />
             <EditText
                 android:id="@+id/et_detail"
                 android:layout_width="match_parent"
                 android:background="@null"
                 android:textSize="14sp"
-                android:hint="请输入小区名称"
+                android:hint="请填写社区楼号单元号门牌号"
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <View
@@ -201,4 +286,5 @@
             android:layout_height="wrap_content" />
 
     </RelativeLayout>
+    </ScrollView>
 </LinearLayout>

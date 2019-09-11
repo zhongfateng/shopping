@@ -60,6 +60,18 @@ public class Constants {
 	public static final String ADDCART                   = "addcartjson";
 	//购物车列表
 	public static final String CARTLIST                  = "memcartjson";
+	//立即购买
+	public static final String BUY                        = "addlijiorder";
+	//订单信息
+	public static final String ORDERDETAIL               = "orderdetil";
+	//获取收货地址
+	public static final String GETADDRESS                = "getmemaddressjson";
+	//市区域
+	public static final String City                       = "shijson";
+	//区区域
+	public static final String QU                         = "qujson";
+
+
 
 
 }

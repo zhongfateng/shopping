@@ -9,4 +9,5 @@ public class AddressModel {
     public String link_num;
     public String detail_address;
     public String is_default;
+    public String isUsed;
 }
