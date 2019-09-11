@@ -247,6 +247,7 @@
                 </LinearLayout>
             </LinearLayout>
             <TextView
+                android:id="@+id/tv_pay"
                 android:layout_width="125dp"
                 android:text="支付"
                 android:background="@color/tab_line"

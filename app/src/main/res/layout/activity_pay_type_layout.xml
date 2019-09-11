@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"></include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="11dp"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:background="@color/white"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/icon_money"
+                android:id="@+id/img_left_jifen"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="14dp"
+                android:layout_toRightOf="@+id/img_left_jifen"
+                android:layout_alignTop="@+id/img_left_jifen"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="余额支付"
+                    android:textSize="13sp"
+                    android:textColor="@color/product_name_color"
+                    android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="@string/ceshi"
+                        android:textSize="11sp"
+                        android:layout_marginLeft="13dp"
+                        android:textColor="@color/e_line"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="9dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="余额支付双倍资金"
+                    android:textSize="11sp"
+                    android:textColor="@color/b_line"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="@string/ceshi"
+                    android:textSize="11sp"
+                    android:layout_marginLeft="11dp"
+                    android:background="@mipmap/bg_chongzhi"
+                    android:gravity="center"
+                    android:textColor="@color/b_line"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/ck_yue_pay"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="11dp"
+                android:layout_alignParentRight="true"
+                android:button="@drawable/check_box_style"
+                android:scaleX="1"
+                android:scaleY="1" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/view_line"
+            android:layout_height="0.1dp"></View>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/pay_type_wechat"
+                android:id="@+id/img_left"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="14dp"
+                android:layout_toRightOf="@+id/img_left"
+                android:layout_alignTop="@+id/img_left"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="微信支付"
+                    android:textSize="13sp"
+                    android:textColor="@color/product_name_color"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="推荐微信用户使用"
+                    android:layout_marginTop="9dp"
+                    android:textSize="11sp"
+                    android:textColor="@color/integral_time_color"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/ck_wx_pay"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="11dp"
+                android:layout_alignParentRight="true"
+                android:button="@drawable/check_box_style"
+                android:scaleX="1"
+                android:scaleY="1" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/view_line"
+            android:layout_height="0.1dp"></View>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/pay_type_alipay"
+                android:id="@+id/img_left_dwon"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="14dp"
+                android:layout_toRightOf="@+id/img_left_dwon"
+                android:layout_alignTop="@+id/img_left_dwon"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="支付宝支付"
+                    android:textSize="13sp"
+                    android:textColor="@color/product_name_color"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="推荐支付宝用户使用"
+                    android:layout_marginTop="9dp"
+                    android:textSize="11sp"
+                    android:textColor="@color/integral_time_color"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/ck_alipay"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="11dp"
+                android:layout_alignParentRight="true"
+                android:drawablePadding="30dp"
+                android:button="@drawable/check_box_style"
+                android:scaleX="1"
+                android:scaleY="1" />
+        </RelativeLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="支付"
+        android:background="@mipmap/pay_bg"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="236dp"
+        android:gravity="center"
+        android:layout_height="wrap_content" />
+</LinearLayout>

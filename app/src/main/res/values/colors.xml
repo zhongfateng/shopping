@@ -64,5 +64,6 @@
     <color name="title1">#4a4a4a</color>
     <color name="title2">#a2a2a2</color>
     <color name="line">#d1d1d1</color>
-
+    <color name="e_line">#BFBFBF</color>
+    <color name="b_line">#FC5260</color>
 </resources>
