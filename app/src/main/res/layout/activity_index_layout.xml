@@ -14,7 +14,7 @@
         android:scrollbars="none"
         android:paddingRight="3dp"
         ptr:ptrAnimationStyle="rotate"
-        ptr:ptrMode="both">
+        ptr:ptrMode="pullUpFromBottom">
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
@@ -33,16 +33,22 @@
                     android:layout_centerVertical="true"
                     android:orientation="horizontal">
                     <ImageView
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:scaleType="fitCenter"
                         android:src="@mipmap/person"
                         />
                     <TextView
+                        android:id="@+id/tv_dingwei"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/app_name"
                         android:textSize="@dimen/sp_14"
+                        android:layout_marginLeft="8dp"
+                        android:maxEms="9"
+                        android:textColor="@color/black"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:drawableRight="@mipmap/arrow"></TextView>
                 </LinearLayout>
                 <LinearLayout
@@ -83,6 +89,68 @@
                     android:layout_centerHorizontal="true"
                     />
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="快速送达"
+                        android:textSize="8sp"
+                        android:textColor="@color/tab_line"
+                        android:drawablePadding="4dp"
+                        android:drawableLeft="@mipmap/duihao"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="品控质检"
+                        android:textSize="8sp"
+                        android:drawablePadding="4dp"
+                        android:textColor="@color/tab_line"
+                        android:drawableLeft="@mipmap/duihao"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="100％售后服务"
+                        android:textSize="8sp"
+                        android:drawablePadding="4dp"
+                        android:textColor="@color/tab_line"
+                        android:drawableLeft="@mipmap/duihao"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="原产地直采"
+                        android:textSize="8sp"
+                        android:drawablePadding="4dp"
+                        android:textColor="@color/tab_line"
+                        android:drawableLeft="@mipmap/duihao"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
             <com.liuwa.shopping.view.MyGridView
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"

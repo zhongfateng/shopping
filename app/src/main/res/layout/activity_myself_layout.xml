@@ -3,21 +3,6 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:paddingTop="@dimen/sp_12"
-        android:paddingBottom="@dimen/sp_12"
-        android:background="@color/tab_line"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="个人中心"
-            android:textColor="@color/white"
-            android:textSize="18sp"/>
-    </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:scrollbars="none"
@@ -28,11 +13,29 @@
         android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:background="@drawable/bg_ac_down">
         <RelativeLayout
             android:layout_width="match_parent"
+            android:paddingTop="@dimen/sp_12"
+            android:paddingBottom="@dimen/sp_12"
+            android:layout_alignParentTop="true"
+            android:id="@+id/top"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="个人中心"
+                android:fitsSystemWindows="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_above="@+id/rl_bottom"
+            android:layout_below="@+id/top"
             android:paddingLeft="@dimen/sp_12"
             android:paddingRight="@dimen/sp_12"
             android:layout_marginBottom="@dimen/sp_15"
@@ -45,14 +48,17 @@
                 android:layout_centerVertical="true"
                 android:layout_height="58dp" />
             <TextView
+                android:id="@+id/tv_nickname"
                 android:layout_width="wrap_content"
                 android:text="@string/app_name"
                 android:textSize="17sp"
                 android:textColor="@color/white"
                 android:layout_toRightOf="@+id/img_tou"
+                android:layout_alignTop="@+id/img_tou"
                 android:layout_marginLeft="@dimen/sp_15"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/tv_id"
                 android:layout_width="wrap_content"
                 android:text="@string/app_name"
                 android:textSize="11sp"
@@ -74,10 +80,11 @@
                 android:id="@+id/tv_my_integral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
                 android:drawableLeft="@mipmap/jfen"
+                android:textColor="@color/tab_line"
                 android:drawablePadding="6dp"
                 android:textSize="@dimen/sp_12" />
 
@@ -85,8 +92,9 @@
                 android:id="@+id/tv_my_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="13dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="13dp"
+                android:textColor="@color/tab_line"
                 android:layout_centerVertical="true"
                 android:textSize="@dimen/sp_12" />
         </RelativeLayout>
@@ -154,10 +162,15 @@
                          android:src="@mipmap/daifukuan"
                          android:layout_height="wrap_content" />
                     <TextView
-                        android:layout_width="6dp"
+                        android:id="@+id/tv_dfk_dot"
+                        android:textColor="@color/white"
+                        android:layout_width="10dp"
+                        android:textSize="5sp"
+                        android:visibility="invisible"
+                        android:gravity="center"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_daifukuan"
-                        android:layout_height="6dp" />
+                        android:layout_height="10dp" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -186,10 +199,15 @@
                         android:src="@mipmap/daifahuo"
                         android:layout_height="wrap_content" />
                     <TextView
-                        android:layout_width="6dp"
+                        android:id="@+id/tv_dfh_dot"
+                        android:layout_width="10dp"
+                        android:textColor="@color/white"
+                        android:visibility="invisible"
+                        android:textSize="5sp"
+                        android:gravity="center"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_daifahuo"
-                        android:layout_height="6dp" />
+                        android:layout_height="10dp" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,10 +236,15 @@
                         android:src="@mipmap/daitihuo"
                         android:layout_height="wrap_content" />
                     <TextView
-                        android:layout_width="6dp"
+                        android:id="@+id/tv_dth_dot"
+                        android:textColor="@color/white"
+                        android:visibility="invisible"
+                        android:layout_width="10dp"
+                        android:gravity="center"
+                        android:textSize="5sp"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_daitihuo"
-                        android:layout_height="6dp" />
+                        android:layout_height="10dp" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -250,10 +273,15 @@
                         android:src="@mipmap/daipingjia"
                         android:layout_height="wrap_content" />
                     <TextView
-                        android:layout_width="6dp"
+                        android:id="@+id/tv_pj"
+                        android:textColor="@color/white"
+                        android:visibility="invisible"
+                        android:layout_width="10dp"
+                        android:gravity="center"
+                        android:textSize="5sp"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_comment"
-                        android:layout_height="6dp" />
+                        android:layout_height="10dp" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -278,6 +306,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
                 <TextView
+                    android:id="@+id/tv_show"
                     android:layout_width="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"

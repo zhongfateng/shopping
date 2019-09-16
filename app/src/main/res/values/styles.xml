@@ -35,4 +35,8 @@
         <item name="android:windowEnterAnimation">@anim/enter_anim</item>
         <item name="android:windowExitAnimation">@anim/exit_anim</item>
     </style>
+
+    <style name="AppTheme.MainTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>

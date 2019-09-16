@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MoneyActivity extends BaseActivity implements IntegralFragment.OnFragmentInteractionListener{
+public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;

@@ -4,6 +4,6 @@
     android:shape= "oval"
     android:useLevel= "false" >
     <solid android:color= "@color/tab_line" />
-    <size android:width= "6dp"
-        android:height= "6dp" />
+    <size android:width= "10dp"
+        android:height= "10dp" />
 </shape>

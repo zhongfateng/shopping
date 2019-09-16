@@ -116,7 +116,6 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 				if(!requestPermissions()){
 					return;
 				}
-				//SystemProgramUtils.paizhao(MainActivity.this, new File("/mnt/sdcard/tupian.jpg"));
 				intent =new Intent(context,NeiborActivity.class);
 				startActivityForResult(intent,REQUEST_CODE_DINGWEI);
 				break;

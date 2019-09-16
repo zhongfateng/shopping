@@ -1,11 +1,20 @@
 package com.liuwa.shopping.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +28,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -35,11 +48,21 @@ import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.CategoryModel;
 import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.model.SpecialModel;
 import com.liuwa.shopping.model.TuanModel;
 import com.liuwa.shopping.model.TuanProductModel;
+import com.liuwa.shopping.permission.PermissionUtils;
+import com.liuwa.shopping.permission.request.IRequestPermissions;
+import com.liuwa.shopping.permission.request.RequestPermissions;
+import com.liuwa.shopping.permission.requestresult.IRequestPermissionsResult;
+import com.liuwa.shopping.permission.requestresult.RequestPermissionsResultSetApp;
+import com.liuwa.shopping.permission.requestresult.SetPermissions;
+import com.liuwa.shopping.util.DatasKey;
 import com.liuwa.shopping.util.DatasUtils;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.ListUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.CircleImageView;
 import com.liuwa.shopping.view.MyGridView;
@@ -80,12 +103,22 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private ArrayList<ProductModel> productList=new ArrayList<ProductModel>();
 	private MyGridAdapter  myGridAdapter;
 	private ListView lv_show_list;
+	private TextView tv_dingwei;
 	IndexProductAdapter indexProductAdapter;
 	public BaseDataModel<ProductModel>  baseModel;
 	private LinearLayout ll_left,ll_down,ll_content;
 	public static final int ReqCode = 3;
 	private int page=1;
 	private int pageSize=10;
+	private AMapLocationClient locationClient = null;
+	private AMapLocationClientOption locationOption = new AMapLocationClientOption();
+	private AMapLocation location;
+	private AMapLocationListener mAMapLocationListener;
+	private Gson gson;
+	private static final int PERMISSION_REQUEST_CODE = 1; //权限请求码
+	private String lat="";
+	private String lon="";
+	private ImageView img_xihua,tv_ce,img_show_left;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,8 +127,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		initViews();
 		initEvent();
 		doGetDatas();
-		}
-	
+		getTuangou();
+		getProduct();
+		startLocation();
+	}
 	public void initViews()
 	{
 		ImageView img_back=(ImageView)findViewById(R.id.img_back);
@@ -125,6 +160,9 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		ll_left=(LinearLayout)findViewById(R.id.ll_left);
 		ll_down=(LinearLayout)findViewById(R.id.ll_down);
 		ll_content=(LinearLayout)findViewById(R.id.ll_content);
+		//定位
+		tv_dingwei=(TextView)findViewById(R.id.tv_dingwei);
+
 
 		//团购tab实现
 		tb_time=(TabLayout)findViewById(R.id.tb_time);
@@ -138,7 +176,6 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				tuanItemList.clear();
 				tuanItemList.addAll(tuanList.get(position).tuaninfolist);
 				indexTuanGouProductAdapter.notifyDataSetChanged();
-
 			}
 
 			@Override
@@ -165,7 +202,9 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				startActivity(intent);
 			}
 		});
-
+		img_xihua=(ImageView)findViewById(R.id.img_xihua);
+		tv_ce=(ImageView)findViewById(R.id.tv_ce);
+		img_show_left=(ImageView)findViewById(R.id.img_show_left);
 	}
 	public void initEvent(){
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
@@ -176,7 +215,9 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-
+				page++;
+				getProduct();
+				refreshView.onRefreshComplete();
 			}
 		});
 		index_category_type.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -193,11 +234,42 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		ll_left.setOnClickListener(onClickListener);
 		ll_content.setOnClickListener(onClickListener);
 		ll_down.setOnClickListener(onClickListener);
+		tv_dingwei.setOnClickListener(onClickListener);
+
+		//定位监听
+		//gps定位监听器
+		mAMapLocationListener = new AMapLocationListener() {
+			@Override
+			public void onLocationChanged(AMapLocation loc) {
+				try {
+					if (null != loc) {
+						stopLocation();
+						if (loc.getErrorCode() == 0) {//可在其中解析amapLocation获取相应内容。
+							location = loc;
+							lat=location.getLatitude()+"";
+							lon=location.getLongitude()+"";
+							//SPUtils.putString(context, DatasKey.LOCATION_INFO, gson.toJson(location));
+							updateDatas(lon,lat);
+						} else {
+							//定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+							Log.e("AmapError", "location Error, ErrCode:"
+									+ loc.getErrorCode() + ", errInfo:"
+									+ loc.getErrorInfo());
+							updateDatas(lon,lat);
+						}
+
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		};
 
 	}
 	@Override
 	protected void onResume() {
 		super.onResume();
+		startLocation();
 	}
 	
 	private OnClickListener onClickListener = new OnClickListener() {
@@ -225,13 +297,118 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				break;
 			case R.id.ll_down:
 				intent=new Intent(context,FavoriateActivity.class);
+				intent.putExtra("classesid",(String)v.getTag());
 				startActivity(intent);
 				break;
-
+			case R.id.tv_dingwei:
+//				if(!requestPermissions()){
+//					return;
+//				}
+//				startLocation();
+//
+			if(checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)){
+					startLocation();
+			}else {
+				SetPermissions.openAppDetails(IndexActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+			}
+				break;
 				
 			}
 		}
 	};
+
+
+	private void showRequestPermissionDialog(final String[] permissions, final int requestCode) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("使用该功能需要使用定位权限\n是否再次开启权限");
+		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				ActivityCompat.requestPermissions(IndexActivity.this,permissions,requestCode);
+			}
+		});
+		builder.setNegativeButton("否",null);
+		builder.setCancelable(true);
+		builder.show();
+	}
+
+	/**
+	 * 检测权限是否授权
+	 * @return
+	 */
+	private boolean checkPermission(Context context, String permission) {
+		return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context,permission);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		switch (requestCode){
+			case PERMISSION_REQUEST_CODE:
+				if (grantResults.length >0 &&
+						grantResults[0] == PackageManager.PERMISSION_GRANTED){
+					//得到了授权
+					Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show();
+					startLocation();
+				}else {
+					//未授权
+					Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	//
+	private void updateDatas(String lon,String lat){
+		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
+		if(lon.length()!=0) {
+			categorymap1.put("x", lon);
+		}
+		if(lat.length()!=0) {
+			categorymap1.put("y", lat);
+		}
+		categorymap1.put("timespan", System.currentTimeMillis()+"");
+		categorymap1.put("sign",Md5SecurityUtil.getSignature(categorymap1));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.Area);
+		requestCategoryMap.put(Constants.kPARAMNAME, categorymap1);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, areaHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler areaHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE) {
+						JSONObject array=job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						String area=array.getString("region");
+						tv_dingwei.setText(area);
+
+					} else {
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	//加载分类 公告
 	private void doGetDatas(){
 		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
@@ -253,15 +430,24 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		noticeMap.put(Constants.kPARAMNAME, map);
 		LKHttpRequest noticeReq = new LKHttpRequest(noticeMap, getNoticeHandler());
 
-
-		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
-		baseParam.put("timespan", System.currentTimeMillis()+"");
-		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
-		HashMap<String, Object> tuangouMap = new HashMap<String, Object>();
-		tuangouMap.put(Constants.kMETHODNAME,Constants.GETTUANGOU);
-		tuangouMap.put(Constants.kPARAMNAME, baseParam);
-		LKHttpRequest tuangouReq = new LKHttpRequest(tuangouMap, getTuanGouHandler());
-
+		TreeMap<String, Object> specilCategory = new TreeMap<String, Object>();
+		specilCategory.put("page", 1);
+		specilCategory.put("rows", 3);
+		specilCategory.put("timespan", System.currentTimeMillis()+"");
+		specilCategory.put("sign",Md5SecurityUtil.getSignature(specilCategory));
+		HashMap<String, Object> specialMap = new HashMap<String, Object>();
+		specialMap.put(Constants.kMETHODNAME,Constants.GETSPECIALCATEGORY);
+		specialMap.put(Constants.kPARAMNAME, specilCategory);
+		LKHttpRequest specialCategoryReq = new LKHttpRequest(specialMap, getSpeicalCagegoryHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,specialCategoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	public void getProduct(){
 		TreeMap<String, Object> baseProductParam = new TreeMap<String, Object>();
 		baseProductParam.put("page",page);
 		baseProductParam.put("rows",pageSize);
@@ -272,19 +458,23 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		productMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
 		productMap.put(Constants.kPARAMNAME, baseProductParam);
 		LKHttpRequest productReq = new LKHttpRequest(productMap, getProductHandler());
-
-
-
-		TreeMap<String, Object> specilCategory = new TreeMap<String, Object>();
-		specilCategory.put("page", 1);
-		specilCategory.put("rows", 3);
-		specilCategory.put("timespan", System.currentTimeMillis()+"");
-		specilCategory.put("sign",Md5SecurityUtil.getSignature(specilCategory));
-		HashMap<String, Object> specialMap = new HashMap<String, Object>();
-		specialMap.put(Constants.kMETHODNAME,Constants.GETSPECIALCATEGORY);
-		specialMap.put(Constants.kPARAMNAME, specilCategory);
-		LKHttpRequest specialCategoryReq = new LKHttpRequest(specialMap, getSpeicalCagegoryHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq,specialCategoryReq,productReq,tuangouReq)
+		new LKHttpRequestQueue().addHttpRequest(productReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	public void getTuangou(){
+		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
+		baseParam.put("timespan", System.currentTimeMillis()+"");
+		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
+		HashMap<String, Object> tuangouMap = new HashMap<String, Object>();
+		tuangouMap.put(Constants.kMETHODNAME,Constants.GETTUANGOU);
+		tuangouMap.put(Constants.kPARAMNAME, baseParam);
+		LKHttpRequest tuangouReq = new LKHttpRequest(tuangouMap, getTuanGouHandler());
+		new LKHttpRequestQueue().addHttpRequest(tuangouReq)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
@@ -312,6 +502,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 								}.getType());
 						productList.addAll(baseModel.list);
 						indexProductAdapter.notifyDataSetChanged();
+
 					}
 					else
 					{
@@ -430,6 +621,19 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 					int code =	job.getInt("code");
 					if(code==Constants.CODE) {
 						JSONArray array=job.getJSONArray("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						ArrayList<SpecialModel> list=localGson.fromJson(array.toString(),
+								new TypeToken<ArrayList<SpecialModel>>() {
+								}.getType());
+						ImageShowUtil.showImage(list.get(2).imgPath,img_xihua);
+						ll_down.setTag(list.get(2).proClassesId);
+
+						ImageShowUtil.showImage(list.get(1).imgPath,tv_ce);
+						ll_content.setTag(list.get(1).proClassesId);
+
+						ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
+						ll_left.setTag(list.get(0).proClassesId);
 					}
 					else {
 					}
@@ -589,6 +793,67 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 					.displayer(new FadeInBitmapDisplayer(100))
 					.build(), new SimpleImageLoadingListener());
 			return convertView;
+		}
+	}
+	/**
+	 * 开始定位
+	 */
+	public void startLocation() {
+		initLocation();
+		// 设置定位参数
+		locationClient.setLocationOption(locationOption);
+		// 启动定位
+		locationClient.startLocation();
+	}
+
+	/**
+	 * 停止定位
+	 */
+	private void stopLocation() {
+		if (null != locationClient) {
+			locationClient.stopLocation();
+		}
+	}
+	/**
+	 * 初始化定位
+	 */
+	private void initLocation() {
+		if (null == locationClient) {
+			//初始化client
+			locationClient = new AMapLocationClient(this.getApplicationContext());
+			//设置定位参数
+			locationClient.setLocationOption(getDefaultOption());
+			// 设置定位监听
+			locationClient.setLocationListener(mAMapLocationListener);
+		}
+	}
+	/**
+	 * 默认的定位参数
+	 */
+	private AMapLocationClientOption getDefaultOption() {
+		AMapLocationClientOption mOption = new AMapLocationClientOption();
+		mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+		mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+		mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+		mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
+		mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+		mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
+		mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+		AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+		mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+		mOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
+		mOption.setMockEnable(true);//如果您希望位置被模拟，请通过setMockEnable(true);方法开启允许位置模拟
+		return mOption;
+	}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		stopLocation();
+		if (null != gson) {
+			gson = null;
+		}
+		if (null != locationClient) {
+			locationClient.onDestroy();
 		}
 	}
 }

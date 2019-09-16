@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/ll_left"
         android:gravity="center"
-        android:paddingBottom="9dp"
+        android:paddingBottom="14dp"
         android:paddingTop="14dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
@@ -30,6 +30,7 @@
             android:layout_marginTop="8dp"
             android:layout_height="wrap_content" />
         <ImageView
+            android:id="@+id/img_show_left"
             android:layout_width="wrap_content"
             android:src="@mipmap/icon_time"
             android:layout_marginTop="8dp"
@@ -99,6 +100,7 @@
                     android:gravity="center"
                     android:layout_height="match_parent">
                     <ImageView
+                        android:id="@+id/tv_ce"
                         android:layout_width="wrap_content"
                         android:src="@mipmap/icon_rexiao"
                         android:scaleType="fitXY"
@@ -111,8 +113,6 @@
                 android:gravity="center_vertical"
                 android:id="@+id/ll_down"
                 android:layout_marginTop="2dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_special_item"
                 android:layout_height="match_parent">
@@ -122,6 +122,7 @@
                     android:gravity="center"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/img_xihua"
                         android:layout_width="wrap_content"
                         android:src="@mipmap/icon_rexiao"
                         android:layout_height="wrap_content" />
@@ -131,7 +132,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
                     <TextView
                         android:layout_width="wrap_content"
                         android:text="@string/guess_like"

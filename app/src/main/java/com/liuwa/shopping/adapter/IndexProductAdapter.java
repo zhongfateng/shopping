@@ -73,14 +73,17 @@ public class IndexProductAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final ProductModel  productModel=productList.get(position);
-		viewHolder.tv_market_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
-		viewHolder.tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.Price)));
+		viewHolder.tv_show_name.setText(productModel.proName);
+		viewHolder.tv_market_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.Price)));
 		viewHolder.img_buy.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onCartClick.cartOnClick(productModel);
 			}
 		});
+		viewHolder.tv_kucun.setText("剩"+productModel.allKuCun+"件");
+		viewHolder.tv_sell_num.setText("/售"+productModel.allSaleNum);
 		return convertView;
 	}
 

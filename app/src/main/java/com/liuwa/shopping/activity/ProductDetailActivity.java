@@ -21,6 +21,7 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.DialogFragmentFromBottom;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.ImageAdapter;
+import com.liuwa.shopping.adapter.ImagePagerAdapter;
 import com.liuwa.shopping.adapter.NeiborBuyAdapter;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
@@ -31,7 +32,9 @@ import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.MyGridView;
+import com.liuwa.shopping.view.indicator.CirclePageIndicator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,11 +54,11 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private LinearLayout ll_left,rl_cart;
 	private TextView tv_add_cart,tv_buy;
 	private ArrayList<ProductModel> neiborList=new ArrayList<>();
-	private GridView gw_list;
+	private MyGridView gw_list;
 	private MyGridView gw_tuijian;
 	private NeiborBuyAdapter neiborBuyAdapter;
 	private FavoriateProductAdapter adapter;
-	private GridView gw_toumai;
+	private MyGridView gw_toumai;
 	private ArrayList<String> urls;
 	private ImageAdapter imageAdapter;
 	private int num=1;
@@ -64,6 +67,9 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private String tag;
 	private ArrayList<String> list=new ArrayList<>();
 	DialogFragmentFromBottom newFragment;
+	private AutoScrollViewPager     index_auto_scroll_view;
+	private CirclePageIndicator     cpi_indicator;
+	private  ImagePagerAdapter      imageAdatper;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,14 +91,23 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		img_back = (ImageView) findViewById(R.id.img_back);
 		tv_title = (TextView) findViewById(R.id.tv_title);
 		tv_title.setText("商品详情");
+		index_auto_scroll_view  = (AutoScrollViewPager)findViewById(R.id.index_auto_scroll_view);
+		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);
+		imageAdatper=new ImagePagerAdapter(context, DatasUtils.imageList);
+		index_auto_scroll_view.setAdapter(imageAdatper);
+		cpi_indicator.setViewPager(index_auto_scroll_view);
+		index_auto_scroll_view.startAutoScroll();
+		index_auto_scroll_view.setInterval(4000);
+		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
+		imageAdatper.notifyDataSetChanged();
 		//多少人购买
-		gw_toumai=(GridView)findViewById(R.id.gw_toumai);
+		gw_toumai=(MyGridView)findViewById(R.id.gw_toumai);
 		imageAdapter=new ImageAdapter(context,DatasUtils.strings);
 		gw_toumai.setAdapter(imageAdapter);
 		imageAdapter.notifyDataSetChanged();
 		//邻居都在买
 		neiborBuyAdapter=new NeiborBuyAdapter(context, DatasUtils.productModels);
-		gw_list=(GridView)findViewById(R.id.gw_list);
+		gw_list=(MyGridView)findViewById(R.id.gw_list);
 		gw_list.setAdapter(neiborBuyAdapter);
 		neiborBuyAdapter.notifyDataSetChanged();
 		//推荐购买

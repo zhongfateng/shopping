@@ -92,10 +92,11 @@
             android:name=".activity.IndexActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            />
         <activity
             android:name=".activity.MySelfActivity"
             android:label="@string/app_name"
+            android:theme="@style/AppTheme.MainTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
@@ -191,6 +192,12 @@
         <activity
             android:name=".activity.PayTypeActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".activity.HeaderCenterActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.MainTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
     </application>

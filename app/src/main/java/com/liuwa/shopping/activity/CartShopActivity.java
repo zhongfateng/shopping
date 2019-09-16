@@ -53,7 +53,6 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		this.context=this;
 		initViews();
 		initEvent();
-		doGetDatas();
 	}
 
 	public void initViews() {
@@ -310,6 +309,10 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		shoppingCartBeanList.remove(position);
 		shoppingCartAdapter.notifyDataSetChanged();
 		statistics();
+	}
+	public void onResume(){
+		super.onResume();
+		doGetDatas();
 	}
 
 }

@@ -10,6 +10,7 @@ public class Constants {
 	public static final String DESCRIPTOR              = "com.liuwa.shopping";
 	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
 	public static final String USER_ID					= "user_id";
+	public static final String USER					    = "user";
 	public static final String kHOSTNAME 				= "hostName";
 	public static final String kREALHOST				= "RealHost"; // 存储真正的连网地址
 	public static final String kMETHODNAME 				= "methodName";
@@ -27,6 +28,8 @@ public class Constants {
 	public static final String VALUE                    = "jklw";
 	//信息返回CODE值 100表示正确
 	public static final int CODE                        = 100;
+	//信息返回CODE值 token生路失效表示正确
+	public static final int TOKENCODE                  = 413 ;
 	public static class Config {
 		public static final boolean DEVELOPER_MODE    = false;
 	}
@@ -70,6 +73,12 @@ public class Constants {
 	public static final String City                       = "shijson";
 	//区区域
 	public static final String QU                         = "qujson";
+	//用户中心
+	public static final String USERCENTER                = "memcenterjson";
+	//订单数量
+	public static final String ORDERCOUNT                = "memordercount";
+	//地区
+	public static final String Area                       = "indexsqjson";
 
 
 

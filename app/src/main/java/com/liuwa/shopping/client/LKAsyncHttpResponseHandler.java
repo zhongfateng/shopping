@@ -1,14 +1,18 @@
 package com.liuwa.shopping.client;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.liuwa.shopping.activity.LoginActivity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.liuwa.shopping.activity.BaseActivity;
 import com.liuwa.shopping.view.LKAlertDialog;
 
 import org.apache.http.client.HttpResponseException;
+import org.json.JSONObject;
 
 public abstract class LKAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
 	
@@ -42,8 +46,20 @@ public abstract class LKAsyncHttpResponseHandler extends AsyncHttpResponseHandle
 		/*int tag = (Integer)request.getRequestDataMap().get(com.ezf.manual.client.Constants.kMETHODNAME);
 		Object obj = ParseResponseXML.parseXML(tag, content);
 		Log.e("success", "try to do success action..." + TransferRequestTag.getRequestTagMap().get(tag));*/
-		
-		successAction(content);
+		try {
+			JSONObject object=new JSONObject(content);
+			int  code=  object.getInt("code");
+			if(code==Constants.TOKENCODE){
+				successAction(content);
+				Context context=(Context) ApplicationEnvironment.getInstance().getApplication();
+				Intent intent =new Intent(context, LoginActivity.class);
+				context.startActivity(intent);
+			}else{
+				successAction(content);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		Log.i("===",content);
 		try{
 			// 如果不通过队列单独发起一人LKHttpRequest请求则会导致异常。
@@ -51,7 +67,7 @@ public abstract class LKAsyncHttpResponseHandler extends AsyncHttpResponseHandle
 				// 当然也不需要去通知队列执行完成。
 				this.request.getRequestQueue().updateCompletedTag(this.request.getTag());
 			}
-			
+
 		} catch(Exception e){
 			e.printStackTrace();
 		}

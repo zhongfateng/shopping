@@ -21,21 +21,28 @@
                 app:tabBackground="@drawable/bg_tab"
                 android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
         </LinearLayout>
-        <LinearLayout
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/corner_bg"
+        android:orientation="horizontal"
+        android:padding="@dimen/sp_8">
+
+        <com.liuwa.shopping.view.MyGridView
+            android:id="@+id/mgw_guangou"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:padding="@dimen/sp_8"
-            android:background="@mipmap/corner_bg"
-            android:layout_height="wrap_content">
-            <com.liuwa.shopping.view.MyGridView
-                android:id="@+id/mgw_guangou"
-                android:layout_width="match_parent"
-                android:numColumns="3"
-                android:layout_height="wrap_content"></com.liuwa.shopping.view.MyGridView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:ems="1"
-                android:text="@string/show_more"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:numColumns="3"></com.liuwa.shopping.view.MyGridView>
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:ems="1"
+            android:gravity="center"
+            android:textSize="8sp"
+            android:drawableBottom="@mipmap/show_more"
+            android:text="@string/show_more" />
+    </LinearLayout>
     </LinearLayout>

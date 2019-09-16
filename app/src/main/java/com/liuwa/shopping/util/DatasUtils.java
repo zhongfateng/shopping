@@ -19,7 +19,7 @@ public class DatasUtils {
     public static ArrayList<String> strings=new ArrayList<String>();
     static {
         ImageItemModel model1=new ImageItemModel();
-        model1.setImageUrl("http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg");
+        model1.setImageUrl("http://p0.so.qhmsg.com/t018fd7fe7982a05245.jpg");
         ImageItemModel model2=new ImageItemModel();
         model2.setImageUrl("http://pic31.nipic.com/20130801/11604791_100539834000_2.jpg");
         imageList.add(model1);

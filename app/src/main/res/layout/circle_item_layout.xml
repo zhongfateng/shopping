@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.liuwa.shopping.view.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="20dp"
+    android:layout_width="20dp"
+    android:orientation="vertical">
+<com.liuwa.shopping.view.CircleImageView
     android:layout_width="20dp"
     android:id="@+id/circle_image"
+    android:scaleType="centerInside"
+    android:src="@mipmap/ic_launcher"
     android:layout_height="20dp">
-
 </com.liuwa.shopping.view.CircleImageView>
+</LinearLayout>
