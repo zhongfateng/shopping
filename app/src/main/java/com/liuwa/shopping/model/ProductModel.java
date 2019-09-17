@@ -1,5 +1,7 @@
 package com.liuwa.shopping.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by ZFT on 2019/8/22.
  * "fristimg": "111.jpg",
@@ -19,7 +21,7 @@ public class ProductModel {
     public String fristimg="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1568013542&di=ec02b3bfddbec283f24691deefa0f33d&src=http://b-ssl.duitang.com/uploads/item/201510/07/20151007151747_VLuRm.jpeg";
     public double showprice;
     public String proName;
-    public double Price;
+    public double price;
     public String allSaleNum;
     public String allKuCun;
     public String classes;
@@ -27,4 +29,5 @@ public class ProductModel {
     public String type;
     public String paixuNum;
     public String area;
+    public String peiSong;
 }

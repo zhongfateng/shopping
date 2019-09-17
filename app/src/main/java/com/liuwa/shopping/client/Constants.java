@@ -79,6 +79,14 @@ public class Constants {
 	public static final String ORDERCOUNT                = "memordercount";
 	//地区
 	public static final String Area                       = "indexsqjson";
+	//添加地址
+	public static final String ADDADDRESS                = "addmemaddressjson";
+	//删除地址
+	public static final String DELETEADDRESS             = "deladdressjson";
+	//默认地址
+	public static final String ISADDRESS                  = "mraddressjson";
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.liuwa.shopping.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -56,6 +58,9 @@ public class ConfirmOrderActivity extends BaseActivity{
 	private ArrayList<OrderProductItem> orderProductItems =new ArrayList<OrderProductItem>();
 	private String order_id;
 	private TextView tv_pay;
+	private TextView tv_shouhuoren,tv_tel,tv_detail,tv_head_name,tv_didian;
+	public static  final  int REQCODE=89;
+	public String addressid;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,19 +82,24 @@ public class ConfirmOrderActivity extends BaseActivity{
 		lv_show_list=(MyListView)findViewById(R.id.lv_show_list);
 		fpAdapter=new OrderProductAdapter(context,orderProductItems);
 		lv_show_list.setAdapter(fpAdapter);
-		fpAdapter.notifyDataSetChanged();
 		tv_pay=(TextView)findViewById(R.id.tv_pay);
+
+		tv_shouhuoren=(TextView)findViewById(R.id.tv_shouhuoren);
+		tv_tel=(TextView)findViewById(R.id.tv_tel);
+		tv_detail=(TextView)findViewById(R.id.tv_detail);
+		tv_head_name=(TextView)findViewById(R.id.tv_head_name);
+		tv_didian=(TextView)findViewById(R.id.tv_didian);
 
 	}
 	
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
 		tv_pay.setOnClickListener(onClickListener);
-
+		rl_add.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
-
+		Intent intent;
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
@@ -100,13 +110,17 @@ public class ConfirmOrderActivity extends BaseActivity{
 				Intent intent =new Intent(context,PayTypeActivity.class);
 				startActivity(intent);
 				break;
+			case R.id.rl_add:
+				intent =new Intent(context,MyAddressActivity.class);
+				startActivityForResult(intent,REQCODE);
+				break;
 			}
 		}
 	};
 
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-		productParam.put("order_id",order_id);
+		productParam.put("orderid",order_id);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -144,8 +158,14 @@ public class ConfirmOrderActivity extends BaseActivity{
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONArray array=job.getJSONArray("data");
-
+						JSONObject jsonObject=job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						orderProductItems.clear();
+						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
+								new TypeToken<ArrayList<OrderProductItem>>() {
+								}.getType()));
+						fpAdapter.notifyDataSetChanged();
 					}
 					else
 					{
@@ -176,9 +196,13 @@ public class ConfirmOrderActivity extends BaseActivity{
 								new TypeToken<ArrayList<AddressModel>>() {
 								}.getType());
 						if(addressModels.size()==0){
-
+							rl_add.setVisibility(View.VISIBLE);
+							rl_address.setVisibility(View.GONE);
 						}else {
-
+							rl_address.setVisibility(View.VISIBLE);
+							rl_add.setVisibility(View.GONE);
+							AddressModel model=addressModels.get(0);
+							tv_tel.setText(model.lxTel);
 						}
 					}
 					else
@@ -193,4 +217,14 @@ public class ConfirmOrderActivity extends BaseActivity{
 			}
 		};
 	}
+	public void onActivityResult(int requestCode, int resultCode, Intent i){
+		if(requestCode == REQCODE){ // 对应启动时那个代号4
+			if(resultCode == Activity.RESULT_OK){ // 对应B里面的标志为成功
+				 addressid = i.getStringExtra("addressid");
+				 rl_add.setVisibility(View.GONE);
+				 rl_address.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
+
 }

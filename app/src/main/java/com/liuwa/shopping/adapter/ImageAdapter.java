@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.MoneyModel;
 import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.view.CircleImageView;

@@ -7,7 +7,12 @@ package com.liuwa.shopping.model;
 public class AddressModel {
     public String address_name;
     public String link_num;
-    public String detail_address;
     public String is_default;
     public String isUsed;
+    public String lxTel;
+    public String lxRen;
+    public String detail;
+    public String addressId;
+    public String city;
+    public String area;
 }

@@ -16,21 +16,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuwa.shopping.R;
-import com.liuwa.shopping.activity.fragment.BlankFragment;
-import com.liuwa.shopping.activity.fragment.IntegralFragment;
 import com.liuwa.shopping.activity.fragment.WebFragment;
 import com.liuwa.shopping.adapter.ImagePagerAdapter;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.AutoScrollViewPager;
-import com.liuwa.shopping.view.MyViewPager;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TimeProductActivity extends BaseActivity implements WebFragment.OnFragmentInteractionListener{
+public class BuyTogetherProductActivity extends BaseActivity implements WebFragment.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
@@ -109,7 +106,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		public void onClick(View v) {
 			switch (v.getId()) {
 				case R.id.img_back:
-					TimeProductActivity.this.finish();
+					BuyTogetherProductActivity.this.finish();
 					break;
 			}
 		}

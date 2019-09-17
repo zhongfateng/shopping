@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/bg_all"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"></include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/bg_favoriate_item"
+            android:paddingLeft="12dp"
+            android:paddingBottom="23dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="11dp"
+            android:paddingRight="12dp"
+            android:paddingTop="19dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="提现金额"
+                android:textSize="14sp"
+                android:textColor="@color/l_line"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="35dp"
+                android:gravity="center_vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_keyong"
+                    android:layout_width="wrap_content"
+                    android:text="￥"
+                    android:textSize="35sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:textSize="35sp"
+                    android:background="@null"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/tixian"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.4dp"
+                    android:background="@color/view_line"></View>
+
+                <TextView
+                    android:id="@+id/tv_yongjin"
+                    android:layout_width="wrap_content"
+                    android:text="可用积分"
+                    android:textSize="14sp"
+                    android:layout_marginTop="22dp"
+                    android:textColor="@color/l_line"
+                    android:layout_marginBottom="27dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_duihuan"
+                    android:layout_width="match_parent"
+                    android:background="@mipmap/tx_bg"
+                    android:text="申请提现"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_height="38dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/bg_favoriate_item"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginTop="14dp"
+            android:layout_below="@+id/ll_top"
+            android:layout_height="match_parent">
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tb_top"
+                app:tabIndicatorColor="@color/tab_line"
+                app:tabTextColor="@color/integral_color"
+                app:tabSelectedTextColor="@color/tab_select_color"
+                app:tabIndicatorHeight="2dp"
+                app:tabMode="fixed"
+                android:layout_width="match_parent"
+                android:layout_height="42dp">
+            </android.support.design.widget.TabLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_category"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

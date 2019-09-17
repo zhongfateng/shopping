@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -29,9 +30,12 @@ import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
+import com.liuwa.shopping.model.ImageItemModel;
+import com.liuwa.shopping.model.ProductChildModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
@@ -39,7 +43,9 @@ import com.liuwa.shopping.view.indicator.CirclePageIndicator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,6 +76,11 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private AutoScrollViewPager     index_auto_scroll_view;
 	private CirclePageIndicator     cpi_indicator;
 	private  ImagePagerAdapter      imageAdatper;
+	private TextView tv_name,tv_price,tv_market_price;
+	private TextView tv_kucun,tv_xiaoliang,tv_ship;
+	private ArrayList<ImageItemModel> imgs=new ArrayList<>();
+	private ArrayList<ProductChildModel> productChildModels=new ArrayList<>();
+	private ProductModel model;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,13 +104,13 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		tv_title.setText("商品详情");
 		index_auto_scroll_view  = (AutoScrollViewPager)findViewById(R.id.index_auto_scroll_view);
 		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);
-		imageAdatper=new ImagePagerAdapter(context, DatasUtils.imageList);
+		imageAdatper=new ImagePagerAdapter(context, imgs);
 		index_auto_scroll_view.setAdapter(imageAdatper);
 		cpi_indicator.setViewPager(index_auto_scroll_view);
 		index_auto_scroll_view.startAutoScroll();
 		index_auto_scroll_view.setInterval(4000);
 		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
-		imageAdatper.notifyDataSetChanged();
+
 		//多少人购买
 		gw_toumai=(MyGridView)findViewById(R.id.gw_toumai);
 		imageAdapter=new ImageAdapter(context,DatasUtils.strings);
@@ -121,6 +132,14 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		rl_cart=(LinearLayout)findViewById(R.id.rl_cart);
 		tv_add_cart=(TextView)findViewById(R.id.tv_add_cart);
 		tv_buy=(TextView)findViewById(R.id.tv_buy);
+
+		tv_name=(TextView)findViewById(R.id.tv_name);
+		tv_price=(TextView)findViewById(R.id.tv_price);
+		tv_market_price=findViewById(R.id.tv_market_price);
+
+		tv_kucun=(TextView)findViewById(R.id.tv_kucun);
+		tv_xiaoliang=(TextView)findViewById(R.id.tv_xiaoliang);
+		tv_ship=(TextView)findViewById(R.id.tv_ship);
 
 	}
 	public PopupWindow.OnDismissListener  dissmiss=new PopupWindow.OnDismissListener() {
@@ -190,7 +209,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		ft.addToBackStack(null);
 
 		// Create and show the dialog.
-		DialogFragmentFromBottom	newFragment = DialogFragmentFromBottom.newInstance("商品名称", DatasUtils.productChildModels);
+		DialogFragmentFromBottom	newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels);
 		newFragment.show(ft, "dialog");
 	}
 	private void doGetDatas(){
@@ -233,14 +252,31 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 					int code =	job.getInt("code");
 					if(code== Constants.CODE)
 					{
-//						JSONObject jsonObject = job.getJSONObject("data");
-//						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-//								.create();
-//						baseModel = localGson.fromJson(jsonObject.toString(),
-//								new TypeToken<BaseDataModel<ProductModel>>() {
-//								}.getType());
-//						proList.addAll(baseModel.list);
-//						fpAdapter.notifyDataSetChanged();
+						JSONObject jsonObject = job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						JSONObject oo=jsonObject.getJSONObject("product_head");
+						model = localGson.fromJson(oo.toString(),
+							ProductModel.class);
+						tv_name.setText(model.proName+"");
+						tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
+						tv_market_price.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+						tv_market_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.price)));
+
+						tv_kucun.setText("库存："+model.allKuCun);
+						tv_xiaoliang.setText("销量："+model.allSaleNum);
+						if(model.peiSong.equals("1")){
+						tv_ship.setText("运费：包邮");
+						}
+						imgs.clear();
+						imgs.addAll((Collection<? extends ImageItemModel>)localGson.fromJson(jsonObject.getJSONArray("proimglist").toString(),
+								new TypeToken<ArrayList<ImageItemModel>>() {
+								}.getType()));
+						imageAdatper.notifyDataSetChanged();
+						productChildModels.clear();
+						productChildModels.addAll((Collection<? extends ProductChildModel>)localGson.fromJson(jsonObject.getJSONArray("prochildlist").toString(),
+								new TypeToken<ArrayList<ProductChildModel>>() {
+								}.getType()));
 
 					}
 					else
@@ -258,7 +294,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private void doBuy(String prochildid,int num){
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
 		baseParam.put("leaderid","1");
-		baseParam.put("prochildid","1");
+		baseParam.put("prochildid",prochildid);
 		baseParam.put("buynum",num);
 		baseParam.put("timespan", System.currentTimeMillis()+"");
 		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
@@ -305,7 +341,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 	private void doAddCart(String prochildid,int num){
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
-		baseParam.put("proheadid","1");
+		baseParam.put("proheadid",proheadid);
 		baseParam.put("prochildid",prochildid);
 		baseParam.put("num",num);
 		baseParam.put("timespan", System.currentTimeMillis()+"");

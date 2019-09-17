@@ -8,6 +8,7 @@ public class ImageItemModel {
     private String imageId;
     private String imageUrl;
     private String imageType;
+    public  String  imgPath;
 
     public String getImageId() {
         return imageId;
@@ -32,4 +33,5 @@ public class ImageItemModel {
     public void setImageType(String imageType) {
         this.imageType = imageType;
     }
+
 }

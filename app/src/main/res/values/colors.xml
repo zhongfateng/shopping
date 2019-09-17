@@ -67,4 +67,8 @@
     <color name="e_line">#BFBFBF</color>
     <color name="b_line">#FC5260</color>
     <color name="c_line">#76BB83</color>
+    <color name="h_line">#5D2B16</color>
+    <color name="d_line">#EA3F43</color>
+    <color name="l_line">#7D838C</color>
+    <color name="tixian">#131921</color>
 </resources>

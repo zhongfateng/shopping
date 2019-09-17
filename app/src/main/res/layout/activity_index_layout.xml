@@ -165,10 +165,10 @@
            <include layout="@layout/specila_category_layout"
                ></include>
             <include layout="@layout/activity_tab_item_layout"></include>
-            <ListView
+            <com.liuwa.shopping.view.MyListView
                 android:id="@+id/lv_show_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></ListView>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></com.liuwa.shopping.view.MyListView>
 
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>

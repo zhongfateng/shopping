@@ -74,8 +74,8 @@ public class IndexProductAdapter extends BaseAdapter {
 		}
 		final ProductModel  productModel=productList.get(position);
 		viewHolder.tv_show_name.setText(productModel.proName);
-		viewHolder.tv_market_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
-		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.Price)));
+		viewHolder.tv_market_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
 		viewHolder.img_buy.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

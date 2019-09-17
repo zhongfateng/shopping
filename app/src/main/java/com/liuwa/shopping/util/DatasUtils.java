@@ -43,15 +43,15 @@ public class DatasUtils {
         ProductModel p1=new ProductModel();
         p1.proName="测试数据测试数据";
         p1.showprice=100.00d;
-        p1.Price=200.00d;
+        p1.price=200.00d;
         ProductModel p2=new ProductModel();
         p2.proName="测试数据测试数据测试数据测试数据测试数据";
         p2.showprice=100.00d;
-        p2.Price=200.00d;
+        p2.price=200.00d;
         ProductModel p3=new ProductModel();
         p3.proName="测试数据测试数据测试数据测试数据测试数据";
         p3.showprice=100.00d;
-        p3.Price=200.00d;
+        p3.price=200.00d;
         productModels.add(p1);
         productModels.add(p2);
         productModels.add(p3);

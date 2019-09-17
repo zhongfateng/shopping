@@ -66,6 +66,7 @@ import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.CircleImageView;
 import com.liuwa.shopping.view.MyGridView;
+import com.liuwa.shopping.view.MyListView;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -102,7 +103,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private ArrayList<TuanModel<TuanProductModel>> tuanList=new ArrayList<TuanModel<TuanProductModel>>();
 	private ArrayList<ProductModel> productList=new ArrayList<ProductModel>();
 	private MyGridAdapter  myGridAdapter;
-	private ListView lv_show_list;
+	private MyListView lv_show_list;
 	private TextView tv_dingwei;
 	IndexProductAdapter indexProductAdapter;
 	public BaseDataModel<ProductModel>  baseModel;
@@ -189,7 +190,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			}
 		});
 		//产品列表
-		lv_show_list=(ListView)findViewById(R.id.lv_show_list);
+		lv_show_list=(MyListView)findViewById(R.id.lv_show_list);
 		indexProductAdapter=new IndexProductAdapter(context,productList);
 		indexProductAdapter.setOnCartClick(this);
 		lv_show_list.setAdapter(indexProductAdapter);

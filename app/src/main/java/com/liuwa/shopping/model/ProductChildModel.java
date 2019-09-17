@@ -20,4 +20,6 @@ public class ProductChildModel {
     public String guiGe;
     public String productId;
     public String proHeadId;
+    public String proChildId;
+    public double salePrice;
 }

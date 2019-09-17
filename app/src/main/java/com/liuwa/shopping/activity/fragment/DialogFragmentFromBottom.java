@@ -296,8 +296,8 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
         adapter.setSelectedPosition(position);
         adapter.notifyDataSetChanged();
         ProductChildModel model= (ProductChildModel) parent.getAdapter().getItem(position);
-        selectProid=model.productId;
-        tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(model.price)));
+        selectProid=model.proChildId;
+        tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(model.salePrice)));
     }
 
     /**

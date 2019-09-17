@@ -58,18 +58,25 @@ public class OrderProductAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = layoutInflater.inflate(R.layout.activity_confrim_order_item_layout, null);
 			viewHolder = new ViewHolder();
+			viewHolder.tv_name=(TextView) convertView.findViewById(R.id.tv_name);
 			viewHolder.img_show=(ImageView)convertView.findViewById(R.id.img_show);
 			viewHolder.tv_num = (TextView) convertView
 					.findViewById(R.id.tv_num);
+			viewHolder.tv_p_num = (TextView) convertView
+					.findViewById(R.id.tv_p_num);
+			viewHolder.tv_pay=(TextView)convertView.findViewById(R.id.tv_pay);
 			viewHolder.tv_price=(TextView) convertView.findViewById(R.id.tv_price);
-			viewHolder.tv_price.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final OrderProductItem  productModel= orderProductItems.get(position);
-		viewHolder.tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.Price)));
-		ImageShowUtil.showImage(productModel.img,viewHolder.img_show);
+		viewHolder.tv_name.setText(productModel.proName);
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.buyPrice)));
+		viewHolder.tv_num.setText("x"+productModel.buyNum);
+		viewHolder.tv_pay.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.buyPrice)));
+		viewHolder.tv_p_num.setText(productModel.buyNum+"件商品");
+		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}
 
@@ -77,5 +84,6 @@ public class OrderProductAdapter extends BaseAdapter {
 		public TextView tv_num;
 		public TextView tv_price;
 		public ImageView img_show;
+		public TextView tv_name,tv_pay,tv_p_num;
 	}
 }

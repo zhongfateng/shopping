@@ -68,7 +68,7 @@ public class NeiborBuyAdapter extends BaseAdapter {
 
 		ProductModel model= productModelArrayList.get(position);
 	    holder.tv_pro_name.setText(model.proName);
-		holder.tv_left.setText(MoneyUtils.formatAmountAsString(new BigDecimal(model.Price)));
+		holder.tv_left.setText(MoneyUtils.formatAmountAsString(new BigDecimal(model.price)));
 		holder.tv_right.setText(MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
 		ImageShowUtil.showImage(model.fristimg,holder.imageView);
 		return convertView;

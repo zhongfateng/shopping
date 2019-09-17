@@ -65,6 +65,7 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/tv_shouhuoren"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/circle_item"
@@ -74,6 +75,7 @@
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/tv_tel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/circle_item"
@@ -83,7 +85,6 @@
                                 android:textColor="@color/black"
                                 android:textSize="14sp" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
@@ -92,9 +93,10 @@
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/gray_d"
                                 android:textSize="10sp"
-                                android:text="提货地点"
+                                android:text="收货地址"
                                 android:layout_height="wrap_content" />
                             <TextView
+                                android:id="@+id/tv_detail"
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/gray_d"
                                 android:textSize="10sp"
@@ -103,14 +105,34 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
+                            android:layout_marginTop="2dp"
                             android:layout_height="wrap_content">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/gray_d"
                                 android:textSize="10sp"
-                                android:text="团长信息"
+                                android:text="提货地点:"
                                 android:layout_height="wrap_content" />
                             <TextView
+                                android:id="@+id/tv_didian"
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/gray_d"
+                                android:textSize="10sp"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="2dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/gray_d"
+                                android:textSize="10sp"
+                                android:text="团长信息:"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:id="@+id/tv_head_name"
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/gray_d"
                                 android:textSize="10sp"
@@ -123,7 +145,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:dividerHeight="10dp"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="9dp"
                     android:divider="@color/transparent"
                     android:layout_height="match_parent"></com.liuwa.shopping.view.MyListView>
                 <LinearLayout

@@ -7,30 +7,20 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuwa.shopping.R;
-import com.liuwa.shopping.activity.fragment.BlankFragment;
-import com.liuwa.shopping.activity.fragment.IntegralFragment;
-import com.liuwa.shopping.activity.fragment.WebFragment;
-import com.liuwa.shopping.adapter.ImagePagerAdapter;
-import com.liuwa.shopping.util.DatasUtils;
-import com.liuwa.shopping.util.ScreenUtil;
-import com.liuwa.shopping.view.AutoScrollViewPager;
-import com.liuwa.shopping.view.MyViewPager;
-import com.liuwa.shopping.view.indicator.CirclePageIndicator;
+import com.liuwa.shopping.activity.fragment.MoneyApplayFragment;
+import com.liuwa.shopping.activity.fragment.MoneyFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TimeProductActivity extends BaseActivity implements WebFragment.OnFragmentInteractionListener{
+public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFragment.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
@@ -39,14 +29,11 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 	private ArrayList fragmentList;
 	private ArrayList list_Title;
 	private MyPagerAdapter adapter;
-	private AutoScrollViewPager     index_auto_scroll_view;
-	private CirclePageIndicator     cpi_indicator;
-	private ImagePagerAdapter imageAdatper;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_buy_together_product_layout);
+		setContentView(R.layout.activity_money_applay_layout);
 		this.context = this;
 		init();
 		initViews();
@@ -56,47 +43,21 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 	public void init() {
 		fragmentList = new ArrayList<>();
 		list_Title = new ArrayList<>();
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		list_Title.add("详情");
-		list_Title.add("评价");
-		list_Title.add("售后");
+		fragmentList.add(MoneyApplayFragment.newInstance());
+		fragmentList.add(MoneyApplayFragment.newInstance());
+		list_Title.add("佣金记录");
+		list_Title.add("使用记录");
 	}
 
 	public void initViews() {
 		img_back = (ImageView) findViewById(R.id.img_back);
 		tv_title = (TextView) findViewById(R.id.tv_title);
-		tv_title.setText("商品西区你高兴");
+		tv_title.setText("团长佣金");
 		tl_tabs = (TabLayout) findViewById(R.id.tb_top);
-		//设置TabLayout的模式
-		tl_tabs.setTabMode(TabLayout.MODE_FIXED);
-
-		//设置分割线
-		LinearLayout linearLayout = (LinearLayout) tl_tabs.getChildAt(0);
-		linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-		linearLayout.setDividerDrawable(ContextCompat.getDrawable(context,
-				R.drawable.divider)); //设置分割线的样式
-		linearLayout.setDividerPadding(ScreenUtil.dip2px(context,2)); //设置分割线间隔
 		vp_category = (ViewPager) findViewById(R.id.vp_category);
 		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
 		vp_category.setAdapter(adapter);
 		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
-
-		index_auto_scroll_view  = (AutoScrollViewPager)findViewById(R.id.index_auto_scroll_view);
-		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);
-		//修改了为了16：9的比例
-		double height = getScreenPixel().widthPixels / (480 / 270.0);
-		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
-		params.height = (int) (height);
-		index_auto_scroll_view.setLayoutParams(params);
-		imageAdatper=new ImagePagerAdapter(context, DatasUtils.imageList);
-		index_auto_scroll_view.setAdapter(imageAdatper);
-		cpi_indicator.setViewPager(index_auto_scroll_view);
-		index_auto_scroll_view.startAutoScroll();
-		index_auto_scroll_view.setInterval(4000);
-		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
-		imageAdatper.notifyDataSetChanged();
 	}
 
 	public void initEvent() {
@@ -109,7 +70,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		public void onClick(View v) {
 			switch (v.getId()) {
 				case R.id.img_back:
-					TimeProductActivity.this.finish();
+					MoneyApplayActivity.this.finish();
 					break;
 			}
 		}

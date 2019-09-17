@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"
+        ></include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+      <ScrollView
+          android:layout_width="match_parent"
+          android:scrollbars="none"
+          android:layout_above="@+id/tv_botoom"
+          android:layout_height="match_parent">
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent">
+
+              <com.liuwa.shopping.view.AutoScrollViewPager
+                  android:id="@+id/index_auto_scroll_view"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  />
+
+              <com.liuwa.shopping.view.indicator.CirclePageIndicator
+                  android:id="@+id/cpi_indicator"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="27dp"
+                  android:layout_centerHorizontal="true"
+                  />
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:background="@mipmap/red_bg"
+                  android:orientation="vertical"
+                  android:paddingLeft="13dp"
+                  android:paddingRight="13dp"
+                  android:paddingTop="9dp"
+                  android:paddingBottom="9dp"
+                  android:layout_height="wrap_content">
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:textSize="23sp"
+                          android:layout_alignParentLeft="true"
+                          android:layout_centerVertical="true"
+                          android:textColor="@color/white"
+                          android:layout_height="wrap_content" />
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:textSize="23sp"
+                          android:layout_alignParentRight="true"
+                          android:layout_centerVertical="true"
+                          android:textColor="@color/white"
+                          android:layout_height="wrap_content" />
+                  </RelativeLayout>
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:background="@mipmap/h"
+                      android:gravity="center"
+                      android:textSize="12sp"
+                      android:textColor="@color/h_line"
+                      android:layout_height="wrap_content" />
+              </LinearLayout>
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:background="@color/white"
+                  android:orientation="vertical"
+                  android:paddingLeft="9dp"
+                  android:paddingRight="9dp"
+                  android:layout_height="wrap_content">
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:textSize="14sp"
+                      android:layout_marginTop="10dp"
+                      android:textColor="@color/name_color"
+                      android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="6dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@mipmap/ci_bg"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_left"
+                        android:layout_width="wrap_content"
+                        android:text="此商品正在参加拼团："
+                        android:layout_alignParentTop="true"
+                        android:textSize="10sp"
+                        android:textColor="@color/tab_line"
+                        android:layout_alignParentLeft="true"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="1、人数＜100人，价格为100元"
+                        android:layout_alignParentTop="true"
+                        android:textSize="10sp"
+                        android:id="@+id/tv_top"
+                        android:layout_toRightOf="@+id/tv_left"
+                        android:textColor="@color/tab_line"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_center"
+                        android:layout_width="wrap_content"
+                        android:text="2、人数＞100人＜200人，价格为80元"
+                        android:textSize="10sp"
+                        android:layout_toRightOf="@+id/tv_left"
+                        android:textColor="@color/tab_line"
+                        android:layout_below="@+id/tv_top"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="3、人数＞200人，价格为50元"
+                        android:textSize="10sp"
+                        android:layout_toRightOf="@+id/tv_left"
+                        android:textColor="@color/tab_line"
+                        android:layout_below="@+id/tv_center"
+                        android:layout_alignParentBottom="true"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:textSize="8sp"
+                      android:layout_marginTop="7dp"
+                      android:textColor="@color/d_line"
+                      android:text="小提示：下单会按照当前团购价格下单，到期成团后会根据实际成团人数返还差价哦"
+                      android:layout_height="wrap_content" />
+
+              </LinearLayout>
+              <RelativeLayout
+                  android:layout_width="match_parent"
+                  android:orientation="horizontal"
+                  android:paddingLeft="15dp"
+                  android:paddingRight="15dp"
+                  android:background="@color/white"
+                  android:layout_marginTop="15dp"
+                  android:layout_height="42dp">
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:text="规格"
+                      android:textSize="14sp"
+                      android:layout_alignParentLeft="true"
+                      android:layout_centerVertical="true"
+                      android:textColor="@color/product_name_color"
+                      android:layout_height="wrap_content" />
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:text="@string/ceshi"
+                      android:textSize="14sp"
+                      android:layout_alignParentRight="true"
+                      android:layout_centerVertical="true"
+                      android:layout_marginLeft="16dp"
+                      android:textColor="@color/ship_color"
+                      android:layout_height="wrap_content" />
+              </RelativeLayout>
+              <RelativeLayout
+                  android:layout_width="match_parent"
+                  android:orientation="horizontal"
+                  android:paddingLeft="15dp"
+                  android:paddingRight="15dp"
+                  android:background="@color/white"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginBottom="15dp"
+                  android:layout_height="42dp">
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:text="时间"
+                      android:textSize="14sp"
+                      android:layout_alignParentLeft="true"
+                      android:layout_centerVertical="true"
+                      android:textColor="@color/product_name_color"
+                      android:layout_height="wrap_content" />
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:text="@string/ceshi"
+                      android:textSize="14sp"
+                      android:layout_alignParentRight="true"
+                      android:layout_centerVertical="true"
+                      android:layout_marginLeft="16dp"
+                      android:textColor="@color/ship_color"
+                      android:layout_height="wrap_content" />
+              </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="7dp"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tb_top"
+                android:layout_width="match_parent"
+                app:tabTextColor="@color/name_color"
+                app:tabSelectedTextColor="@color/tab_line"
+                app:tabMode="fixed"
+                app:tabIndicatorHeight="0dp"
+                app:tabIndicatorColor="@color/transparent"
+                android:layout_height="42dp"></android.support.design.widget.TabLayout>
+            <com.liuwa.shopping.view.MyViewPager
+                android:id="@+id/vp_category"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"></com.liuwa.shopping.view.MyViewPager>
+        </LinearLayout>
+          </LinearLayout>
+      </ScrollView>
+        <TextView
+            android:id="@+id/tv_botoom"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="立即参团"
+            android:background="@color/tab_line"
+            android:layout_height="45dp" />
+    </RelativeLayout>
+
+</LinearLayout>
