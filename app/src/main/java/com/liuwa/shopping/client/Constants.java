@@ -16,6 +16,8 @@ public class Constants {
 	public static final String kMETHODNAME 				= "methodName";
 	public static final String kPARAMNAME 				= "paramName";
 	public static final String TOKEN               		= "token";
+	public static final String LeadId               		= "leadid";
+	public static final String AREA               		= "area";
 	//用户反馈--xx
 	public static final String content                  = "content";
 	//用户手机号
@@ -85,9 +87,18 @@ public class Constants {
 	public static final String DELETEADDRESS             = "deladdressjson";
 	//默认地址
 	public static final String ISADDRESS                  = "mraddressjson";
-
-
-
+	//购物车结算
+	public static final String JIESUAN                     = "addorder";
+	//订单列表
+	public static final String ORDERLIST                   = "orderlist";
+	//用户积分获得记录
+	public static final String GETINTEGRALORDER           = "memscorehdlistjson";
+	//用户积分获得记录
+	public static final String XIAOFEIORDER                = "memscorexflistjson";
+	//8.3用户余额充值记录
+	public static final String MONEYORDER                  = "memmoneyczlistjson";
+	//用户消费记录
+	public static final String XFMONEYORDER                = "memmoneyxflistjson";
 
 
 

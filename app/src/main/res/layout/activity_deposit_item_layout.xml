@@ -5,7 +5,7 @@
     android:id="@+id/ll_item"
     android:gravity="center_vertical"
     android:layout_marginRight="@dimen/sp_12"
-    android:layout_height="58dp">
+    android:layout_height="65dp">
     <TextView
         android:id="@+id/tv_money"
         android:layout_width="wrap_content"

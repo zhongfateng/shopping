@@ -2,6 +2,7 @@ package com.liuwa.shopping.util;
 
 import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.MoneyModel;
+import com.liuwa.shopping.model.OrderTitleModel;
 import com.liuwa.shopping.model.ProductChildModel;
 import com.liuwa.shopping.model.ProductModel;
 
@@ -17,6 +18,7 @@ public class DatasUtils {
     public static ArrayList<ProductModel> productModels=new ArrayList<ProductModel>();
     public static ArrayList<ProductChildModel> productChildModels=new ArrayList<ProductChildModel>();
     public static ArrayList<String> strings=new ArrayList<String>();
+    public static ArrayList<OrderTitleModel> orderTitleModels=new ArrayList<OrderTitleModel>();
     static {
         ImageItemModel model1=new ImageItemModel();
         model1.setImageUrl("http://p0.so.qhmsg.com/t018fd7fe7982a05245.jpg");
@@ -64,6 +66,22 @@ public class DatasUtils {
             model.productId="1";
             productChildModels.add(model);
         }
+        OrderTitleModel titleModel=new OrderTitleModel();
+        titleModel.tag="0";
+        titleModel.title="待付款";
+        OrderTitleModel titleModel2=new OrderTitleModel();
+        titleModel2.tag="1";
+        titleModel2.title="待发货";
+        OrderTitleModel titleModel3=new OrderTitleModel();
+        titleModel3.tag="2";
+        titleModel3.title="待提货";
+        OrderTitleModel titleModel4=new OrderTitleModel();
+        titleModel4.tag="3";
+        titleModel4.title="待评价";
+        orderTitleModels.add(titleModel);
+        orderTitleModels.add(titleModel2);
+        orderTitleModels.add(titleModel3);
+        orderTitleModels.add(titleModel4);
 
     }
 }

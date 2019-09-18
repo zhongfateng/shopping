@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
+        android:layout_marginTop="10dp"
         android:background="@color/bg_address_color"
         android:layout_height="match_parent">
         <LinearLayout
@@ -39,6 +40,7 @@
                     android:id="@+id/et_input_name"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
+                    android:textSize="13sp"
                     android:background="@null"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
@@ -77,6 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:textSize="13sp"
                         android:inputType="phone"
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
@@ -122,8 +125,9 @@
                         android:layout_toRightOf="@+id/tv_l"
                         android:hint="所在城市"
                         android:textColor="@color/tab_color"
-                        android:textSize="15sp"
-                        android:layout_marginLeft="5dp"
+                        android:textSize="13sp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
                         android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content" />
                     <ImageView
@@ -172,9 +176,10 @@
                         android:background="@null"
                         android:layout_toRightOf="@+id/tv_area"
                         android:hint="所在区域"
+                        android:layout_centerVertical="true"
                         android:textColor="@color/tab_color"
-                        android:textSize="15sp"
-                        android:layout_marginLeft="5dp"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="10dp"
                         android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content" />
                     <ImageView
@@ -220,7 +225,7 @@
                         android:layout_gravity="center_vertical"
                         android:hint="@string/detail_address_hint"
                         android:layout_marginLeft="5dp"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:gravity="center_vertical"
                         android:layout_height="wrap_content" />
 

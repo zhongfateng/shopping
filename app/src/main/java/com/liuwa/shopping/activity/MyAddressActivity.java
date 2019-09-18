@@ -23,6 +23,7 @@ import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.AddressModel;
+import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 

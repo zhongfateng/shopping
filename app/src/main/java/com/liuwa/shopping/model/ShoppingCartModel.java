@@ -46,6 +46,7 @@ public class ShoppingCartModel {
     public String proHeadId;
     public String proChildId;
     public String cartId;
+    public String guiGe;
 
     public void setCartId(String cartId) {
         this.cartId = cartId;

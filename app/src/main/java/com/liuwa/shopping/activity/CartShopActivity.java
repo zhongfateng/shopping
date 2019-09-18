@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,12 +9,15 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.ShoppingApplication;
 import com.liuwa.shopping.adapter.ShoppingCartAdapter;
+import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
@@ -46,11 +50,13 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	private double totalPrice = 0.00;// 购买的商品总价
 	private int totalCount = 0;// 购买的商品总数量
 	private static final String TAG = "CartShopActivity";
+	private String leaderid;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cart_list_layout);
 		this.context=this;
+		leaderid= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.LeadId,"");
 		initViews();
 		initEvent();
 	}
@@ -61,7 +67,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("购物车");
 		btnEdit=(TextView)findViewById(R.id.tv_edit);
-		btnEdit.setVisibility(View.VISIBLE);
+		btnEdit.setVisibility(View.GONE);
 		btnEdit.setText("编辑");
 		list_shopping_cart=findViewById(R.id.list_shopping_cart);
 		ckAll=(CheckBox) findViewById(R.id.ck_all);
@@ -72,7 +78,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		shoppingCartAdapter.setCheckInterface(this);
 		shoppingCartAdapter.setModifyCountInterface(this);
 		list_shopping_cart.setAdapter(shoppingCartAdapter);
-
+		list_shopping_cart.setEmptyView(findViewById(android.R.id.empty));
 
 	}
 	
@@ -202,19 +208,27 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	 */
 	private void lementOnder() {
 		//选中的需要提交的商品清单
+		StringBuffer proids = new StringBuffer();
+		StringBuffer nums = new StringBuffer();
+		int i=0;
 		for (ShoppingCartModel bean:shoppingCartBeanList ){
 			boolean choosed = bean.isChoosed();
 			if (choosed){
 				String shoppingName = bean.getShoppingName();
 				int count = bean.getNum();
 				double price = bean.getSalePrice();
-				int size = bean.getDressSize();
-				String attribute = bean.getAttribute();
-				int id = bean.getId();
-				Log.d(TAG,id+"----id---"+shoppingName+"---"+count+"---"+price+"--size----"+size+"--attr---"+attribute);
+				proids.append(bean.getProHeadId());
+				proids.append(",");
+				nums.append(bean.getNum());
+				nums.append(",");
+				i++;
 			}
 		}
-
+		if(i!=0) {
+		String finalproids = proids.deleteCharAt(proids.length() - 1).toString();
+		String finalnum = nums.deleteCharAt(nums.length() - 1).toString();
+		jiesuan(finalproids, finalnum);
+		}
 		//跳转到支付界面
 	}
 	/**
@@ -260,7 +274,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 				totalPrice += shoppingCartBean.getSalePrice() * shoppingCartBean.getNum();
 			}
 		}
-		tv_show_price.setText("合计:" + totalPrice);
+		tv_show_price.setText("￥" + totalPrice);
 		tvSettlement.setText("结算(" + totalCount + ")");
 	}
 	/**
@@ -315,4 +329,54 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		doGetDatas();
 	}
 
+	private void jiesuan(String proids,String nums){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("prochilds", proids);
+		productParam.put("buynums", nums);
+		productParam.put("leaderid", leaderid);
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.JIESUAN);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, Handler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+
+	private LKAsyncHttpResponseHandler Handler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						String orderid  = job.getString("data");
+						Intent intent =new Intent(context,ConfirmOrderActivity.class);
+						startActivity(intent);
+					}
+					else if(code==402)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 }

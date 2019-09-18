@@ -180,11 +180,6 @@ public class MoneyApplayFragment extends Fragment{
 
     //根据分类加载商品列表
     private void loadData(){
-        Money model=new Money();
-        model.detail="asdfas";
-        moneyArrayList.add(model);
-        moneyItemAdapter.notifyDataSetChanged();
-
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
         productParam.put("page",page);
         productParam.put("rows",pageSize);

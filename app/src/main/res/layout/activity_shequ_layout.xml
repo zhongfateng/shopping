@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_top_title_layout"></include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/bg_top_item"
+        android:layout_marginTop="10dp"
+        android:layout_height="112dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@mipmap/top_circle"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/search_bg_icon"
+                android:layout_marginLeft="11dp"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:text="@string/ceshi"
+                android:layout_marginLeft="10dp"
+                android:drawableRight="@mipmap/arr_down"
+                android:drawablePadding="10dp"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:layout_width="match_parent"
+                android:background="@null"
+                android:textSize="12sp"
+                android:textColor="@color/i_c"
+                android:hint="请输入小区名称"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:text="当前社区"
+            android:layout_marginTop="12dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <include layout="@layout/activity_shequ_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-40dp"></include>
+</LinearLayout>

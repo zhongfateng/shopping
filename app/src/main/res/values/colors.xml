@@ -71,4 +71,8 @@
     <color name="d_line">#EA3F43</color>
     <color name="l_line">#7D838C</color>
     <color name="tixian">#131921</color>
+    <color name="bg_show">#F1F1F1</color>
+    <color name="ad">#010101</color>
+    <color name="ad_c">#7E7E7E</color>
+    <color name="i_c">#9F9F9F</color>
 </resources>

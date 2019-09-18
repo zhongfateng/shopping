@@ -3,6 +3,7 @@ package com.liuwa.shopping.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.google.gson.Gson;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.adapter.DepositAdapter;
 import com.liuwa.shopping.client.ApplicationEnvironment;
@@ -27,6 +29,7 @@ import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.MoneyModel;
+import com.liuwa.shopping.model.UserModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.PayResult;
@@ -60,6 +63,8 @@ public class MyMoneyActivity extends BaseActivity{
 	private String order_id;
 	private TextView tv_commit;
 	private MoneyModel selectModel;
+	private TextView tv_money_detail;
+	private TextView tv_money;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,11 +92,12 @@ public class MyMoneyActivity extends BaseActivity{
 		mg_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				selectModel=(MoneyModel) parent.getAdapter().getItem(position);
 				depositAdapter.setSelectedPosition(position);
 				depositAdapter.notifyDataSetChanged();
 			}
 		});
-
+		tv_money=(TextView)findViewById(R.id.tv_money);
 		pay_type=(RadioGroup)findViewById(R.id.rg_pay_type);
 		zhifubao=(RadioButton)findViewById(R.id.rb_aplipay);
 		weixin=(RadioButton)findViewById(R.id.rb_wechatpay);
@@ -106,6 +112,14 @@ public class MyMoneyActivity extends BaseActivity{
 				}
 			}
 		});
+		tv_money_detail=(TextView)findViewById(R.id.tv_money_detail);
+
+		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
+		String userStr=pre.getString(Constants.USER,"");
+		if(userStr!=null) {
+			UserModel model = new Gson().fromJson(userStr, UserModel.class);
+			tv_money.setText("￥" + model.yuE + "");
+		}
 	}
 	//微信支付详情
 	private void payWEIXINOrder(){
@@ -199,18 +213,22 @@ public class MyMoneyActivity extends BaseActivity{
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
 		tv_commit.setOnClickListener(onClickListener);
+		tv_money_detail.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			Intent intent;
 			switch (v.getId()) {
-			    case R.id.img_back:
+				case R.id.img_back:
 				 MyMoneyActivity.this.finish();
 				break;
-				case R.id.tv_comment:
+				case R.id.tv_money_detail:
+					intent =new Intent(context,MoneyActivity.class);
+					startActivity(intent);
+					break;
+				case R.id.tv_commit:
 					if(selectModel==null){
 						Toast.makeText(context,"请选择充值金额",Toast.LENGTH_SHORT).show();
 						return;
@@ -226,15 +244,12 @@ public class MyMoneyActivity extends BaseActivity{
 							payWEIXINOrder();
 						}
 					}
-
-					MyMoneyActivity.this.finish();
 					break;
 			}
 		}
 	};
 	//支付宝支付详情
 	private void payZhiFuBaoOrder(){
-
 		TreeMap<String, Object> map = new TreeMap<String, Object>();
 		map.put("timestamp",System.currentTimeMillis()/1000+"");
 		map.put("uid", uid);
@@ -243,7 +258,6 @@ public class MyMoneyActivity extends BaseActivity{
 		map.put("token", token);
 		map.put("timespan", System.currentTimeMillis()+"");
 		map.put("sign", Md5SecurityUtil.getSignature(map));
-
 		HashMap<String, Object> mapend = new HashMap<String, Object>();
 		mapend.put(Constants.kMETHODNAME,Constants.PayOrder);
 		mapend.put(Constants.kPARAMNAME, map);

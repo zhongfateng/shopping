@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.model.IntegralModel;
 import com.liuwa.shopping.model.Money;
+import com.liuwa.shopping.util.TimeUtil;
 
 import java.util.ArrayList;
 
@@ -55,16 +56,21 @@ public class MoneyItemAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			viewHolder.tv_detail = (TextView) convertView
 					.findViewById(R.id.tv_detail);
+			viewHolder.tv_time=(TextView)convertView.findViewById(R.id.tv_time);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		Money  model= moneyArrayList.get(position);
-		viewHolder.tv_detail.setText(model.detail);
+		viewHolder.tv_detail.setText("充值"+model.money+"元");
+		viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time,""));
+		viewHolder.tv_money.setText("+"+model.money);
 		return convertView;
 	}
 
 	public static class ViewHolder {
 		public TextView tv_detail;
+		public TextView tv_time;
+		public TextView tv_money;
 	}
 }

@@ -86,7 +86,6 @@ public class MySelfActivity extends BaseActivity {
 		tv_dth_dot=(TextView)findViewById(R.id.tv_dth_dot);
 		tv_pj=(TextView)findViewById(R.id.tv_pj);
 	}
-	
 	public void initEvent(){
 		tv_my_integral.setOnClickListener(onClickListener);
 		tv_my_money.setOnClickListener(onClickListener);
@@ -99,23 +98,20 @@ public class MySelfActivity extends BaseActivity {
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			Intent intent;
 			switch (v.getId()) {
 				case R.id.tv_my_integral:
-
-					intent=new Intent(context,HeaderCenterActivity.class);
-					//intent=new Intent(context,IntegralActivity.class);
+					intent=new Intent(context,IntegralActivity.class);
 					startActivity(intent);
 					break;
 				case R.id.tv_my_money:
-					intent=new Intent(context,MoneyActivity.class);
+					intent=new Intent(context,MyMoneyActivity.class);
 					startActivity(intent);
 					break;
 			    case R.id.rl_address:
-			    	intent=new Intent(context,MySelfActivity.class);
+			    	intent=new Intent(context,MyAddressActivity.class);
 			    	startActivity(intent);
 				break;
 				case R.id.rl_applay_head:
@@ -135,8 +131,8 @@ public class MySelfActivity extends BaseActivity {
 					startActivity(intent);
 					break;
 				case R.id.rl_my_order:
-//					intent =  new Intent(context,);
-//					startActivity(intent);
+					intent =  new Intent(context,OrderShowByCategroyActivity.class);
+					startActivity(intent);
 					break;
 				case R.id.tv_go_to_index:
 					intent=new Intent();
@@ -167,12 +163,10 @@ public class MySelfActivity extends BaseActivity {
 		LKHttpRequest Req = new LKHttpRequest(Map, getCountHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
-
 					@Override
 					public void onComplete() {
 						super.onComplete();
 					}
-
 				});
 	}
 	private LKAsyncHttpResponseHandler getProductHandler(){
@@ -192,6 +186,7 @@ public class MySelfActivity extends BaseActivity {
 						userModel = localGson.fromJson(jsonObject.toString(),UserModel.class);
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
 						editor.putString(Constants.Phone, userModel.tel);
+						editor.putString(Constants.USER,localGson.toJson(userModel));
 						editor.commit();
 						tv_nickname.setText(userModel.nickname);
 						tv_id.setText("用户 ID:"+userModel.memberId);
@@ -209,10 +204,8 @@ public class MySelfActivity extends BaseActivity {
 							});
 						}
 					}
-					else
-					{
+					else {
 					}
-
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -256,8 +249,7 @@ public class MySelfActivity extends BaseActivity {
 							tv_pj.setText(pj+"");
 						}
 					}
-					else
-					{
+					else {
 					}
 
 				} catch (JSONException e) {

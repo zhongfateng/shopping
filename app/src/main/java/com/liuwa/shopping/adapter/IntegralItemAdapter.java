@@ -13,6 +13,9 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.model.IntegralModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.TimeUtil;
+
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -59,16 +62,23 @@ public class IntegralItemAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			viewHolder.tv_detail = (TextView) convertView
 					.findViewById(R.id.tv_detail);
+			viewHolder.tv_score=(TextView)convertView.findViewById(R.id.tv_score);
+			viewHolder.tv_time=(TextView)convertView.findViewById(R.id.tv_time);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		IntegralModel  model= integralList.get(position);
-		viewHolder.tv_detail.setText(model.description+"");
+		viewHolder.tv_detail.setText("充值"+model.score+"元");
+		viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time,""));
+		viewHolder.tv_score.setText("+"+model.score);
+
 		return convertView;
 	}
 
 	public static class ViewHolder {
 		public TextView tv_detail;
+		public TextView tv_score;
+		public TextView tv_time;
 	}
 }

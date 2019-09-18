@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -39,6 +40,7 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.adapter.IndexProductAdapter;
 import com.liuwa.shopping.adapter.IndexTuanGouProductAdapter;
 import com.liuwa.shopping.adapter.jakewharton.salvage.RecyclingPagerAdapter;
+import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
@@ -144,10 +146,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);
 		index_category_type      = (MyGridView)findViewById(R.id.index_category_type);
 		//修改了为了16：9的比例
-		double height = getScreenPixel().widthPixels / (480 / 270.0);
-		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
-		params.height = (int) (height);
-		index_auto_scroll_view.setLayoutParams(params);
+//		double height = getScreenPixel().widthPixels / (480 / 270.0);
+//		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
+//		params.height = (int) (height);
+//		index_auto_scroll_view.setLayoutParams(params);
 		imageAdatper=new ImagePagerAdapter(context, DatasUtils.imageList);
 		index_auto_scroll_view.setAdapter(imageAdatper);
 		cpi_indicator.setViewPager(index_auto_scroll_view);
@@ -397,6 +399,12 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
 						String area=array.getString("region");
+						String leaderId=array.getString("leaderId");
+						String diqu=array.getString("area");
+						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+						editor.putString(Constants.LeadId, leaderId);
+						editor.putString(Constants.AREA, diqu);
+						editor.commit();
 						tv_dingwei.setText(area);
 
 					} else {

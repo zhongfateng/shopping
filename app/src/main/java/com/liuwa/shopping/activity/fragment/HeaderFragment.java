@@ -182,11 +182,6 @@ public class HeaderFragment extends Fragment{
 
     //根据分类加载商品列表
     private void loadData(){
-        IntegralModel model=new IntegralModel();
-        model.description="asdfas";
-        //headerModels.add(model);
-        headerItemAdapter.notifyDataSetChanged();
-
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
         productParam.put("page",page);
         productParam.put("rows",pageSize);

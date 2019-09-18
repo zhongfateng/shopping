@@ -1,6 +1,8 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,9 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.IntegralFragment;
 import com.liuwa.shopping.activity.fragment.MoneyFragment;
+import com.liuwa.shopping.client.ApplicationEnvironment;
+import com.liuwa.shopping.client.Constants;
+import com.liuwa.shopping.model.UserModel;
+import com.liuwa.shopping.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +69,19 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
 		vp_category.setAdapter(adapter);
 		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
+		Util.reflex(tl_tabs);
+		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
+		String userStr=pre.getString(Constants.USER,"");
+		if(userStr!=null){
+			UserModel model =new Gson().fromJson(userStr, UserModel.class);
+			tv_keyong.setText("￥"+model.yuE+"");
+			tv_jifen.setText("累计充值"+model.score);
+		}
 	}
 
 	public void initEvent() {
 		img_back.setOnClickListener(onClickListener);
+		tv_duihuan.setOnClickListener(onClickListener);
 	}
 
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -75,6 +91,10 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 			switch (v.getId()) {
 				case R.id.img_back:
 					MoneyActivity.this.finish();
+					break;
+				case R.id.tv_duihuan:
+					Intent intent=new Intent(context,MyMoneyActivity.class);
+					startActivity(intent);
 					break;
 			}
 		}

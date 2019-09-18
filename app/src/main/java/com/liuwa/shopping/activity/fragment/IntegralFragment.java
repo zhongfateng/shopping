@@ -65,7 +65,7 @@ public class IntegralFragment extends Fragment{
     private ArrayList<IntegralModel> integralModels = new ArrayList<IntegralModel>();
 
     // TODO: Rename and change types of parameters
-    public BaseDataModel<ProductModel>  baseModel;
+    public BaseDataModel<IntegralModel>  baseModel;
     private OnFragmentInteractionListener mListener;
 
     public IntegralFragment() {
@@ -187,19 +187,13 @@ public class IntegralFragment extends Fragment{
 
     //根据分类加载商品列表
     private void loadData(){
-        IntegralModel model=new IntegralModel();
-        model.description="asdfas";
-        integralModels.add(model);
-        integralItemAdapter.notifyDataSetChanged();
-
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
         productParam.put("page",page);
         productParam.put("rows",pageSize);
-        productParam.put("type",1);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-        requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+        requestCategoryMap.put(Constants.kMETHODNAME,Constants.GETINTEGRALORDER);
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
@@ -252,10 +246,10 @@ public class IntegralFragment extends Fragment{
                         Gson localGson = new GsonBuilder().disableHtmlEscaping()
                                 .create();
                         baseModel = localGson.fromJson(jsonObject.toString(),
-                                new TypeToken<BaseDataModel<ProductModel>>() {
+                                new TypeToken<BaseDataModel<IntegralModel>>() {
                                 }.getType());
-//                        proList.addAll(baseModel.list);
-//                        fpAdapter.notifyDataSetChanged();
+                        integralModels.addAll(baseModel.list);
+                        integralItemAdapter.notifyDataSetChanged();
 
                     }
                     else

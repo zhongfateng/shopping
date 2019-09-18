@@ -8,61 +8,70 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
-import com.liuwa.shopping.adapter.MoneyItemAdapter;
+import com.liuwa.shopping.adapter.FavoriateProductAdapter;
+import com.liuwa.shopping.adapter.OrderAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
-import com.liuwa.shopping.model.IntegralModel;
-import com.liuwa.shopping.model.Money;
+import com.liuwa.shopping.model.CategoryModel;
+import com.liuwa.shopping.model.OrderModel;
+import com.liuwa.shopping.model.OrderTitleModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.view.MyGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MoneyFragment.OnFragmentInteractionListener} interface
+ * {@link OrderShowByCategoryFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MoneyFragment#newInstance} factory method to
+ * Use the {@link OrderShowByCategoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MoneyFragment extends Fragment{
+public class OrderShowByCategoryFragment extends Fragment implements OrderAdapter.OnCartClick{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private View rootView;
     private static final String ARG_PARAM1 = "model";
+    private static final String ARG_PARAM  = "postion";
     boolean mIsPrepare = false;		//视图还没准备好
     boolean mIsVisible= false;		//不可见
     boolean mIsFirstLoad = true;	//第一次加载
     private int page=1;
     private int pageSize=10;
-    private PullToRefreshListView pullToRefreshListView;
-    private MoneyItemAdapter moneyItemAdapter;
-    private ArrayList<Money> moneyArrayList = new ArrayList<Money>();
+    private PullToRefreshScrollView pullToRefreshScrollView;
+    private MyGridView gv_favoriate_list;
+    private OrderAdapter fpAdapter;
+    private ArrayList<OrderModel> proList = new ArrayList<OrderModel>();
 
     // TODO: Rename and change types of parameters
-    public BaseDataModel<Money>  baseModel;
+    private OrderTitleModel mParam1;
+    private String  tag;
     private OnFragmentInteractionListener mListener;
 
-    public MoneyFragment() {
+    public OrderShowByCategoryFragment() {
         // Required empty public constructor
     }
 
@@ -73,8 +82,11 @@ public class MoneyFragment extends Fragment{
      * @return A new instance of fragment BlankFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MoneyFragment newInstance() {
-        MoneyFragment fragment = new MoneyFragment();
+    public static OrderShowByCategoryFragment newInstance(String tag) {
+        OrderShowByCategoryFragment fragment = new OrderShowByCategoryFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM,tag);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -82,7 +94,7 @@ public class MoneyFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            tag=getArguments().getString(ARG_PARAM);
         }
     }
 
@@ -91,35 +103,37 @@ public class MoneyFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (rootView == null) {
-             rootView =inflater.inflate(R.layout.fragment_money_list_layout, container, false);
+             rootView =inflater.inflate(R.layout.fragment_order_show_by_category_item_layout, container, false);
         }
-        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.pullToListView);
-        moneyItemAdapter =  new MoneyItemAdapter(getActivity(), moneyArrayList);
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        pullToRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pullToScrollView);
+        gv_favoriate_list        = (MyGridView)rootView.findViewById(R.id.gv__list);
+        fpAdapter                 =  new OrderAdapter(getActivity(),proList);
+        pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                page=1;
-                moneyArrayList.clear();
-                loadData();
-                refreshView.onRefreshComplete();
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                pullToRefreshScrollView.onRefreshComplete();
             }
-
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                page++;
-                loadData();
-                refreshView.onRefreshComplete();
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                pullToRefreshScrollView.onRefreshComplete();
             }
         });
-        pullToRefreshListView.setAdapter(moneyItemAdapter);
-
+        fpAdapter.setOnCartClick(this);
+        gv_favoriate_list.setAdapter(fpAdapter);
+        gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
+                Toast.makeText(getActivity(),"item"+model.proName,Toast.LENGTH_SHORT).show();
+            }
+        });
         return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(int positon ,int num) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(positon,num);
         }
     }
 
@@ -158,6 +172,10 @@ public class MoneyFragment extends Fragment{
         }
     }
 
+    @Override
+    public void cartOnClick(OrderModel model) {
+        Toast.makeText(getActivity(),"购物车点击",Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -171,7 +189,7 @@ public class MoneyFragment extends Fragment{
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(int positon, int num);
     }
     private void lazyLoad() {
         //这里进行三个条件的判断，如果有一个不满足，都将不进行加载
@@ -187,12 +205,11 @@ public class MoneyFragment extends Fragment{
     //根据分类加载商品列表
     private void loadData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page",page);
-        productParam.put("rows",pageSize);
+        productParam.put("Type",tag);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-        requestCategoryMap.put(Constants.kMETHODNAME,Constants.MONEYORDER);
+        requestCategoryMap.put(Constants.kMETHODNAME,Constants.ORDERLIST);
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
@@ -241,14 +258,15 @@ public class MoneyFragment extends Fragment{
                     int code =	job.getInt("code");
                     if(code==Constants.CODE)
                     {
-                        JSONObject jsonObject = job.getJSONObject("data");
+                        JSONArray jsonObject = job.getJSONArray("data");
                         Gson localGson = new GsonBuilder().disableHtmlEscaping()
                                 .create();
-                        baseModel = localGson.fromJson(jsonObject.toString(),
-                                new TypeToken<BaseDataModel<Money>>() {
-                                }.getType());
-                        moneyArrayList.addAll(baseModel.list);
-                        moneyItemAdapter.notifyDataSetChanged();
+                        ;
+                        proList.addAll((Collection<? extends OrderModel>) localGson.fromJson(jsonObject.toString(),
+                                new TypeToken<ArrayList<OrderModel>>() {
+                                }.getType()));
+                        fpAdapter.notifyDataSetChanged();
+
                     }
                     else
                     {
