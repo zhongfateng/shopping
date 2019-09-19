@@ -75,4 +75,6 @@
     <color name="ad">#010101</color>
     <color name="ad_c">#7E7E7E</color>
     <color name="i_c">#9F9F9F</color>
+    <color name="l_c">#9B9B9B</color>
+
 </resources>

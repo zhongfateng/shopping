@@ -63,8 +63,8 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 		initEvent();
 	}
 	public void init(){
-		position=getIntent().getIntExtra("position",0);
-		cateList=(ArrayList<CategoryModel>)getIntent().getSerializableExtra("cateList");
+		position=getParent().getIntent().getIntExtra("position",0);
+		cateList=(ArrayList<CategoryModel>)getParent().getIntent().getSerializableExtra("cateList");
 	}
 	public void initViews() {
 		img_back=(ImageView)findViewById(R.id.img_back);

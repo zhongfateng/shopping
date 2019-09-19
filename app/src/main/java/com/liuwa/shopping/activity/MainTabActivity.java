@@ -58,7 +58,7 @@ public class MainTabActivity extends TabActivity {
 	private void initTabHost() {
 		mTabHost = (TabHost) getTabHost();
 		TabsUtil.addTab(mTabHost, "首页", R.drawable.tab_nav_index_selector, 0, new Intent(this, IndexActivity.class));
-		TabsUtil.addTab(mTabHost, "分类", R.drawable.tab_nav_cate_selector, 1, new Intent(this, RegisterAndGetPassWordActivity.class));
+		TabsUtil.addTab(mTabHost, "分类", R.drawable.tab_nav_cate_selector, 1, new Intent(this, ProductShowByCategroyActivity.class));
 		TabsUtil.addTab(mTabHost, "购物车", R.drawable.tab_nav_cart_selector, 2, new Intent(this, CartShopActivity.class));
 		TabsUtil.addTab(mTabHost, "我的", R.drawable.tab_nav_myself_selector, 3, new Intent(this, MySelfActivity.class));
 

@@ -99,6 +99,10 @@ public class Constants {
 	public static final String MONEYORDER                  = "memmoneyczlistjson";
 	//用户消费记录
 	public static final String XFMONEYORDER                = "memmoneyxflistjson";
+	//社区列表
+	public static final String SheQuList                    = "indexsqlistjson";
+
+
 
 
 

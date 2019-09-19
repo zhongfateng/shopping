@@ -50,6 +50,7 @@ import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.CategoryModel;
 import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.model.SheQuModel;
 import com.liuwa.shopping.model.SpecialModel;
 import com.liuwa.shopping.model.TuanModel;
 import com.liuwa.shopping.model.TuanProductModel;
@@ -122,6 +123,8 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private String lat="";
 	private String lon="";
 	private ImageView img_xihua,tv_ce,img_show_left;
+	public LinearLayout go_shequ;
+	public static  final  int ReqShequ= 67;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -208,6 +211,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		img_xihua=(ImageView)findViewById(R.id.img_xihua);
 		tv_ce=(ImageView)findViewById(R.id.tv_ce);
 		img_show_left=(ImageView)findViewById(R.id.img_show_left);
+		go_shequ=(LinearLayout)findViewById(R.id.go_shequ);
 	}
 	public void initEvent(){
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
@@ -226,18 +230,23 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		index_category_type.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				CategoryModel model=(CategoryModel) parent.getAdapter().getItem(position);
-				Intent intent =new Intent(context,ProductShowByCategroyActivity.class);
+//				CategoryModel model=(CategoryModel) parent.getAdapter().getItem(position);
+//				Intent intent =new Intent(context,ProductShowByCategroyActivity.class);
+//				intent.putExtra("position",position);
+//				intent.putExtra("cateList",cateList);
+//				startActivity(intent);
+				Intent intent=new Intent();
+				intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
+				intent.putExtra(MainTabActivity.TAB_INDEX_KEY,1);
 				intent.putExtra("position",position);
 				intent.putExtra("cateList",cateList);
-				startActivity(intent);
+				sendBroadcast(intent);//发送标准广播
 			}
 		});
 		tv_go_search.setOnClickListener(onClickListener);
 		ll_left.setOnClickListener(onClickListener);
 		ll_content.setOnClickListener(onClickListener);
 		ll_down.setOnClickListener(onClickListener);
-		tv_dingwei.setOnClickListener(onClickListener);
 
 		//定位监听
 		//gps定位监听器
@@ -267,6 +276,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				}
 			}
 		};
+		go_shequ.setOnClickListener(onClickListener);
 
 	}
 	@Override
@@ -293,6 +303,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			case R.id.ll_left:
 				intent=new Intent(context,TimeBuyActivity.class);
 				startActivity(intent);
+				break;
+			case R.id.go_shequ:
+				intent=new Intent(context,SheQuListActivity.class);
+				startActivityForResult(intent,ReqShequ);
 				break;
 			case R.id.ll_content:
 				intent=new Intent(context,SearchHistoryActivity.class);
@@ -398,14 +412,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						JSONObject array=job.getJSONObject("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						String area=array.getString("region");
-						String leaderId=array.getString("leaderId");
-						String diqu=array.getString("area");
+						SheQuModel sheQuModel=localGson.fromJson(array.toString(), SheQuModel.class);
+						tv_dingwei.setText(sheQuModel.region);
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-						editor.putString(Constants.LeadId, leaderId);
-						editor.putString(Constants.AREA, diqu);
+						editor.putString(Constants.AREA, localGson.toJson(sheQuModel));
 						editor.commit();
-						tv_dingwei.setText(area);
 
 					} else {
 					}
@@ -863,6 +874,18 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		}
 		if (null != locationClient) {
 			locationClient.onDestroy();
+		}
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode==ReqShequ){
+			if (resultCode == Activity.RESULT_OK){
+				SheQuModel model = (SheQuModel)data.getSerializableExtra(Constants.AREA);
+				tv_dingwei.setText(model.region);
+				SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+				editor.putString(Constants.AREA, new Gson().toJson(model));
+				editor.commit();
+			}
 		}
 	}
 }

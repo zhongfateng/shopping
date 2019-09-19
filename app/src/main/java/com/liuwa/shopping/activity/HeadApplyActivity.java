@@ -179,7 +179,7 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 		if(requestPermissionsResult.doRequestPermissionsResult(this, permissions, grantResults)){
 			//请求的权限全部授权成功，此处可以做自己想做的事了
 			//输出授权结果
-			Toast.makeText(context,"授权成功，请重新点击刚才的操作！",Toast.LENGTH_LONG).show();
+
 		}else{
 			//输出授权结果
 			Toast.makeText(context,"请给APP授权，否则功能无法正常使用！",Toast.LENGTH_LONG).show();

@@ -4,6 +4,17 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/activity_top_title_layout"></include>
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pullToScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ptr:ptrAnimationStyle="rotate"
+        ptr:ptrMode="both">
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:orientation="vertical"
+         android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -25,21 +36,15 @@
                 android:src="@mipmap/search_bg_icon"
                 android:layout_marginLeft="11dp"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:text="@string/ceshi"
-                android:layout_marginLeft="10dp"
-                android:drawableRight="@mipmap/arr_down"
-                android:drawablePadding="10dp"
-                android:layout_height="wrap_content" />
             <EditText
+                android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:background="@null"
                 android:textSize="12sp"
                 android:textColor="@color/i_c"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:inputType="text"
                 android:hint="请输入小区名称"
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content" />
@@ -57,4 +62,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-40dp"></include>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="附近社区"
+        android:layout_marginLeft="10dp"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+    <com.liuwa.shopping.view.MyListView
+        android:id="@+id/lv_show_shequ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.liuwa.shopping.view.MyListView>
+        <TextView
+            android:id="@android:id/empty"
+            android:gravity="center"
+            android:text="没有更多社区了"
+            android:layout_width="match_parent"
+            android:textSize="12sp"
+            android:textColor="@color/l_c"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+     </LinearLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 </LinearLayout>

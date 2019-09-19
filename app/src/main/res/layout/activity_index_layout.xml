@@ -27,6 +27,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_height="wrap_content">
                 <LinearLayout
+                    android:id="@+id/go_shequ"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
