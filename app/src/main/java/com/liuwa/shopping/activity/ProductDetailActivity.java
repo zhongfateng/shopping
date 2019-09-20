@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +24,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.DialogFragmentFromBottom;
+import com.liuwa.shopping.activity.fragment.WebFragment;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.ImageAdapter;
 import com.liuwa.shopping.adapter.ImagePagerAdapter;
+import com.liuwa.shopping.adapter.MyPagerAdapter;
 import com.liuwa.shopping.adapter.NeiborBuyAdapter;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
@@ -36,6 +42,8 @@ import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.SPUtils;
+import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
@@ -45,6 +53,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.ref.ReferenceQueue;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,14 +61,15 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class ProductDetailActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,DialogFragmentFromBottom.OnFragmentInteractionListener{
+public class ProductDetailActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,DialogFragmentFromBottom.OnFragmentInteractionListener,WebFragment.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
-	private String proheadid,leaderId;
+	private String leaderId;
 	private LinearLayout ll_left,rl_cart;
 	private TextView tv_add_cart,tv_buy;
 	private ArrayList<ProductModel> neiborList=new ArrayList<>();
+	private ArrayList<ProductModel> tuiJianList=new ArrayList<>();
 	private MyGridView gw_list;
 	private MyGridView gw_tuijian;
 	private NeiborBuyAdapter neiborBuyAdapter;
@@ -67,6 +77,8 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private MyGridView gw_toumai;
 	private ArrayList<String> urls;
 	private ImageAdapter imageAdapter;
+	private TabLayout tl_tabs;
+	private ViewPager vp_category;
 	private int num=1;
 	private String token;
 	//区分立即购买还是加入购物车
@@ -81,13 +93,15 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private ArrayList<ImageItemModel> imgs=new ArrayList<>();
 	private ArrayList<ProductChildModel> productChildModels=new ArrayList<>();
 	private ProductModel model;
+	private ArrayList fragmentList;
+	private ArrayList list_Title;
+	private MyPagerAdapter pageradapter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_product_detail_layout);
 		this.context = this;
-		proheadid=getIntent().getStringExtra("proheadid");
-		leaderId=getIntent().getStringExtra("leaderId");
+		model=(ProductModel)getIntent().getSerializableExtra("model");
 		init();
 		initViews();
 		initEvent();
@@ -95,7 +109,14 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 
 	public void init() {
-		token= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.TOKEN, "");
+		fragmentList = new ArrayList<>();
+		list_Title = new ArrayList<>();
+		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+		list_Title.add("详情");
+		list_Title.add("评价");
+		list_Title.add("售后");
 	}
 
 	public void initViews() {
@@ -111,22 +132,54 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		index_auto_scroll_view.setInterval(4000);
 		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
 
+		//商品详情hmtl
+		tl_tabs = (TabLayout) findViewById(R.id.tb_top);
+		//设置分割线
+		LinearLayout linearLayout = (LinearLayout) tl_tabs.getChildAt(0);
+		linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+		linearLayout.setDividerDrawable(ContextCompat.getDrawable(context,
+				R.drawable.divider)); //设置分割线的样式
+		linearLayout.setDividerPadding(ScreenUtil.dip2px(context,2)); //设置分割线间隔
+		vp_category = (ViewPager) findViewById(R.id.vp_category);
+		pageradapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
+		vp_category.setAdapter(pageradapter);
+		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
+
+
 		//多少人购买
 		gw_toumai=(MyGridView)findViewById(R.id.gw_toumai);
 		imageAdapter=new ImageAdapter(context,DatasUtils.strings);
 		gw_toumai.setAdapter(imageAdapter);
 		imageAdapter.notifyDataSetChanged();
 		//邻居都在买
-		neiborBuyAdapter=new NeiborBuyAdapter(context, DatasUtils.productModels);
+		neiborBuyAdapter=new NeiborBuyAdapter(context, neiborList);
 		gw_list=(MyGridView)findViewById(R.id.gw_list);
+		gw_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ProductModel model=(ProductModel) parent.getAdapter().getItem(position);
+				Intent intent =new Intent(context,ProductDetailActivity.class);
+				intent.putExtra("model",model);
+				startActivity(intent);
+				ProductDetailActivity.this.finish();
+			}
+		});
 		gw_list.setAdapter(neiborBuyAdapter);
-		neiborBuyAdapter.notifyDataSetChanged();
 		//推荐购买
-		adapter=new FavoriateProductAdapter(context,DatasUtils.productModels);
+		adapter=new FavoriateProductAdapter(context,tuiJianList);
 		adapter.setOnCartClick(this);
 		gw_tuijian=(MyGridView)findViewById(R.id.gw_tuijian);
+		gw_tuijian.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ProductModel model=(ProductModel) parent.getAdapter().getItem(position);
+				Intent intent =new Intent(context,ProductDetailActivity.class);
+				intent.putExtra("model",model);
+				startActivity(intent);
+				ProductDetailActivity.this.finish();
+			}
+		});
 		gw_tuijian.setAdapter(adapter);
-		adapter.notifyDataSetChanged();
 
 		ll_left=(LinearLayout)findViewById(R.id.ll_left);
 		rl_cart=(LinearLayout)findViewById(R.id.rl_cart);
@@ -214,7 +267,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-		productParam.put("proheadid",proheadid);
+		productParam.put("proheadid",model.proHeadId);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -223,7 +276,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
-		baseParam.put("leaderId",leaderId);
+		baseParam.put("leaderId", SPUtils.getShequMode(context,Constants.AREA));
 		baseParam.put("timespan", System.currentTimeMillis()+"");
 		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
 		HashMap<String, Object> requestNeiborMap = new HashMap<String, Object>();
@@ -231,7 +284,16 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		requestNeiborMap.put(Constants.kPARAMNAME, baseParam);
 		LKHttpRequest neiborReq = new LKHttpRequest(requestNeiborMap, getNeiborHandler());
 
-		new LKHttpRequestQueue().addHttpRequest(categoryReq,neiborReq)
+		TreeMap<String, Object> Param = new TreeMap<String, Object>();
+		Param.put("clssesid", model.classes);
+		Param.put("timespan", System.currentTimeMillis()+"");
+		Param.put("sign", Md5SecurityUtil.getSignature(Param));
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put(Constants.kMETHODNAME,Constants.TUIJIAN);
+		Map.put(Constants.kPARAMNAME,Param);
+		LKHttpRequest Req = new LKHttpRequest(Map, getTuiJianHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,neiborReq, Req)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -256,7 +318,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
 						JSONObject oo=jsonObject.getJSONObject("product_head");
-						model = localGson.fromJson(oo.toString(),
+						ProductModel model = localGson.fromJson(oo.toString(),
 							ProductModel.class);
 						tv_name.setText(model.proName+"");
 						tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
@@ -293,7 +355,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 	private void doBuy(String prochildid,int num){
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
-		baseParam.put("leaderid","1");
+		baseParam.put("leaderid",SPUtils.getShequMode(context,Constants.AREA).leaderId);
 		baseParam.put("prochildid",prochildid);
 		baseParam.put("buynum",num);
 		baseParam.put("timespan", System.currentTimeMillis()+"");
@@ -341,7 +403,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 	private void doAddCart(String prochildid,int num){
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
-		baseParam.put("proheadid",proheadid);
+		baseParam.put("proheadid",model.proHeadId);
 		baseParam.put("prochildid",prochildid);
 		baseParam.put("num",num);
 		baseParam.put("timespan", System.currentTimeMillis()+"");
@@ -405,6 +467,43 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						neiborList.addAll((Collection<? extends ProductModel>)localGson.fromJson(jsonObject.toString(),
 							new TypeToken<ArrayList<ProductModel>>() {
 							}.getType()));
+						neiborBuyAdapter.notifyDataSetChanged();
+
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+	private LKAsyncHttpResponseHandler getTuiJianHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code== Constants.CODE)
+					{
+						JSONArray jsonObject = job.getJSONArray("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						tuiJianList.clear();
+						localGson.fromJson(jsonObject.toString(),
+								new TypeToken<ArrayList<ProductModel>>() {
+								}.getType());
+						tuiJianList.addAll((Collection<? extends ProductModel>)localGson.fromJson(jsonObject.toString(),
+								new TypeToken<ArrayList<ProductModel>>() {
+								}.getType()));
+						adapter.notifyDataSetChanged();
 
 					}
 					else
@@ -427,8 +526,6 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 
 	@Override
 	public void onFragmentInteraction(String prochildid,int num) {
-		this.proheadid=proheadid;
-		this.num=num;
 		if(tag.equals("0")){
 			//立即购买
 			doBuy(prochildid,num);
@@ -436,6 +533,11 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 			//加入购物车
 			doAddCart(prochildid,num);
 		}
+	}
+
+	@Override
+	public void onFragmentInteraction(Uri uri) {
+
 	}
 }
 

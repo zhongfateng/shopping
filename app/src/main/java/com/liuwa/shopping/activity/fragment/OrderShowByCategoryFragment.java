@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.OrderDetailActivity;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.OrderAdapter;
 import com.liuwa.shopping.client.Constants;
@@ -123,8 +125,9 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
         gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-                Toast.makeText(getActivity(),"item"+model.proName,Toast.LENGTH_SHORT).show();
+                OrderModel model=(OrderModel)parent.getAdapter().getItem(position);
+                Intent intent =new Intent(getActivity(), OrderDetailActivity.class);
+                getActivity().startActivity(intent);
             }
         });
         return rootView;

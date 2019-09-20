@@ -3,6 +3,10 @@ package com.liuwa.shopping.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.liuwa.shopping.client.ApplicationEnvironment;
+import com.liuwa.shopping.model.SheQuModel;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -370,4 +374,12 @@ public class SPUtils {
         return settings.getBoolean(key, defaultValue);
     }
 
+    public static SheQuModel getShequMode(Context context, String key) {
+        SharedPreferences sp = ApplicationEnvironment.getInstance().getPreferences();
+        String areajson= sp.getString(key,"");
+        if(areajson!=null){
+            return   new Gson().fromJson(areajson, SheQuModel.class);
+        }
+        return  null;
+    }
 }

@@ -64,6 +64,7 @@ public class FavoriateProductAdapter extends BaseAdapter {
 			convertView = layoutInflater.inflate(R.layout.activity_favoriate_item_layout, null);
 			viewHolder = new ViewHolder();
 			viewHolder.img_show=(ImageView)convertView.findViewById(R.id.img_show);
+			viewHolder.tv_name=(TextView)convertView.findViewById(R.id.tv_name);
 			viewHolder.tv_show_price = (TextView) convertView
 					.findViewById(R.id.tv_show_price);
 			viewHolder.tv_price=(TextView) convertView.findViewById(R.id.tv_price);
@@ -74,14 +75,15 @@ public class FavoriateProductAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final ProductModel  productModel=productList.get(position);
-		viewHolder.tv_show_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
-		viewHolder.tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
-		viewHolder.img_buy.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onCartClick.cartOnClick(productModel);
-			}
-		});
+		viewHolder.tv_name.setText(productModel.proName);
+		viewHolder.tv_show_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
+//		viewHolder.img_buy.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				onCartClick.cartOnClick(productModel);
+//			}
+//		});
 		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}
@@ -90,6 +92,7 @@ public class FavoriateProductAdapter extends BaseAdapter {
 		public TextView tv_show_price;
 		public TextView tv_price;
 		public ImageView img_buy,img_show;
+		public TextView tv_name;
 	}
 	public interface OnCartClick{
 		public void cartOnClick(ProductModel model);

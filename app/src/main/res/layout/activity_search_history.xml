@@ -86,6 +86,7 @@
                     android:background="#EEEEEE"></View>
                 <com.liuwa.shopping.view.FlowLayout
                     android:id="@+id/ll_flow"
+                    android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></com.liuwa.shopping.view.FlowLayout>
             </LinearLayout>

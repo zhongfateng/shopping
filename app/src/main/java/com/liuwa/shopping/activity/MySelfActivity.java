@@ -37,6 +37,7 @@ import com.liuwa.shopping.permission.requestresult.IRequestPermissionsResult;
 import com.liuwa.shopping.permission.requestresult.RequestPermissionsResultSetApp;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.QrCodeUtil;
 import com.liuwa.shopping.util.StatusBarUtils;
 import com.liuwa.shopping.util.uri.FileProviderUtils;
 import com.liuwa.shopping.util.uri.SystemProgramUtils;
@@ -60,6 +61,7 @@ public class MySelfActivity extends BaseActivity {
 	private TextView tv_nickname,tv_id;
 	private TextView tv_dfk_dot,tv_dfh_dot,tv_dth_dot,tv_pj;
 	private TextView tv_show;
+	private ImageView img_qr;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,6 +87,12 @@ public class MySelfActivity extends BaseActivity {
 		tv_dfh_dot=(TextView)findViewById(R.id.tv_dfh_dot);
 		tv_dth_dot=(TextView)findViewById(R.id.tv_dth_dot);
 		tv_pj=(TextView)findViewById(R.id.tv_pj);
+		img_qr=(ImageView)findViewById(R.id.img_qr);
+		//二维码的背景图片
+		Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
+			//生成的二维码图片
+		Bitmap qr = QrCodeUtil.createQRImage("hello world",300,300,bmp);
+		img_qr.setImageBitmap(qr);
 	}
 	public void initEvent(){
 		tv_my_integral.setOnClickListener(onClickListener);

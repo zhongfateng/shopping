@@ -21,7 +21,7 @@
     <color name="money_color">#EC654A</color>
     <color name="market_money_color">#A9A9A9</color>
     <color name="bg_favorite">#D1DBE5</color>
-    <color name="bg_special">#80D1DBE5</color>
+    <color name="bg_special">#30D1DBE5</color>
     <color name="tab_line">#28903B</color>
     <color name="tr_tab_line">#8028903B</color>
     <color name="tab_color">#666666</color>
@@ -76,5 +76,6 @@
     <color name="ad_c">#7E7E7E</color>
     <color name="i_c">#9F9F9F</color>
     <color name="l_c">#9B9B9B</color>
+    <color name="d_c">#6D6C6C</color>
 
 </resources>

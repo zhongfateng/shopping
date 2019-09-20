@@ -101,6 +101,9 @@ public class Constants {
 	public static final String XFMONEYORDER                = "memmoneyxflistjson";
 	//社区列表
 	public static final String SheQuList                    = "indexsqlistjson";
+	//推荐购买
+	public static final String TUIJIAN                      = "tuijianbuyjson";
+
 
 
 

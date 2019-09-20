@@ -204,7 +204,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ProductModel model=(ProductModel) parent.getAdapter().getItem(position);
 				Intent intent =new Intent(context,ProductDetailActivity.class);
-				intent.putExtra("proheadid",model.proHeadId);
+				intent.putExtra("model",model);
 				startActivity(intent);
 			}
 		});
@@ -293,15 +293,12 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			switch(v.getId()){
 			case R.id.tv_go_search:
 				intent=new Intent(context,SearchHistoryActivity.class);
+				intent.putExtra("requestCode",IndexActivity.ReqCode);
 				startActivity(intent);
-
-//				intent = new Intent();
-//				intent.setAction("android.intent.action.CALL");
-//				intent.setData(Uri.parse("tel:" + "13181279291"));
-//				startActivity(intent);
 				break;
 			case R.id.ll_left:
 				intent=new Intent(context,TimeBuyActivity.class);
+				intent.putExtra("classesid",(String)v.getTag());
 				startActivity(intent);
 				break;
 			case R.id.go_shequ:

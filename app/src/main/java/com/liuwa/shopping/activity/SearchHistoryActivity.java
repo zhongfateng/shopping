@@ -117,7 +117,7 @@ public class SearchHistoryActivity extends BaseActivity{
 	}
 	public void setBackValue(String value){
 		if(requestCode==IndexActivity.ReqCode){
-			Intent intent=new Intent(context,LoginActivity.class);
+			Intent intent=new Intent(context,SearchResultActivity.class);
 			intent.putExtra("searchKey", value);
 			startActivity(intent);
 			SearchHistoryActivity.this.finish();
@@ -170,10 +170,7 @@ public class SearchHistoryActivity extends BaseActivity{
 				label.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent=new Intent(SearchHistoryActivity.this,LoginActivity.class);
-						intent.putExtra("searchKey", label.getText().toString()+"");
-						startActivity(intent);
-						SearchHistoryActivity.this.finish();
+						setBackValue(label.getText().toString()+"");
 					}
 				});
 				ll_flow.addView(label);

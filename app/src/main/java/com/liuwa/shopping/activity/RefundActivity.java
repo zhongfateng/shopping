@@ -1,12 +1,13 @@
 package com.liuwa.shopping.activity;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.fragment.DialogFragmentSelectBottom;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
@@ -24,8 +26,6 @@ import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
-import com.liuwa.shopping.model.CategoryModel;
-import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.view.MyGridView;
@@ -35,15 +35,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class FavoriateActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick{
+public class RefundActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,DialogFragmentSelectBottom.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
-	private PullToRefreshScrollView pullToRefreshScrollView;
 	private MyGridView gv_favoriate_list;
 	private FavoriateProductAdapter fpAdapter;
 	private ArrayList<ProductModel> proList = new ArrayList<ProductModel>();
@@ -53,55 +51,45 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 	public BaseDataModel<ProductModel>  baseModel;
 	private String classesid;
 	private ImageView img_top;
+	private TextView tv_commit;
+	private RelativeLayout rl_select;
+	private TextView tv_reason;
+	public String selectStr;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_favoriate_show_layout);
+		setContentView(R.layout.activity_refund_layout);
 		this.context=this;
-		classesid=getIntent().getStringExtra("classesid");
 		initViews();
 		initEvent();
-		doGetDatas();
+		//doGetDatas();
 	}
 
 	public void initViews()
 	{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView) findViewById(R.id.tv_title);
-		tv_title.setText("猜你喜欢");
-		img_top=(ImageView)findViewById(R.id.img_top);
-		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
-		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
-		fpAdapter                 =  new FavoriateProductAdapter(this,proList);
-		fpAdapter.setOnCartClick(this);
-		gv_favoriate_list.setAdapter(fpAdapter);
-		gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-				Toast.makeText(context,"item"+model.proName,Toast.LENGTH_SHORT).show();
-			}
-		});
+		tv_title.setText("申请退款");
+//		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
+//		fpAdapter                 =  new FavoriateProductAdapter(this,proList);
+//		fpAdapter.setOnCartClick(this);
+//		gv_favoriate_list.setAdapter(fpAdapter);
+//		gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
+//				Toast.makeText(context,"item"+model.proName,Toast.LENGTH_SHORT).show();
+//			}
+//		});
+		tv_commit=(TextView)findViewById(R.id.tv_commit);
+		rl_select=(RelativeLayout)findViewById(R.id.rl_select);
+		tv_reason=(TextView)findViewById(R.id.tv_reason);
 	}
 	
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
-		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
-			@Override
-			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page=1;
-				proList.clear();
-				doGetDatas();
-				pullToRefreshScrollView.onRefreshComplete();
-			}
-
-			@Override
-			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page++;
-				doGetDatas();
-				pullToRefreshScrollView.onRefreshComplete();
-			}
-		});
+		tv_commit.setOnClickListener(onClickListener);
+		rl_select.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -110,11 +98,33 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.img_back:
-				FavoriateActivity.this.finish();
+				RefundActivity.this.finish();
+				break;
+			case R.id.tv_commit:
+				RefundActivity.this.finish();
+				break;
+			case R.id.rl_select:
+				DialogFragmentFromBottom();
 				break;
 			}
 		}
 	};
+	private void DialogFragmentFromBottom() {
+		showDialog();
+	}
+	void showDialog() {
+
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		DialogFragmentSelectBottom newFragment = DialogFragmentSelectBottom.newInstance();
+		newFragment.show(ft, "dialog");
+	}
 
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
@@ -202,5 +212,11 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 	@Override
 	public void cartOnClick(ProductModel model) {
 		Toast.makeText(this,"购物车点击"+model.proName,Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onFragmentInteraction(String selectStr) {
+		this.selectStr=selectStr;
+		tv_reason.setText(selectStr);
 	}
 }

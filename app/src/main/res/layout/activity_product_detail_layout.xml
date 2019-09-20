@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/activity_top_title_layout"></include>
@@ -226,6 +227,27 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"></com.liuwa.shopping.view.MyGridView>
 
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="7dp"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tb_top"
+                        android:layout_width="match_parent"
+                        app:tabTextColor="@color/name_color"
+                        app:tabSelectedTextColor="@color/tab_line"
+                        android:background="@color/white"
+                        app:tabMode="fixed"
+                        app:tabIndicatorHeight="0dp"
+                        app:tabIndicatorColor="@color/transparent"
+                        android:layout_height="42dp"></android.support.design.widget.TabLayout>
+                    <com.liuwa.shopping.view.MyViewPager
+                        android:id="@+id/vp_category"
+                        android:layout_marginTop="0.5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"></com.liuwa.shopping.view.MyViewPager>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
