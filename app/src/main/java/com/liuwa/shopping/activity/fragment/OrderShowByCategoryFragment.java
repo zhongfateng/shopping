@@ -129,6 +129,7 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 OrderModel model=(OrderModel)parent.getAdapter().getItem(position);
                 Intent intent =new Intent(getActivity(), OrderDetailActivity.class);
+                intent.putExtra("order_id",model.orderId);
                 getActivity().startActivity(intent);
             }
         });

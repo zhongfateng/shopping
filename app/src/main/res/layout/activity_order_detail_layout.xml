@@ -21,12 +21,32 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_min"
+                        android:layout_width="wrap_content"
+                        android:textSize="29sp"
+                        android:text="00"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:textSize="29sp"
-                        android:text="18:00"
+                        android:text=":"
                         android:textColor="@color/white"
                         android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_seconds"
+                        android:layout_width="wrap_content"
+                        android:textSize="29sp"
+                        android:text="00"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content" />
+                    </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:text="待付款，超时订单自动关闭"
@@ -226,6 +246,7 @@
                                 android:text="下单时间"
                                 android:layout_height="wrap_content" />
                             <TextView
+                                android:id="@+id/tv_time"
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/black"
                                 android:textSize="12sp"
@@ -245,6 +266,7 @@
                                 android:text="商品活动"
                                 android:layout_height="wrap_content" />
                             <TextView
+                                android:id="@+id/tv_youhui"
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/black"
                                 android:textSize="12sp"
@@ -265,6 +287,7 @@
                                 android:text="社区活动"
                                 android:layout_height="wrap_content" />
                             <TextView
+                                android:id="@+id/tv_hudong"
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/black"
                                 android:textSize="12sp"
@@ -310,6 +333,7 @@
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_height="51dp">
             <TextView

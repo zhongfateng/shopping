@@ -67,11 +67,12 @@ public class TimeUtil {
                     .substring(0, 4));
             System.out.println("currentYear: "+currentYear);
             System.out.println("year: "+year);
-            if (currentYear == year) {//如果为今年则不显示年份
-                sdf.applyPattern(FORMAT_MONTH_DAY_TIME);
-            } else {
-                sdf.applyPattern(FORMAT_DATE_TIME);
-            }
+//            if (currentYear == year) {//如果为今年则不显示年份
+//                sdf.applyPattern(FORMAT_MONTH_DAY_TIME);
+//            } else {
+//                sdf.applyPattern(FORMAT_DATE_TIME);
+//            }
+            sdf.applyPattern(FORMAT_DATE_TIME);
         } else {
             sdf.applyPattern(format);
         }

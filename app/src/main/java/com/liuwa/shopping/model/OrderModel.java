@@ -15,6 +15,7 @@ public class OrderModel implements Serializable{
     public String type;
     public String address;
     public int allbuynum;
+    public double youhui;
     public ArrayList<InnerModel>  childlist;
     public class InnerModel{
         public int buyNum;
