@@ -16,15 +16,16 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:orientation="vertical">
-                <com.liuwa.shopping.view.MyGridView
+                <com.liuwa.shopping.view.MyListView
                     android:id="@+id/gv__list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingVertical="10dp"
                     android:numColumns="1"
+                    android:dividerHeight="8dp"
+                    android:divider="@color/transparent"
                     android:horizontalSpacing="0.5dp"
                     android:verticalSpacing="0.5dp"
-                    ></com.liuwa.shopping.view.MyGridView>
+                    ></com.liuwa.shopping.view.MyListView>
             </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 </LinearLayout>

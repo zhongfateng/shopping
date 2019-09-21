@@ -31,4 +31,5 @@ public class ProductModel implements Serializable{
     public String paixuNum;
     public String area;
     public String peiSong;
+    public String content;
 }

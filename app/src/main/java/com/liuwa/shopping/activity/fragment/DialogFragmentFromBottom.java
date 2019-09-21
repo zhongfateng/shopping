@@ -73,6 +73,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
     private GridView hlv;
     private GuiGeAdapter adapter;
     private ImageView img_show;
+    private ImageView img_close;
     //选择的数量和属性
     private String selectProid;
     private int num=1;
@@ -129,6 +130,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
         View view = inflater.inflate(R.layout.activity_bottom_product_detail_layout, container, false);
         tv_name=(TextView)view.findViewById(R.id.tv_name);
         img_show=(ImageView)view.findViewById(R.id.img_show);
+        img_close=(ImageView)view.findViewById(R.id.img_close);
         tv_price=(TextView)view.findViewById(R.id.tv_price);
         iv_sub=(TextView)view.findViewById(R.id.iv_sub);
         iv_add=(TextView)view.findViewById(R.id.iv_add);
@@ -139,7 +141,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
         tv_ok.setOnClickListener(this);
         iv_sub.setOnClickListener(this);
         iv_add.setOnClickListener(this);
-        img_show.setOnClickListener(this);
+        img_close.setOnClickListener(this);
         return view;
     }
 
@@ -284,7 +286,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
                 num++;
                 tv_commodity_show_num.setText(num+"");
                 break;
-            case R.id.img_show:
+            case R.id.img_close:
                 dismiss();
                 break;
             case R.id.iv_sub:

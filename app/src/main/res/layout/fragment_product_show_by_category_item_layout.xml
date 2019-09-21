@@ -7,16 +7,12 @@
         android:id="@+id/pullToScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_favorite"
         ptr:ptrAnimationStyle="rotate"
         ptr:ptrMode="both">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:paddingTop="10dp"
-                android:background="@color/bg_favorite"
                 android:orientation="vertical">
                 <com.liuwa.shopping.view.MyGridView
                     android:id="@+id/gv__list"

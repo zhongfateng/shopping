@@ -33,6 +33,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.github.jaiimageio.impl.common.ImageUtil;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -714,17 +715,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
 			final ImageItemModel model=imageIdList.get(position);
-			ImageLoader.getInstance().displayImage(model.getImageUrl(), holder.imageView, new DisplayImageOptions.Builder()
-					.showImageForEmptyUri(R.mipmap.ic_launcher)
-					.showImageOnFail(R.mipmap.ic_launcher)
-					.showImageOnLoading(R.mipmap.ic_launcher)
-					.resetViewBeforeLoading(true)
-					.cacheOnDisk(true)
-					.bitmapConfig(Bitmap.Config.RGB_565)
-					.considerExifParams(true)
-					.displayer(new FadeInBitmapDisplayer(100))
-					.build(), new SimpleImageLoadingListener());
-
+			ImageShowUtil.showImage(model.getImageUrl(),holder.imageView);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -799,16 +790,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			}
 			CategoryModel  Model=	cateList.get(position);
 			views.hot_name.setText(Model.getProClassesName());
-			ImageLoader.getInstance().displayImage("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1559814520,1200587741&fm=26&gp=0.jpg", views.hot_image, new DisplayImageOptions.Builder()
-					.showImageForEmptyUri(R.mipmap.ic_launcher)
-					.showImageOnFail(R.mipmap.ic_launcher)
-					.showImageOnLoading(R.mipmap.ic_launcher)
-					.resetViewBeforeLoading(true)
-					.cacheOnDisk(true)
-					.bitmapConfig(Bitmap.Config.RGB_565)
-					.considerExifParams(true)
-					.displayer(new FadeInBitmapDisplayer(100))
-					.build(), new SimpleImageLoadingListener());
+			ImageShowUtil.showImage(Model.getImgPath(),views.hot_image);
 			return convertView;
 		}
 	}

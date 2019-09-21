@@ -20,6 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.OrderDetailActivity;
+import com.liuwa.shopping.activity.RefundActivity;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.OrderAdapter;
 import com.liuwa.shopping.client.Constants;
@@ -34,6 +35,7 @@ import com.liuwa.shopping.model.OrderTitleModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.view.MyGridView;
+import com.liuwa.shopping.view.MyListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,7 +66,7 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
     private int page=1;
     private int pageSize=10;
     private PullToRefreshScrollView pullToRefreshScrollView;
-    private MyGridView gv_favoriate_list;
+    private MyListView gv_favoriate_list;
     private OrderAdapter fpAdapter;
     private ArrayList<OrderModel> proList = new ArrayList<OrderModel>();
 
@@ -108,7 +110,7 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
              rootView =inflater.inflate(R.layout.fragment_order_show_by_category_item_layout, container, false);
         }
         pullToRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pullToScrollView);
-        gv_favoriate_list        = (MyGridView)rootView.findViewById(R.id.gv__list);
+        gv_favoriate_list        = (MyListView)rootView.findViewById(R.id.gv__list);
         fpAdapter                 =  new OrderAdapter(getActivity(),proList);
         pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
@@ -177,7 +179,16 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
 
     @Override
     public void cartOnClick(OrderModel model) {
-        Toast.makeText(getActivity(),"购物车点击",Toast.LENGTH_SHORT).show();
+        Intent intent =new Intent(getActivity(), OrderDetailActivity.class);
+        intent.putExtra("order_id",model.orderId);
+        getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void tuiKuanClick(OrderModel model) {
+        Intent intent =new Intent(getActivity(), RefundActivity.class);
+        intent.putExtra("model",model);
+        getActivity().startActivity(intent);
     }
 
     /**
@@ -264,7 +275,7 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
                         JSONArray jsonObject = job.getJSONArray("data");
                         Gson localGson = new GsonBuilder().disableHtmlEscaping()
                                 .create();
-                        ;
+                        proList.clear();
                         proList.addAll((Collection<? extends OrderModel>) localGson.fromJson(jsonObject.toString(),
                                 new TypeToken<ArrayList<OrderModel>>() {
                                 }.getType()));

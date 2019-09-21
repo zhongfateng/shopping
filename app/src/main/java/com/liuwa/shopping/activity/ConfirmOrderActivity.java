@@ -29,6 +29,7 @@ import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.AddressModel;
 import com.liuwa.shopping.model.BaseDataModel;
+import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
@@ -61,6 +62,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 	private TextView tv_shouhuoren,tv_tel,tv_detail,tv_head_name,tv_didian;
 	public static  final  int REQCODE=89;
 	public String addressid;
+	public TextView tv_tip,tv_p_num;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,6 +91,9 @@ public class ConfirmOrderActivity extends BaseActivity{
 		tv_detail=(TextView)findViewById(R.id.tv_detail);
 		tv_head_name=(TextView)findViewById(R.id.tv_head_name);
 		tv_didian=(TextView)findViewById(R.id.tv_didian);
+
+		tv_tip=(TextView)findViewById(R.id.tv_tip);
+		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
 
 	}
 	
@@ -137,7 +142,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 		map.put(Constants.kPARAMNAME, param);
 		LKHttpRequest areaReq = new LKHttpRequest(map, getAddressHandler());
 
-		new LKHttpRequestQueue().addHttpRequest(categoryReq,areaReq)
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -159,12 +164,36 @@ public class ConfirmOrderActivity extends BaseActivity{
 					if(code==Constants.CODE)
 					{
 						JSONObject jsonObject=job.getJSONObject("data");
+						tv_tip.setText(jsonObject.getString("yjps"));
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
+						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
+						if(orderModel.address==null||orderModel.address.length()==0){
+							rl_add.setVisibility(View.VISIBLE);
+							rl_address.setVisibility(View.GONE);
+						}else
+						{
+							JSONObject add=jsonObject.getJSONObject("addressmap");
+							rl_address.setVisibility(View.VISIBLE);
+							rl_add.setVisibility(View.GONE);
+							tv_shouhuoren.setText(add.getString("lxRen"));
+							tv_tel.setText(add.getString("lxTel"));
+							tv_detail.setText(add.getString("detail"));
+						}
+						{
+							JSONObject leader = jsonObject.getJSONObject("leadermap");
+							tv_head_name.setText(leader.getString("tname"));
+							tv_didian.setText(leader.getString("taddress"));
+
+						}
+						{
+
+						}
 						orderProductItems.clear();
 						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
 								new TypeToken<ArrayList<OrderProductItem>>() {
 								}.getType()));
+						tv_p_num.setText("共"+orderModel.allbuynum+"件商品");
 						fpAdapter.notifyDataSetChanged();
 					}
 					else
@@ -189,15 +218,14 @@ public class ConfirmOrderActivity extends BaseActivity{
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONObject jsonObject = job.getJSONObject("data");
+						JSONArray jsonObject = job.getJSONArray("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
 						ArrayList<AddressModel> addressModels=localGson.fromJson(jsonObject.toString(),
 								new TypeToken<ArrayList<AddressModel>>() {
 								}.getType());
 						if(addressModels.size()==0){
-							rl_add.setVisibility(View.VISIBLE);
-							rl_address.setVisibility(View.GONE);
+
 						}else {
 							rl_address.setVisibility(View.VISIBLE);
 							rl_add.setVisibility(View.GONE);

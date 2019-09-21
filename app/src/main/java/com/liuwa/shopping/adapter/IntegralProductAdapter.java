@@ -67,7 +67,7 @@ public class IntegralProductAdapter extends BaseAdapter {
 		}
 		final ProductModel  productModel=productList.get(position);
 		viewHolder.tv_name.setText(productModel.proName);
-		viewHolder.tv_integral.setText(productModel+"积分");
+		viewHolder.tv_integral.setText("4000"+"积分");
 		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.client.Constants;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -15,7 +16,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 public class ImageShowUtil {
     public static void showImage(String url, ImageView imageView){
-        ImageLoader.getInstance().displayImage(url, imageView, new DisplayImageOptions.Builder()
+        ImageLoader.getInstance().displayImage(Constants.IMAGEHOSTPRE+url, imageView, new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.mipmap.ic_launcher)
                 .showImageOnFail(R.mipmap.ic_launcher)
                 .showImageOnLoading(R.mipmap.ic_launcher)

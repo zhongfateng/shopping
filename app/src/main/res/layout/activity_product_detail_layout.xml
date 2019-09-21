@@ -78,6 +78,8 @@
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="8dp"
                         android:layout_height="wrap_content">
                         <TextView
                             android:id="@+id/tv_ship"
@@ -103,10 +105,14 @@
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.3dp"
+                    android:background="@color/view_line"
+                    ></View>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
-                    android:layout_marginTop="15dp"
                     android:layout_height="wrap_content">
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -114,7 +120,6 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:background="@color/white"
-                        android:layout_marginTop="15dp"
                         android:layout_height="42dp">
                         <TextView
                             android:layout_width="wrap_content"
@@ -126,11 +131,13 @@
                             android:layout_height="wrap_content" />
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="@string/ceshi"
+                            android:text="标准"
                             android:textSize="14sp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="16dp"
+                            android:drawableRight="@mipmap/gui_r"
+                            android:drawablePadding="4dp"
                             android:textColor="@color/ship_color"
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
@@ -141,7 +148,6 @@
                         android:paddingRight="15dp"
                         android:background="@color/white"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="15dp"
                         android:layout_height="42dp">
                         <TextView
                             android:layout_width="wrap_content"
@@ -152,6 +158,7 @@
                             android:textColor="@color/product_name_color"
                             android:layout_height="wrap_content" />
                         <TextView
+                            android:id="@+id/tv_peisong"
                             android:layout_width="wrap_content"
                             android:text="@string/ceshi"
                             android:textSize="14sp"
@@ -164,8 +171,8 @@
                 </LinearLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="15dp"
                     android:background="@color/white"
+                    android:visibility="gone"
                     android:layout_height="wrap_content">
                     <com.liuwa.shopping.view.MyGridView
                         android:id="@+id/gw_toumai"

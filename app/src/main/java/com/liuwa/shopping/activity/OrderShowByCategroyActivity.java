@@ -16,12 +16,23 @@ import android.widget.TextView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.OrderShowByCategoryFragment;
 import com.liuwa.shopping.activity.fragment.ProductShowByCategoryFragment;
+import com.liuwa.shopping.client.Constants;
+import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
+import com.liuwa.shopping.client.LKHttpRequest;
+import com.liuwa.shopping.client.LKHttpRequestQueue;
+import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.CategoryModel;
 import com.liuwa.shopping.model.OrderTitleModel;
 import com.liuwa.shopping.util.DatasUtils;
+import com.liuwa.shopping.util.Md5SecurityUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class OrderShowByCategroyActivity extends BaseActivity implements OrderShowByCategoryFragment.OnFragmentInteractionListener {
@@ -32,8 +43,8 @@ public class OrderShowByCategroyActivity extends BaseActivity implements OrderSh
 	private TabLayout tl_tabs;
 	private int position;
 	private ArrayList<OrderTitleModel> cateList= DatasUtils.orderTitleModels;
-	private ArrayList fragmentList;
-	private ArrayList list_Title;
+	private ArrayList fragmentList=new ArrayList<>();;
+	private ArrayList list_Title= new ArrayList<>();;
 	private MyPagerAdapter adapter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,19 +54,10 @@ public class OrderShowByCategroyActivity extends BaseActivity implements OrderSh
 		init();
 		initViews();
 		initEvent();
+		doGetDatas();
 	}
 	public void init(){
 		position=getIntent().getIntExtra("position",0);
-		fragmentList = new ArrayList<>();
-		list_Title = new ArrayList<>();
-		fragmentList.add(OrderShowByCategoryFragment.newInstance("0"));
-		fragmentList.add(OrderShowByCategoryFragment.newInstance("1"));
-		fragmentList.add(OrderShowByCategoryFragment.newInstance("2"));
-		fragmentList.add(OrderShowByCategoryFragment.newInstance("3"));
-		list_Title.add("获取明细");
-		list_Title.add("使用记录");
-		list_Title.add("获取明细");
-		list_Title.add("获取明细");
 	}
 	public void initViews() {
 		img_back=(ImageView)findViewById(R.id.img_back);
@@ -82,8 +84,7 @@ public class OrderShowByCategroyActivity extends BaseActivity implements OrderSh
 
 			}
 		});
-		tl_tabs.getTabAt(position).select();
-		vp_category.setCurrentItem(position);
+
 
 	}
 	
@@ -140,5 +141,59 @@ public class OrderShowByCategroyActivity extends BaseActivity implements OrderSh
 		public CharSequence getPageTitle(int position) {
 			return list_Title.get(position);
 		}
+	}
+	private void doGetDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.CountOrder);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+	private LKAsyncHttpResponseHandler getProductHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code== Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						list_Title.add("待付款"+"("+jsonObject.getString("count1")+")");
+						list_Title.add("待发货"+"("+jsonObject.getString("count2")+")");
+						list_Title.add("待提货"+"("+jsonObject.getString("count3")+")");
+						list_Title.add("评价"+"("+jsonObject.getString("count4")+")");
+						fragmentList.add(OrderShowByCategoryFragment.newInstance("0"));
+						fragmentList.add(OrderShowByCategoryFragment.newInstance("1"));
+						fragmentList.add(OrderShowByCategoryFragment.newInstance("2"));
+						fragmentList.add(OrderShowByCategoryFragment.newInstance("3"));
+						adapter.notifyDataSetChanged();
+						tl_tabs.getTabAt(position).select();
+						vp_category.setCurrentItem(position);
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
 	}
 }

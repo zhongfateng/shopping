@@ -9,6 +9,7 @@ public class Constants {
 	public static final String APP_ID                   = "wxdcd80da641faa3ae";
 	public static final String DESCRIPTOR              = "com.liuwa.shopping";
 	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
+	public static final String IMAGEHOSTPRE             = "http://ht.xingyf.com/upload/";
 	public static final String USER_ID					= "user_id";
 	public static final String USER					    = "user";
 	public static final String kHOSTNAME 				= "hostName";
@@ -103,7 +104,10 @@ public class Constants {
 	public static final String SheQuList                    = "indexsqlistjson";
 	//推荐购买
 	public static final String TUIJIAN                      = "tuijianbuyjson";
-
+	//团长中心
+	public static final String HEADERCETER                 = "leadercenterjson";
+	//订单数量
+	public static final String CountOrder                  = "memordercount";
 
 
 

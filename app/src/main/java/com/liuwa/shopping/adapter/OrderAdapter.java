@@ -14,6 +14,7 @@ import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.TimeUtil;
 
 import org.w3c.dom.Text;
 
@@ -73,22 +74,37 @@ public class OrderAdapter extends BaseAdapter {
 			viewHolder.tv_total=(TextView)convertView.findViewById(R.id.tv_total);
 			viewHolder.tv_order_num=(TextView)convertView.findViewById(R.id.tv_order_num);
 			viewHolder.tv_detail=(TextView)convertView.findViewById(R.id.tv_detail);
+			viewHolder.tv_tuikuan=(TextView)convertView.findViewById(R.id.tv_tuikuan);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final OrderModel  productModel=productList.get(position);
+		viewHolder.tv_time.setText("下单时间："+ TimeUtil.getFormatTimeFromTimestamp(productModel.createDate.time,null));
+		viewHolder.tv_tag.setText(productModel.childlist.get(0).typename);
 		viewHolder.tv_detail.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onCartClick.cartOnClick(productModel);
 			}
 		});
+		viewHolder.tv_tuikuan.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 		viewHolder.tv_name.setText(productModel.childlist.get(0).proName);
-		viewHolder.tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.childlist.get(0).buyPrice)));
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.childlist.get(0).buyPrice)));
 		viewHolder.tv_num.setText("x"+productModel.childlist.get(0).buyNum+"");
 		ImageShowUtil.showImage(productModel.childlist.get(0).fristimg,viewHolder.img_show);
-		viewHolder.tv_total.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.total)));
+		viewHolder.tv_total.setText("实付：￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.total)));
+		viewHolder.tv_order_num.setText("共"+productModel.allbuynum+"件商品");
+		if(productModel.type.equals("1")||productModel.type.equals("2")){
+			viewHolder.tv_tuikuan.setVisibility(View.VISIBLE);
+		}else{
+			viewHolder.tv_tuikuan.setVisibility(View.GONE);
+		}
 		return convertView;
 	}
 
@@ -102,8 +118,10 @@ public class OrderAdapter extends BaseAdapter {
 		public TextView tv_total;
 		public TextView tv_order_num;
 		public TextView tv_detail;
-	}
+		public TextView tv_tuikuan;
+ 	}
 	public interface OnCartClick{
 		public void cartOnClick(OrderModel model);
+		public void tuiKuanClick(OrderModel model);
 	}
 }

@@ -12,6 +12,7 @@
         app:tabSelectedTextColor="@color/tab_select_color"
         app:tabIndicatorHeight="2dp"
         android:layout_marginTop="5dp"
+        android:background="@color/white"
         app:tabGravity="center"
         app:tabMode="fixed"
         app:tabPaddingTop="@dimen/sp_12"

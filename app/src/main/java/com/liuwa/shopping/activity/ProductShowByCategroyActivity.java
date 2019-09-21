@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -41,7 +42,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 
 
@@ -52,15 +55,18 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 	private android.support.v4.view.ViewPager vp_category;
 	private TabLayout tl_tabs;
 	private int position;
-	private ArrayList<CategoryModel> cateList;
+	private ArrayList<CategoryModel> cateList=new ArrayList<>();
+	private ArrayList<Fragment> fragments=new ArrayList<>();
+	public MyPagerAdapter adapter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_product_show_by_category_layout);
 		this.context=this;
-		init();
+		//init();
 		initViews();
 		initEvent();
+		doGetData();
 	}
 	public void init(){
 		position=getParent().getIntent().getIntExtra("position",0);
@@ -68,26 +74,12 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 	}
 	public void initViews() {
 		img_back=(ImageView)findViewById(R.id.img_back);
+		img_back.setVisibility(View.GONE);
 		tv_title =(TextView)findViewById(R.id.tv_title);
 		tl_tabs   =(TabLayout)findViewById(R.id.tl_tabs);
 		vp_category =(ViewPager)findViewById(R.id.vp_category);
-		vp_category.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-			@Override
-			public Fragment getItem(int position) {
-				return ProductShowByCategoryFragment.newInstance(cateList.get(position));
-			}
-
-			@Override
-			public int getCount() {
-				return cateList.size();
-			}
-			@Nullable
-			@Override
-			public CharSequence getPageTitle(int position) {
-				String title=cateList.get(position).getProClassesName();
-				return title;
-			}
-		});
+		adapter=new MyPagerAdapter(getSupportFragmentManager(),context,fragments,cateList);
+		vp_category.setAdapter(adapter);
 		tl_tabs.setupWithViewPager(vp_category);
 		tl_tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
@@ -105,8 +97,7 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 
 			}
 		});
-		tl_tabs.getTabAt(position).select();
-		vp_category.setCurrentItem(position);
+
 
 	}
 	
@@ -129,5 +120,88 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 	@Override
 	public void onFragmentInteraction(Uri uri) {
 
+	}
+	public void doGetData(){
+		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
+		categorymap1.put("timespan", System.currentTimeMillis()+"");
+		categorymap1.put("sign",Md5SecurityUtil.getSignature(categorymap1));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.GETCATEGORY);
+		requestCategoryMap.put(Constants.kPARAMNAME, categorymap1);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getCagegoryHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler getCagegoryHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE) {
+						JSONArray array=job.getJSONArray("data");
+						cateList.clear();
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						cateList.addAll((Collection<? extends CategoryModel>) localGson.fromJson(array.toString(),
+								new TypeToken<ArrayList<CategoryModel>>() {
+								}.getType()));
+						for(CategoryModel model :cateList){
+							fragments.add(ProductShowByCategoryFragment.newInstance(model));
+						}
+						adapter.notifyDataSetChanged();
+//						tl_tabs.getTabAt(position).select();
+//						vp_category.setCurrentItem(position);
+					} else {
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+	public class MyPagerAdapter extends FragmentPagerAdapter {
+		private Context context;
+		private List<Fragment> fragmentList;
+		private List<CategoryModel> list_Title;
+
+		public MyPagerAdapter(FragmentManager fm, Context context, List<Fragment> fragmentList, List<CategoryModel> list_Title) {
+			super(fm);
+			this.context = context;
+			this.fragmentList = fragmentList;
+			this.list_Title = list_Title;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return fragmentList.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return list_Title.size();
+		}
+
+		/**
+		 * //此方法用来显示tab上的名字
+		 *
+		 * @param position
+		 * @return
+		 */
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return list_Title.get(position).getProClassesName();
+		}
 	}
 }

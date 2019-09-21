@@ -14,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.IntegralFragment;
@@ -65,15 +67,10 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 		init();
 		initViews();
 		initEvent();
+		doGetDatas();
 	}
 
 	public void init() {
-		ProductModel model=new ProductModel();
-		model.proName="asdfas";
-		ProductModel model2=new ProductModel();
-		model2.proName="asdfas";
-		proList.add(model);
-		proList.add(model2);
 	}
 
 	public void initViews() {
@@ -82,19 +79,36 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 		tv_title.setText("积分商城");
 		img_top=(ImageView)findViewById(R.id.img_top);
 		double height = getScreenPixel().widthPixels / (360 / 148.0);
-		ViewGroup.LayoutParams params = img_top.getLayoutParams();
+		final ViewGroup.LayoutParams params = img_top.getLayoutParams();
 		params.height = (int) (height);
 		img_top.setLayoutParams(params);
 		ImageShowUtil.showImage("http://img4.imgtn.bdimg.com/it/u=508387608,2848974022&fm=26&gp=0.jpg",img_top);
 		pullToRefreshScrollView=(PullToRefreshScrollView)findViewById(R.id.pullToScrollView);
+		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+			@Override
+			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+				page=1;
+				proList.clear();
+				doGetDatas();
+				pullToRefreshScrollView.onRefreshComplete();
+			}
+
+			@Override
+			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+				page++;
+				doGetDatas();
+				pullToRefreshScrollView.onRefreshComplete();
+			}
+		});
 		gw_list=(GridView)findViewById(R.id.gw_list);
 		integralProductAdapter=new IntegralProductAdapter(context,proList);
 		gw_list.setAdapter(integralProductAdapter);
-		integralProductAdapter.notifyDataSetChanged();
 		gw_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ProductModel model=(ProductModel) parent.getAdapter().getItem(position);
 				Intent intent =new Intent(context,IntegralProductDetailActivity.class);
+				intent.putExtra("model",model);
 				startActivity(intent);
 			}
 		});
@@ -123,9 +137,9 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-		productParam.put("start",page);
+		productParam.put("page",page);
 		productParam.put("rows",pageSize);
-		productParam.put("classesid","1");
+		productParam.put("classesid","63");
 		productParam.put("type",1);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
@@ -162,7 +176,6 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 								}.getType());
 						proList.addAll(baseModel.list);
 						integralProductAdapter.notifyDataSetChanged();
-
 					}
 					else
 					{

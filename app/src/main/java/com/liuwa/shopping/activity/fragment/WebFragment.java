@@ -13,6 +13,10 @@ import android.webkit.WebViewClient;
 import android.webkit.WebViewFragment;
 
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.util.ScreenUtil;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,16 +89,34 @@ public class WebFragment extends Fragment {
         //设置支持缩放
         webSettings.setBuiltInZoomControls(true);
         //加载需要显示的网页
-        webView.loadUrl("http://www.jd.com");
         //设置Web视图
         webView.setWebViewClient(new webViewClient ());
-
+        webView.loadDataWithBaseURL(null,mParam2, "text/html",  "utf-8", null);
     }
     //Web视图
     private class webViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            String javascript = "javascript:function ResizeImages() {" +
+                    "var myimg,oldwidth;" +
+                    "var maxwidth = document.body.clientWidth;" +
+                    "for(i=0;i <document.images.length;i++){" +
+                    "myimg = document.images[i];" +
+                    "if(myimg.width > maxwidth){" +
+                    "oldwidth = myimg.width;" +
+                    "myimg.width = maxwidth;" +
+                    "}" +
+                    "}" +
+                    "}";
+            String width = String.valueOf(ScreenUtil.getWindowsWidth(getActivity()));
+            view.loadUrl(javascript);
+            view.loadUrl("javascript:ResizeImages();");
         }
     }
     // TODO: Rename method, update argument and hook method into UI event

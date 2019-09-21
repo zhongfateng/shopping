@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.ProductDetailActivity;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
@@ -95,23 +97,25 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (rootView == null) {
              rootView =inflater.inflate(R.layout.fragment_product_show_by_category_item_layout, container, false);
         }
-        View rootView =inflater.inflate(R.layout.fragment_product_show_by_category_item_layout, container, false);
         pullToRefreshScrollView = (PullToRefreshScrollView) rootView.findViewById(R.id.pullToScrollView);
         gv_favoriate_list        = (MyGridView)rootView.findViewById(R.id.gv__list);
         fpAdapter                 =  new FavoriateProductAdapter(getActivity(),proList);
         pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                loadData();
                 pullToRefreshScrollView.onRefreshComplete();
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                page++;
+                loadDataMore();
                 pullToRefreshScrollView.onRefreshComplete();
             }
         });
@@ -121,7 +125,9 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-                Toast.makeText(getActivity(),"item"+model.proName,Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getActivity(), ProductDetailActivity.class);
+                intent.putExtra("model",model);
+                getActivity().startActivity(intent);
             }
         });
         return rootView;
@@ -171,7 +177,6 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
 
     @Override
     public void cartOnClick(ProductModel model) {
-        Toast.makeText(getActivity(),"购物车点击"+model.proName,Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -197,12 +202,34 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
         //数据加载完毕,恢复标记,防止重复加载
         mIsFirstLoad = false;
     }
+    //根据分类加载商品列表
+    private void loadDataMore(){
+        TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+        productParam.put("page",page);
+        productParam.put("rows",pageSize);
+        productParam.put("classesid",mParam1.getProClassesId());
+        productParam.put("type",1);
+        productParam.put("timespan", System.currentTimeMillis()+"");
+        productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+        HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+        requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+        requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+        LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getMoreHandler());
+        new LKHttpRequestQueue().addHttpRequest(categoryReq)
+                .executeQueue(null, new LKHttpRequestQueueDone(){
 
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+
+                });
+    }
 
     //根据分类加载商品列表
     private void loadData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page",page);
+        productParam.put("page",1);
         productParam.put("rows",pageSize);
         productParam.put("classesid",mParam1.getProClassesId());
         productParam.put("type",1);
@@ -223,26 +250,36 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
                 });
     }
 
-    private LKAsyncHttpResponseHandler getNoticeHandler(){
+    private LKAsyncHttpResponseHandler getMoreHandler(){
         return new LKAsyncHttpResponseHandler(){
+
             @Override
             public void successAction(Object obj) {
                 String json=(String)obj;
                 try {
-                    JSONObject job= new JSONObject(json);
+                    JSONObject  job= new JSONObject(json);
                     int code =	job.getInt("code");
                     if(code==Constants.CODE)
                     {
-                        JSONArray array=job.getJSONArray("data");
+                        JSONObject jsonObject = job.getJSONObject("data");
+                        Gson localGson = new GsonBuilder().disableHtmlEscaping()
+                                .create();
+                        baseModel = localGson.fromJson(jsonObject.toString(),
+                                new TypeToken<BaseDataModel<ProductModel>>() {
+                                }.getType());
+                        proList.addAll(baseModel.list);
+                        fpAdapter.notifyDataSetChanged();
 
                     }
                     else
                     {
                     }
+
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+
             }
         };
     }
@@ -261,6 +298,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
                         JSONObject jsonObject = job.getJSONObject("data");
                         Gson localGson = new GsonBuilder().disableHtmlEscaping()
                                 .create();
+                        proList.clear();
                         baseModel = localGson.fromJson(jsonObject.toString(),
                                 new TypeToken<BaseDataModel<ProductModel>>() {
                                 }.getType());

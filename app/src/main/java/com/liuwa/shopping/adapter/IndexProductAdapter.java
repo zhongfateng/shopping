@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
 
 import java.math.BigDecimal;
@@ -73,6 +74,7 @@ public class IndexProductAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final ProductModel  productModel=productList.get(position);
+		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		viewHolder.tv_show_name.setText(productModel.proName);
 		viewHolder.tv_market_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
 		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));

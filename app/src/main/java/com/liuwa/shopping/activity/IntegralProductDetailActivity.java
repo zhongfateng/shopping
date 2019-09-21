@@ -30,6 +30,8 @@ import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
+import com.liuwa.shopping.model.ImageItemModel;
+import com.liuwa.shopping.model.ProductChildModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
@@ -42,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -53,14 +56,20 @@ public class IntegralProductDetailActivity extends BaseActivity implements Integ
 	private AutoScrollViewPager     index_auto_scroll_view;
 	private CirclePageIndicator     cpi_indicator;
 	private ImagePagerAdapter imageAdatper;
+	private ArrayList<ImageItemModel> imgs=new ArrayList<>();
 	private TextView tv_duihuan;
+	private ProductModel model;
+	public TextView tv_name,tv_kucun;
+	private ArrayList<ProductChildModel> productChildModels=new ArrayList<>();
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_integral_product_detail_layout);
 		this.context=this;
+		model=(ProductModel) getIntent().getSerializableExtra("model");
 		initViews();
 		initEvent();
+		doGetDatas();
 	}
 
 	public void initViews() {
@@ -74,14 +83,15 @@ public class IntegralProductDetailActivity extends BaseActivity implements Integ
 		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
 		params.height = (int) (height);
 		index_auto_scroll_view.setLayoutParams(params);
-		imageAdatper=new ImagePagerAdapter(context, DatasUtils.imageList);
+		imageAdatper=new ImagePagerAdapter(context, imgs);
 		index_auto_scroll_view.setAdapter(imageAdatper);
 		cpi_indicator.setViewPager(index_auto_scroll_view);
 		index_auto_scroll_view.startAutoScroll();
 		index_auto_scroll_view.setInterval(4000);
 		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
-		imageAdatper.notifyDataSetChanged();
 		tv_duihuan=(TextView)findViewById(R.id.tv_duihuan);
+		tv_name=(TextView)findViewById(R.id.tv_name);
+		tv_kucun=(TextView)findViewById(R.id.tv_kucun);
 	}
 	
 	public void initEvent(){
@@ -106,26 +116,23 @@ public class IntegralProductDetailActivity extends BaseActivity implements Integ
 
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
-//		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-//		productParam.put("start",page);
-//		productParam.put("rows",pageSize);
-//		productParam.put("classesid","1");
-//		productParam.put("type",1);
-//		productParam.put("timespan", System.currentTimeMillis()+"");
-//		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
-//		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-//		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
-//		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
-//		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-//		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-//				.executeQueue(null, new LKHttpRequestQueueDone(){
-//
-//					@Override
-//					public void onComplete() {
-//						super.onComplete();
-//					}
-//
-//				});
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("proheadid",model.proHeadId);
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTDETAIL);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
 	}
 
 	private LKAsyncHttpResponseHandler getNoticeHandler(){
@@ -175,15 +182,24 @@ public class IntegralProductDetailActivity extends BaseActivity implements Integ
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-//						JSONObject jsonObject = job.getJSONObject("data");
-//						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-//								.create();
-//						baseModel = localGson.fromJson(jsonObject.toString(),
-//								new TypeToken<BaseDataModel<ProductModel>>() {
-//								}.getType());
-//						proList.addAll(baseModel.list);
-//						fpAdapter.notifyDataSetChanged();
+						JSONObject jsonObject = job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						JSONObject oo=jsonObject.getJSONObject("product_head");
+						ProductModel model = localGson.fromJson(oo.toString(),
+								ProductModel.class);
+						tv_name.setText(model.proName+"");
+						tv_kucun.setText("剩余"+model.allKuCun+"件");
 
+						imgs.clear();
+						imgs.addAll((Collection<? extends ImageItemModel>)localGson.fromJson(jsonObject.getJSONArray("proimglist").toString(),
+								new TypeToken<ArrayList<ImageItemModel>>() {
+								}.getType()));
+						imageAdatper.notifyDataSetChanged();
+						productChildModels.clear();
+						productChildModels.addAll((Collection<? extends ProductChildModel>)localGson.fromJson(jsonObject.getJSONArray("prochildlist").toString(),
+								new TypeToken<ArrayList<ProductChildModel>>() {
+								}.getType()));
 					}
 					else
 					{

@@ -11,6 +11,7 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.IndexActivity;
 import com.liuwa.shopping.adapter.jakewharton.salvage.RecyclingPagerAdapter;
 import com.liuwa.shopping.model.ImageItemModel;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.ListUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -68,17 +69,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
         holder.imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         final ImageItemModel model=imageIdList.get(position);
-        ImageLoader.getInstance().displayImage(model.getImageUrl(), holder.imageView, new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.mipmap.ic_launcher)
-                .showImageOnFail(R.mipmap.ic_launcher)
-                .showImageOnLoading(R.mipmap.ic_launcher)
-                .resetViewBeforeLoading(true)
-                .cacheOnDisk(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .considerExifParams(true)
-                .displayer(new FadeInBitmapDisplayer(100))
-                .build(), new SimpleImageLoadingListener());
-
+        ImageShowUtil.showImage(model.imgPath,holder.imageView);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

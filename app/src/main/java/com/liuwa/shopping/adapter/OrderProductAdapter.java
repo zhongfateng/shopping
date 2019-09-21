@@ -74,8 +74,7 @@ public class OrderProductAdapter extends BaseAdapter {
 		viewHolder.tv_name.setText(productModel.proName);
 		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.buyPrice)));
 		viewHolder.tv_num.setText("x"+productModel.buyNum);
-		viewHolder.tv_pay.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.buyPrice)));
-		viewHolder.tv_p_num.setText(productModel.buyNum+"件商品");
+		viewHolder.tv_pay.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.total)));
 		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}

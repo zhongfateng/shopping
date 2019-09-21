@@ -70,8 +70,9 @@
                             android:textColor="@color/detail_address_color"
                             android:layout_height="wrap_content" />
                         <TextView
-                            android:layout_width="70dp"
+                            android:layout_width="wrap_content"
                             android:text="提货人"
+                            android:id="@+id/tv_tihuoren"
                             android:textSize="12sp"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content" />
@@ -83,13 +84,14 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="70dp"
-                            android:text="提货人"
+                            android:text="提货地点"
                             android:textSize="12sp"
                             android:textColor="@color/detail_address_color"
                             android:layout_height="wrap_content" />
                         <TextView
                             android:layout_width="70dp"
                             android:text="提货人"
+                            android:id="@+id/tv_detail_leader"
                             android:textSize="12sp"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content" />
@@ -107,6 +109,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:textSize="14sp"
+                            android:id="@+id/tv_order_num"
                             android:textColor="@color/black"
                             android:text="共1件商品"
                             android:layout_height="wrap_content" />
@@ -117,6 +120,7 @@
                             android:text="小计:"
                             android:layout_height="wrap_content" />
                         <TextView
+                            android:id="@+id/tv_total"
                             android:layout_width="wrap_content"
                             android:textSize="16sp"
                             android:textColor="@color/money_color"
@@ -124,11 +128,46 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
-                <ListView
+                <LinearLayout
                     android:layout_width="match_parent"
+                    android:orientation="vertical"
                     android:layout_marginLeft="9dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="9dp"
-                    android:layout_height="wrap_content"></ListView>
+                    android:background="@drawable/bg_favoriate_item"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_height="36dp">
+                        <TextView
+                            android:id="@+id/tv_tip"
+                            android:layout_width="wrap_content"
+                            android:textColor="@color/gray_d"
+                            android:textSize="12sp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:id="@+id/tv_p_num"
+                            android:layout_width="wrap_content"
+                            android:textColor="@color/gray_d"
+                            android:textSize="12sp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:background="@color/view_line"
+                        android:layout_height="0.2dp"></View>
+                    <com.liuwa.shopping.view.MyListView
+                        android:id="@+id/lv_show_list"
+                        android:layout_width="match_parent"
+                        android:divider="@color/transparent"
+                        android:layout_height="match_parent"></com.liuwa.shopping.view.MyListView>
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_marginLeft="9dp"
@@ -167,6 +206,7 @@
                                 android:text="订单编号"
                                 android:layout_height="wrap_content" />
                             <TextView
+                                android:id="@+id/tv_order_id"
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/black"
                                 android:textSize="12sp"

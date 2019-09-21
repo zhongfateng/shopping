@@ -17,20 +17,26 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
+import com.liuwa.shopping.adapter.OrderProductAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
+import com.liuwa.shopping.model.OrderModel;
+import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.view.MyGridView;
+import com.liuwa.shopping.view.MyListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,16 +47,21 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	private Context context;
 	private ImageView img_back;
 	private MyGridView gv_favoriate_list;
-	private FavoriateProductAdapter fpAdapter;
+	private OrderProductAdapter fpAdapter;
 	private ArrayList<ProductModel> proList = new ArrayList<ProductModel>();
 	private TextView tv_title;
 	public BaseDataModel<ProductModel>  baseModel;
 	private TextView tv_cancel,tv_pay;
+	private MyListView lv_show_list;
+	private ArrayList<OrderProductItem> orderProductItems =new ArrayList<OrderProductItem>();
+	public String order_id;
+	public TextView tv_tip,tv_shouhuoren,tv_detail_leader,tv_order_num,tv_total,tv_p_num,tv_order_id;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_detail_layout);
 		this.context=this;
+		order_id=getIntent().getStringExtra("order_id");
 		initViews();
 		initEvent();
 		doGetDatas();
@@ -61,11 +72,10 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView) findViewById(R.id.tv_title);
 		tv_title.setText("订单详情");
-		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
-		fpAdapter                 =  new FavoriateProductAdapter(this,proList);
-		fpAdapter.setOnCartClick(this);
-		gv_favoriate_list.setAdapter(fpAdapter);
-		gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		lv_show_list=(MyListView)findViewById(R.id.lv_show_list);
+		fpAdapter=new OrderProductAdapter(context,orderProductItems);
+		lv_show_list.setAdapter(fpAdapter);
+		lv_show_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
@@ -74,6 +84,13 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		});
 		tv_cancel=(TextView)findViewById(R.id.tv_cancel);
 		tv_pay=(TextView)findViewById(R.id.tv_pay_order);
+		tv_tip=(TextView)findViewById(R.id.tv_tip);
+		tv_shouhuoren=(TextView)findViewById(R.id.tv_tihuoren);
+		tv_detail_leader=(TextView)findViewById(R.id.tv_detail_leader);
+		tv_order_num=(TextView)findViewById(R.id.tv_order_num);
+		tv_total=(TextView)findViewById(R.id.tv_total);
+		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
+		tv_order_id=(TextView)findViewById(R.id.tv_order_id);
 	}
 	
 	public void initEvent(){
@@ -105,15 +122,15 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-		productParam.put("clssesid",1);
+		productParam.put("orderid",order_id);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-		requestCategoryMap.put(Constants.kMETHODNAME,Constants.TUIJIAN);
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.ORDERDETAIL);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
-		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getOrderHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -147,9 +164,8 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		};
 	}
 
-	private LKAsyncHttpResponseHandler getProductHandler(){
+	private LKAsyncHttpResponseHandler getOrderHandler(){
 		return new LKAsyncHttpResponseHandler(){
-
 			@Override
 			public void successAction(Object obj) {
 				String json=(String)obj;
@@ -158,28 +174,36 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONObject jsonObject = job.getJSONObject("data");
+						JSONObject jsonObject=job.getJSONObject("data");
+						tv_tip.setText(jsonObject.getString("yjps"));
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						proList.clear();
-						localGson.fromJson(jsonObject.toString(),
-								new TypeToken<BaseDataModel<ProductModel>>() {
-								}.getType());
-						proList.addAll((Collection<? extends ProductModel>)localGson.fromJson(jsonObject.toString(),
-								new TypeToken<BaseDataModel<ProductModel>>() {
-								}.getType()));
-						fpAdapter.notifyDataSetChanged();
+						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
+							JSONObject add=jsonObject.getJSONObject("addressmap");
+							tv_shouhuoren.setText(add.getString("lxRen")+"  "+add.getString("lxTel"));
+						{
+							JSONObject leader = jsonObject.getJSONObject("leadermap");
+							tv_detail_leader.setText(leader.getString("taddress"));
+						}
+						{
 
+						}
+						orderProductItems.clear();
+						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
+								new TypeToken<ArrayList<OrderProductItem>>() {
+								}.getType()));
+						tv_order_num.setText("共"+orderModel.allbuynum+"件商品");
+						tv_p_num.setText(orderModel.allbuynum+"件商品");
+						tv_total.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.total)));
+						fpAdapter.notifyDataSetChanged();
 					}
 					else
 					{
 					}
-
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		};
 	}

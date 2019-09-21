@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -89,12 +90,12 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private CirclePageIndicator     cpi_indicator;
 	private  ImagePagerAdapter      imageAdatper;
 	private TextView tv_name,tv_price,tv_market_price;
-	private TextView tv_kucun,tv_xiaoliang,tv_ship;
+	private TextView tv_kucun,tv_xiaoliang,tv_ship,tv_peisong;
 	private ArrayList<ImageItemModel> imgs=new ArrayList<>();
 	private ArrayList<ProductChildModel> productChildModels=new ArrayList<>();
 	private ProductModel model;
-	private ArrayList fragmentList;
-	private ArrayList list_Title;
+	private ArrayList fragmentList= new ArrayList<>();;
+	private ArrayList list_Title = new ArrayList<>();;
 	private MyPagerAdapter pageradapter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,16 +103,14 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		setContentView(R.layout.activity_product_detail_layout);
 		this.context = this;
 		model=(ProductModel)getIntent().getSerializableExtra("model");
-		init();
+		//init();
 		initViews();
 		initEvent();
 		doGetDatas();
 	}
 
-	public void init() {
-		fragmentList = new ArrayList<>();
-		list_Title = new ArrayList<>();
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+	public void init(ProductModel model) {
+		fragmentList.add(WebFragment.newInstance("dsaf",model.content));
 		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
 		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
 		list_Title.add("详情");
@@ -193,6 +192,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		tv_kucun=(TextView)findViewById(R.id.tv_kucun);
 		tv_xiaoliang=(TextView)findViewById(R.id.tv_xiaoliang);
 		tv_ship=(TextView)findViewById(R.id.tv_ship);
+		tv_peisong=findViewById(R.id.tv_peisong);
 
 	}
 	public PopupWindow.OnDismissListener  dissmiss=new PopupWindow.OnDismissListener() {
@@ -237,11 +237,21 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 					break;
 				case R.id.tv_add_cart:
 					//加入购物车
+					if(token==null||token.length()==0){
+						intent =new Intent(context,LoginActivity.class);
+						startActivity(intent);
+						return;
+					}
 					tag="1";
 					DialogFragmentFromBottom();
 					break;
 				case R.id.tv_buy:
 					//立即购买
+					if(token==null||token.length()==0){
+						intent =new Intent(context,LoginActivity.class);
+						startActivity(intent);
+						return;
+					}
 					tag="0";
 					DialogFragmentFromBottom();
 					break;
@@ -327,9 +337,8 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 
 						tv_kucun.setText("库存："+model.allKuCun);
 						tv_xiaoliang.setText("销量："+model.allSaleNum);
-						if(model.peiSong.equals("1")){
 						tv_ship.setText("运费：包邮");
-						}
+						tv_peisong.setText(model.peiSong);
 						imgs.clear();
 						imgs.addAll((Collection<? extends ImageItemModel>)localGson.fromJson(jsonObject.getJSONArray("proimglist").toString(),
 								new TypeToken<ArrayList<ImageItemModel>>() {
@@ -339,7 +348,8 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						productChildModels.addAll((Collection<? extends ProductChildModel>)localGson.fromJson(jsonObject.getJSONArray("prochildlist").toString(),
 								new TypeToken<ArrayList<ProductChildModel>>() {
 								}.getType()));
-
+						init(model);
+						pageradapter.notifyDataSetChanged();
 					}
 					else
 					{
@@ -522,6 +532,11 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	@Override
 	public void cartOnClick(ProductModel model) {
 
+	}
+	public void onResume(){
+		super.onResume();
+		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
+		token=pre.getString(Constants.TOKEN,"");
 	}
 
 	@Override

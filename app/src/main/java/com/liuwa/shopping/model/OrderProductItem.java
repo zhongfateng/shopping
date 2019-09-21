@@ -24,5 +24,6 @@ public class OrderProductItem {
     public int  buyNum;
     public String proName;
     public String guiGe;
+    public double total;
 
 }

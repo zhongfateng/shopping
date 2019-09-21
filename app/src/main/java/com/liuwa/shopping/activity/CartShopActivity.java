@@ -26,6 +26,7 @@ import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.ImageItemModel;
 import com.liuwa.shopping.model.ShoppingCartModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,13 +51,11 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	private double totalPrice = 0.00;// 购买的商品总价
 	private int totalCount = 0;// 购买的商品总数量
 	private static final String TAG = "CartShopActivity";
-	private String leaderid;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cart_list_layout);
 		this.context=this;
-		leaderid= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.LeadId,"");
 		initViews();
 		initEvent();
 	}
@@ -333,7 +332,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("prochilds", proids);
 		productParam.put("buynums", nums);
-		productParam.put("leaderid", leaderid);
+		productParam.put("leaderid", SPUtils.getShequMode(context,Constants.AREA).leaderId);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -341,7 +340,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, Handler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -364,6 +363,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 					{
 						String orderid  = job.getString("data");
 						Intent intent =new Intent(context,ConfirmOrderActivity.class);
+						intent.putExtra("order_id",orderid);
 						startActivity(intent);
 					}
 					else if(code==402)
