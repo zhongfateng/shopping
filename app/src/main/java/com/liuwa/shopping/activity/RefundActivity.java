@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -20,26 +21,34 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.DialogFragmentSelectBottom;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
+import com.liuwa.shopping.adapter.RefundAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
+import com.liuwa.shopping.model.OrderModel;
+import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.TimeUtil;
 import com.liuwa.shopping.view.MyGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 
 
-public class RefundActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,DialogFragmentSelectBottom.OnFragmentInteractionListener{
+public class RefundActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,DialogFragmentSelectBottom.OnFragmentInteractionListener,RefundAdapter.CheckInterface{
 	private Context context;
 	private ImageView img_back;
 	private MyGridView gv_favoriate_list;
@@ -49,20 +58,25 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	public int pageSize=10;
 	private TextView tv_title;
 	public BaseDataModel<ProductModel>  baseModel;
+	private ArrayList<OrderProductItem> orderProductItems =new ArrayList<OrderProductItem>();
 	private String classesid;
 	private ImageView img_top;
 	private TextView tv_commit;
 	private RelativeLayout rl_select;
 	private TextView tv_reason;
 	public String selectStr;
+	public RefundAdapter refundAdapter;
+	public ListView list_shopping_cart;
+	public String 		order_id;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_refund_layout);
 		this.context=this;
+		order_id=(String) getIntent().getStringExtra("order_id");
 		initViews();
 		initEvent();
-		//doGetDatas();
+		doGetDatas();
 	}
 
 	public void initViews()
@@ -81,6 +95,12 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 //				Toast.makeText(context,"item"+model.proName,Toast.LENGTH_SHORT).show();
 //			}
 //		});
+		list_shopping_cart=(ListView)findViewById(R.id.list_shopping_cart);
+		//装配数据
+		refundAdapter = new RefundAdapter(this);
+		refundAdapter.setCheckInterface(this);
+		list_shopping_cart.setAdapter(refundAdapter);
+
 		tv_commit=(TextView)findViewById(R.id.tv_commit);
 		rl_select=(RelativeLayout)findViewById(R.id.rl_select);
 		tv_reason=(TextView)findViewById(R.id.tv_reason);
@@ -101,7 +121,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 				RefundActivity.this.finish();
 				break;
 			case R.id.tv_commit:
-				RefundActivity.this.finish();
+				lementOnder();
 				break;
 			case R.id.rl_select:
 				DialogFragmentFromBottom();
@@ -129,16 +149,13 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-		productParam.put("page",page);
-		productParam.put("rows",pageSize);
-		productParam.put("classesid",classesid);
-		productParam.put("type",1);
+		productParam.put("orderid",order_id);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.ORDERDETAIL);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
-		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getOrderHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
@@ -160,7 +177,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONArray array=job.getJSONArray("data");
+						Toast.makeText(context,"退款申请已经提交!",Toast.LENGTH_SHORT).show();
 
 					}
 					else
@@ -174,9 +191,8 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 		};
 	}
 
-	private LKAsyncHttpResponseHandler getProductHandler(){
+	private LKAsyncHttpResponseHandler getOrderHandler(){
 		return new LKAsyncHttpResponseHandler(){
-
 			@Override
 			public void successAction(Object obj) {
 				String json=(String)obj;
@@ -185,25 +201,24 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONObject jsonObject = job.getJSONObject("data");
+						JSONObject jsonObject=job.getJSONObject("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						baseModel = localGson.fromJson(jsonObject.toString(),
-								new TypeToken<BaseDataModel<ProductModel>>() {
-								}.getType());
-						proList.addAll(baseModel.list);
-						fpAdapter.notifyDataSetChanged();
-
+						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
+						JSONObject add=jsonObject.getJSONObject("addressmap");
+						orderProductItems.clear();
+						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
+								new TypeToken<ArrayList<OrderProductItem>>() {
+								}.getType()));
+						refundAdapter.setShoppingCartModelList(orderProductItems);
 					}
 					else
 					{
 					}
-
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		};
 	}
@@ -218,5 +233,51 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	public void onFragmentInteraction(String selectStr) {
 		this.selectStr=selectStr;
 		tv_reason.setText(selectStr);
+	}
+
+	@Override
+	public void checkGroup(int position, boolean isChecked) {
+		orderProductItems.get(position).setChoosed(isChecked);
+		refundAdapter.notifyDataSetChanged();
+	}
+	private void lementOnder() {
+		//选中的需要提交的商品清单
+		StringBuffer proids = new StringBuffer();
+		int i=0;
+		for (OrderProductItem bean:orderProductItems ){
+			boolean choosed = bean.isChoosed();
+			if (choosed){
+				proids.append(bean.orderChildId);
+				proids.append(",");
+				i++;
+			}
+		}
+		if(i==0) {
+			Toast.makeText(context,"请勾选退款订单",Toast.LENGTH_SHORT).show();
+			return;
+
+		}
+		String finalproids = proids.deleteCharAt(proids.length() - 1).toString();
+		tuikuanDatas(finalproids);
+		//提交申请退款
+	}
+	private void tuikuanDatas(String orderchildids){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("orderchildids",orderchildids);
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.Orderdaddressqr);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getNoticeHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
 	}
 }

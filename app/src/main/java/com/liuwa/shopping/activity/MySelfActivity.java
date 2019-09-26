@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,7 @@ public class MySelfActivity extends BaseActivity {
 	private TextView tv_dfk_dot,tv_dfh_dot,tv_dth_dot,tv_pj;
 	private TextView tv_show;
 	private ImageView img_qr;
+	public LinearLayout rl_dfk,rl_dfh,rl_dth,pj;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,6 +74,10 @@ public class MySelfActivity extends BaseActivity {
 	}
 
 	public void initViews() {
+		rl_dfk=(LinearLayout)findViewById(R.id.rl_dfk);
+		rl_dfh=(LinearLayout)findViewById(R.id.rl_dfh);
+		rl_dth=(LinearLayout)findViewById(R.id.rl_dth);
+		pj=(LinearLayout)findViewById(R.id.pj);
 		rl_my_order=(RelativeLayout)findViewById(R.id.rl_my_order);
 		tv_my_integral=(TextView)findViewById(R.id.tv_my_integral);
 		tv_my_money=(TextView)findViewById(R.id.tv_my_money);
@@ -88,11 +94,7 @@ public class MySelfActivity extends BaseActivity {
 		tv_dth_dot=(TextView)findViewById(R.id.tv_dth_dot);
 		tv_pj=(TextView)findViewById(R.id.tv_pj);
 		img_qr=(ImageView)findViewById(R.id.img_qr);
-		//二维码的背景图片
-		Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
-			//生成的二维码图片
-		Bitmap qr = QrCodeUtil.createQRImage("hello world",300,300,bmp);
-		img_qr.setImageBitmap(qr);
+
 	}
 	public void initEvent(){
 		tv_my_integral.setOnClickListener(onClickListener);
@@ -103,6 +105,10 @@ public class MySelfActivity extends BaseActivity {
 		rl_money.setOnClickListener(onClickListener);
 		rl_connect.setOnClickListener(onClickListener);
 		rl_my_order.setOnClickListener(onClickListener);
+		rl_dfk.setOnClickListener(onClickListener);
+		rl_dfh.setOnClickListener(onClickListener);
+		rl_dth.setOnClickListener(onClickListener);
+		pj.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -112,6 +118,26 @@ public class MySelfActivity extends BaseActivity {
 			switch (v.getId()) {
 				case R.id.tv_my_integral:
 					intent=new Intent(context,IntegralActivity.class);
+					startActivity(intent);
+					break;
+				case R.id.rl_dfk:
+					intent=new Intent(context,OrderShowByCategroyActivity.class);
+					intent.putExtra("position",0);
+					startActivity(intent);
+					break;
+				case R.id.rl_dfh:
+					intent=new Intent(context,OrderShowByCategroyActivity.class);
+					intent.putExtra("position",1);
+					startActivity(intent);
+					break;
+				case R.id.rl_dth:
+					intent=new Intent(context,OrderShowByCategroyActivity.class);
+					intent.putExtra("position",2);
+					startActivity(intent);
+					break;
+				case R.id.pj:
+					intent=new Intent(context,OrderShowByCategroyActivity.class);
+					intent.putExtra("position",3);
 					startActivity(intent);
 					break;
 				case R.id.tv_my_money:
@@ -211,6 +237,9 @@ public class MySelfActivity extends BaseActivity {
 								}
 							});
 						}
+						//生成的二维码图片
+						Bitmap qr = QrCodeUtil.createQRImage(userModel.memberId,300,300,null);
+						img_qr.setImageBitmap(qr);
 					}
 					else {
 					}

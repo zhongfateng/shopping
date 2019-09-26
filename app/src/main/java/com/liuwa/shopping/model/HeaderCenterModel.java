@@ -10,4 +10,6 @@ public class HeaderCenterModel {
     public String Tel;
     public double nowMoney;
     public String region;
+    public String tname;
+    public String leaderId;
 }

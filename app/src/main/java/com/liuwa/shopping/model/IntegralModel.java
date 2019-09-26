@@ -8,6 +8,7 @@ package com.liuwa.shopping.model;
 public class IntegralModel {
    public int score;
    public CreateData createDate;
+   public String type;
    public class CreateData{
        public long time;
    }

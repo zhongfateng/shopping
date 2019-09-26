@@ -70,8 +70,8 @@ public class TimeBuyAdapter extends BaseAdapter {
 		}
 		final ProductModel  productModel=productList.get(position);
 		viewHolder.tv_name.setText(productModel.proName);
-		viewHolder.tv_show_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
-		viewHolder.tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
+		viewHolder.tv_show_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
 		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}

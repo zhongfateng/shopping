@@ -48,7 +48,7 @@ public class MoneyFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private View rootView;
-    private static final String ARG_PARAM1 = "model";
+    private static final String ARG_PARAM1 = "param1";
     boolean mIsPrepare = false;		//视图还没准备好
     boolean mIsVisible= false;		//不可见
     boolean mIsFirstLoad = true;	//第一次加载
@@ -61,6 +61,7 @@ public class MoneyFragment extends Fragment{
     // TODO: Rename and change types of parameters
     public BaseDataModel<Money>  baseModel;
     private OnFragmentInteractionListener mListener;
+    private String mParam1;
 
     public MoneyFragment() {
         // Required empty public constructor
@@ -73,8 +74,11 @@ public class MoneyFragment extends Fragment{
      * @return A new instance of fragment BlankFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MoneyFragment newInstance() {
+    public static MoneyFragment newInstance(String param1) {
         MoneyFragment fragment = new MoneyFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -82,7 +86,7 @@ public class MoneyFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            mParam1=getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -98,16 +102,13 @@ public class MoneyFragment extends Fragment{
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                page=1;
-                moneyArrayList.clear();
                 loadData();
                 refreshView.onRefreshComplete();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                page++;
-                loadData();
+                loadMoreData();
                 refreshView.onRefreshComplete();
             }
         });
@@ -187,12 +188,12 @@ public class MoneyFragment extends Fragment{
     //根据分类加载商品列表
     private void loadData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page",page);
+        productParam.put("page","1");
         productParam.put("rows",pageSize);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-        requestCategoryMap.put(Constants.kMETHODNAME,Constants.MONEYORDER);
+        requestCategoryMap.put(Constants.kMETHODNAME,mParam1);
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
@@ -231,6 +232,61 @@ public class MoneyFragment extends Fragment{
     }
 
     private LKAsyncHttpResponseHandler getProductHandler(){
+        return new LKAsyncHttpResponseHandler(){
+
+            @Override
+            public void successAction(Object obj) {
+                String json=(String)obj;
+                try {
+                    JSONObject  job= new JSONObject(json);
+                    int code =	job.getInt("code");
+                    if(code==Constants.CODE)
+                    {
+                        JSONObject jsonObject = job.getJSONObject("data");
+                        Gson localGson = new GsonBuilder().disableHtmlEscaping()
+                                .create();
+                        baseModel = localGson.fromJson(jsonObject.toString(),
+                                new TypeToken<BaseDataModel<Money>>() {
+                                }.getType());
+                        moneyArrayList.clear();
+                        moneyArrayList.addAll(baseModel.list);
+                        moneyItemAdapter.notifyDataSetChanged();
+                    }
+                    else
+                    {
+                    }
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+    //根据分类加载商品列表
+    private void loadMoreData(){
+        TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+        productParam.put("page",page++);
+        productParam.put("rows",pageSize);
+        productParam.put("timespan", System.currentTimeMillis()+"");
+        productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+        HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+        requestCategoryMap.put(Constants.kMETHODNAME,mParam1);
+        requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+        LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getMoreHandler());
+        new LKHttpRequestQueue().addHttpRequest(categoryReq)
+                .executeQueue(null, new LKHttpRequestQueueDone(){
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+
+                });
+    }
+
+    private LKAsyncHttpResponseHandler getMoreHandler(){
         return new LKAsyncHttpResponseHandler(){
 
             @Override

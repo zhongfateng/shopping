@@ -117,6 +117,7 @@
             android:background="@mipmap/tuihu"
             android:visibility="invisible"
             android:textSize="12sp"
+            android:text="申请退款"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="center"

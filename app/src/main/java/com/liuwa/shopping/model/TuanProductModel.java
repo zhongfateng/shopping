@@ -9,4 +9,7 @@ public class TuanProductModel {
     public int maxNum;
     public String proName;
     public double realPrice;
+    public double priceA;
+    public double price;
+    public String tuanInfoId;
 }

@@ -32,4 +32,8 @@ public class ProductModel implements Serializable{
     public String area;
     public String peiSong;
     public String content;
+    public String miaoInfoId;
+    public String tuanInfoId;
+    public String saleNum;
+    public double priceA;
 }

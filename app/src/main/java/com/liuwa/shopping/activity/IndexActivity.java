@@ -67,6 +67,7 @@ import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.ListUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.SPUtils;
+import com.liuwa.shopping.util.TimeUtil;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.CircleImageView;
 import com.liuwa.shopping.view.MyGridView;
@@ -126,6 +127,8 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private ImageView img_xihua,tv_ce,img_show_left;
 	public LinearLayout go_shequ;
 	public static  final  int ReqShequ= 67;
+	public TextView show_more;
+	public String tuanId;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -176,12 +179,22 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		mgw_guangou=(MyGridView)findViewById(R.id.mgw_guangou);
 		indexTuanGouProductAdapter	= new IndexTuanGouProductAdapter(context,tuanItemList);
 		mgw_guangou.setAdapter(indexTuanGouProductAdapter);
+		mgw_guangou.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				TuanProductModel model=(TuanProductModel) parent.getAdapter().getItem(position);
+				Intent intent=new Intent(context,BuyTogetherProductActivity.class);
+				intent.putExtra("tuanInfoId",model.tuanInfoId);
+				startActivity(intent);
+			}
+		});
 		tb_time.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
 				int position=tab.getPosition();
 				tuanItemList.clear();
 				tuanItemList.addAll(tuanList.get(position).tuaninfolist);
+				tuanId=tuanList.get(position).tuan.tuanId;
 				indexTuanGouProductAdapter.notifyDataSetChanged();
 			}
 
@@ -213,6 +226,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		tv_ce=(ImageView)findViewById(R.id.tv_ce);
 		img_show_left=(ImageView)findViewById(R.id.img_show_left);
 		go_shequ=(LinearLayout)findViewById(R.id.go_shequ);
+		show_more=(TextView)findViewById(R.id.show_more);
 	}
 	public void initEvent(){
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
@@ -248,7 +262,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		ll_left.setOnClickListener(onClickListener);
 		ll_content.setOnClickListener(onClickListener);
 		ll_down.setOnClickListener(onClickListener);
-
+		show_more.setOnClickListener(onClickListener);
 		//定位监听
 		//gps定位监听器
 		mAMapLocationListener = new AMapLocationListener() {
@@ -300,6 +314,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			case R.id.ll_left:
 				intent=new Intent(context,TimeBuyActivity.class);
 				intent.putExtra("classesid",(String)v.getTag());
+				startActivity(intent);
+				break;
+			case R.id.show_more:
+				intent=new Intent(context,BuyTogetherActivity.class);
+				intent.putExtra("tuanId",tuanId);
 				startActivity(intent);
 				break;
 			case R.id.go_shequ:
@@ -581,7 +600,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 								}.getType())));
 						for(TuanModel<TuanProductModel> model:tuanList){
 							String tuancode=model.tuan.tuanCode;
-							tb_time.addTab(tb_time.newTab().setText(tuancode+""));
+							tb_time.addTab(tb_time.newTab().setText(TimeUtil.getFormatimestamp(model.tuan.beginTime.time,model.tuan.endTime.time,"HH:mm")+""));
 						}
 						tb_time.getTabAt(0).select();
                         tuanItemList.clear();
@@ -644,13 +663,13 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						ArrayList<SpecialModel> list=localGson.fromJson(array.toString(),
 								new TypeToken<ArrayList<SpecialModel>>() {
 								}.getType());
-						ImageShowUtil.showImage(list.get(2).imgPath,img_xihua);
+						//ImageShowUtil.showImage(list.get(2).imgPath,img_xihua);
 						ll_down.setTag(list.get(2).proClassesId);
 
-						ImageShowUtil.showImage(list.get(1).imgPath,tv_ce);
+						//ImageShowUtil.showImage(list.get(1).imgPath,tv_ce);
 						ll_content.setTag(list.get(1).proClassesId);
 
-						ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
+						//ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
 						ll_left.setTag(list.get(0).proClassesId);
 					}
 					else {

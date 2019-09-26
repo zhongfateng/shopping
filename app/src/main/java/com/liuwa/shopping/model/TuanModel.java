@@ -13,6 +13,7 @@ public class TuanModel<T> {
         public String tuanCode;
         public TimeModel beginTime;
         public TimeModel endTime;
+        public String tuanId;
         public class TimeModel{
             public String  beginTime;
             public long    time;

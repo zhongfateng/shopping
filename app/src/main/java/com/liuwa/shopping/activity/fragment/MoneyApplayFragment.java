@@ -17,6 +17,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.adapter.MoneyItemAdapter;
+import com.liuwa.shopping.adapter.MoneyYongJinAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
@@ -54,7 +55,7 @@ public class MoneyApplayFragment extends Fragment{
     private int page=1;
     private int pageSize=10;
     private PullToRefreshListView pullToRefreshListView;
-    private MoneyItemAdapter moneyItemAdapter;
+    private MoneyYongJinAdapter moneyItemAdapter;
     private ArrayList<Money> moneyArrayList = new ArrayList<Money>();
 
     // TODO: Rename and change types of parameters
@@ -93,16 +94,21 @@ public class MoneyApplayFragment extends Fragment{
              rootView =inflater.inflate(R.layout.fragment_money_list_layout, container, false);
         }
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.pullToListView);
-        moneyItemAdapter =  new MoneyItemAdapter(getActivity(), moneyArrayList);
+        moneyItemAdapter =  new MoneyYongJinAdapter(getActivity(), moneyArrayList);
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                page=1;
+                moneyArrayList.clear();
+                loadData();
+                pullToRefreshListView.onRefreshComplete();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                page++;
+                loadData();
+                pullToRefreshListView.onRefreshComplete();
             }
         });
         pullToRefreshListView.setAdapter(moneyItemAdapter);
@@ -183,11 +189,10 @@ public class MoneyApplayFragment extends Fragment{
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
         productParam.put("page",page);
         productParam.put("rows",pageSize);
-        productParam.put("type",1);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-        requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+        requestCategoryMap.put(Constants.kMETHODNAME,Constants.leaderyjhdlistjson);
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
@@ -240,10 +245,10 @@ public class MoneyApplayFragment extends Fragment{
                         Gson localGson = new GsonBuilder().disableHtmlEscaping()
                                 .create();
                         baseModel = localGson.fromJson(jsonObject.toString(),
-                                new TypeToken<BaseDataModel<ProductModel>>() {
+                                new TypeToken<BaseDataModel<Money>>() {
                                 }.getType());
-//                        proList.addAll(baseModel.list);
-//                        fpAdapter.notifyDataSetChanged();
+                        moneyArrayList.addAll(baseModel.list);
+                        moneyItemAdapter.notifyDataSetChanged();
 
                     }
                     else

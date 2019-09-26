@@ -49,7 +49,7 @@ public abstract class LKAsyncHttpResponseHandler extends AsyncHttpResponseHandle
 		try {
 			JSONObject object=new JSONObject(content);
 			int  code=  object.getInt("code");
-			if(code==Constants.TOKENCODE){
+			if(code==Constants.TOKENCODE||code==Constants.TOKENNULL){
 				successAction(content);
 				Context context=(Context) ApplicationEnvironment.getInstance().getApplication();
 				Intent intent =new Intent(context, LoginActivity.class);

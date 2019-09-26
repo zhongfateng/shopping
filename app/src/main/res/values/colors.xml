@@ -26,7 +26,7 @@
     <color name="tr_tab_line">#8028903B</color>
     <color name="tab_color">#666666</color>
     <color name="guess_like_color">#5EA8D7</color>
-    <color name="rexiao_color">#35BA12</color>
+    <color name="rexiao_color">#FF9000</color>
     <color name="address_cancel_color">#606060</color>
     <color name="tab_select_color">#28903B</color>
     <color name="confirm">#28903B</color>
@@ -77,5 +77,16 @@
     <color name="i_c">#9F9F9F</color>
     <color name="l_c">#9B9B9B</color>
     <color name="d_c">#6D6C6C</color>
+    <color name="b_c">#B6B6B6</color>
+    <!-- QRCode scanner color begin -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#B0000000</color>
+    <color name="viewfinder_frame">#90FFFFFF</color>
+    <color name="result_point_color">#C0FFFF00</color>
+    <color name="laser_color">#0F0</color>
+    <color name="corner_color">#00FF00</color>
+    <!-- QRCode scanner color end -->
+    <color name="le_color">#FE7199</color>
+    <color name="blue_color">#D2E5D1</color>
 
 </resources>

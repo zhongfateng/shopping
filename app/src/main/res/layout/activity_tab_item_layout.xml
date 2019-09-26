@@ -12,11 +12,17 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="wrap_content"
+                android:src="@mipmap/qg_icon"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_width="wrap_content"
                 android:src="@mipmap/qianggou"
                 android:layout_height="wrap_content" />
             <android.support.design.widget.TabLayout
                 android:id="@+id/tb_time"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                app:tabMode="fixed"
                 app:tabIndicatorHeight="0dp"
                 app:tabBackground="@drawable/bg_tab"
                 android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
@@ -37,6 +43,7 @@
             android:numColumns="3"></com.liuwa.shopping.view.MyGridView>
 
         <TextView
+            android:id="@+id/show_more"
             android:layout_width="15dp"
             android:layout_height="match_parent"
             android:ems="1"

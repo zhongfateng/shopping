@@ -65,8 +65,6 @@ public class TimeUtil {
             int currentYear = Calendar.getInstance().get(Calendar.YEAR);
             int year = Integer.valueOf(sdf.format(new Date(timestamp))
                     .substring(0, 4));
-            System.out.println("currentYear: "+currentYear);
-            System.out.println("year: "+year);
 //            if (currentYear == year) {//如果为今年则不显示年份
 //                sdf.applyPattern(FORMAT_MONTH_DAY_TIME);
 //            } else {
@@ -78,6 +76,33 @@ public class TimeUtil {
         }
         Date date = new Date(timestamp);
         return sdf.format(date);
+    }
+
+    public static String getFormatimestamp(long startTime,long endTime,
+                                                    String format) {
+        if (format == null || format.trim().equals("")) {
+            sdf.applyPattern(FORMAT_DATE);
+            int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+            int year = Integer.valueOf(sdf.format(new Date(startTime))
+                    .substring(0, 4));
+//            if (currentYear == year) {//如果为今年则不显示年份
+//                sdf.applyPattern(FORMAT_MONTH_DAY_TIME);
+//            } else {
+//                sdf.applyPattern(FORMAT_DATE_TIME);
+//            }
+            sdf.applyPattern(FORMAT_DATE_TIME);
+        } else {
+            sdf.applyPattern(format);
+        }
+        long currentTime=new Date().getTime();
+        if(currentTime>=startTime&&currentTime<=endTime){
+            return  sdf.format(startTime)+"\n"+"进行中";
+        }else if(currentTime<startTime){
+            return  sdf.format(startTime)+"\n"+"即将开始";
+        }else if(currentTime>endTime){
+            return  sdf.format(startTime)+"\n"+"已结束";
+        }
+        return sdf.format(startTime);
     }
 
     /**

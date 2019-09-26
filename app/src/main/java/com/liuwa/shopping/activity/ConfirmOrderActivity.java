@@ -61,8 +61,9 @@ public class ConfirmOrderActivity extends BaseActivity{
 	private TextView tv_pay;
 	private TextView tv_shouhuoren,tv_tel,tv_detail,tv_head_name,tv_didian;
 	public static  final  int REQCODE=89;
-	public String addressid;
+	public String addressid="0";
 	public TextView tv_tip,tv_p_num;
+	public LinearLayout ll_goto_address;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,6 +95,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 
 		tv_tip=(TextView)findViewById(R.id.tv_tip);
 		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
+		ll_goto_address=(LinearLayout)findViewById(R.id.ll_goto_address);
 
 	}
 	
@@ -101,6 +103,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 		img_back.setOnClickListener(onClickListener);
 		tv_pay.setOnClickListener(onClickListener);
 		rl_add.setOnClickListener(onClickListener);
+		ll_goto_address.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -111,9 +114,18 @@ public class ConfirmOrderActivity extends BaseActivity{
 			case R.id.img_back:
 				ConfirmOrderActivity.this.finish();
 				break;
+			case R.id.ll_goto_address:
+				intent =new Intent(context,MyAddressActivity.class);
+				startActivityForResult(intent,REQCODE);
+				break;
 			case R.id.tv_pay:
-				Intent intent =new Intent(context,PayTypeActivity.class);
-				startActivity(intent);
+//				Intent intent =new Intent(context,PayTypeActivity.class);
+//				startActivity(intent);
+				if(addressid.equals("0")){
+					Toast.makeText(context,"请添加收货地址",Toast.LENGTH_SHORT).show();
+					return;
+				}
+				comitAddress();
 				break;
 			case R.id.rl_add:
 				intent =new Intent(context,MyAddressActivity.class);
@@ -132,16 +144,6 @@ public class ConfirmOrderActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kMETHODNAME,Constants.ORDERDETAIL);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getOrderHandler());
-
-		TreeMap<String, Object> param = new TreeMap<String, Object>();
-		param.put("isused","1");
-		param.put("timespan", System.currentTimeMillis()+"");
-		param.put("sign", Md5SecurityUtil.getSignature(param));
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(Constants.kMETHODNAME,Constants.GETADDRESS);
-		map.put(Constants.kPARAMNAME, param);
-		LKHttpRequest areaReq = new LKHttpRequest(map, getAddressHandler());
-
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
@@ -151,7 +153,9 @@ public class ConfirmOrderActivity extends BaseActivity{
 					}
 
 				});
+
 	}
+
 
 	private LKAsyncHttpResponseHandler getOrderHandler(){
 		return new LKAsyncHttpResponseHandler(){
@@ -168,11 +172,13 @@ public class ConfirmOrderActivity extends BaseActivity{
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
 						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
-						if(orderModel.address==null||orderModel.address.length()==0){
+						if(orderModel.address.equals("0")){
 							rl_add.setVisibility(View.VISIBLE);
+							addressid="0";
 							rl_address.setVisibility(View.GONE);
 						}else
 						{
+							addressid=orderModel.address;
 							JSONObject add=jsonObject.getJSONObject("addressmap");
 							rl_address.setVisibility(View.VISIBLE);
 							rl_add.setVisibility(View.GONE);
@@ -207,6 +213,27 @@ public class ConfirmOrderActivity extends BaseActivity{
 		};
 	}
 
+	public void comitAddress(){
+		TreeMap<String, Object> param = new TreeMap<String, Object>();
+		param.put("addressid",addressid);
+		param.put("orderid",order_id);
+		param.put("timespan", System.currentTimeMillis()+"");
+		param.put("sign", Md5SecurityUtil.getSignature(param));
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put(Constants.kMETHODNAME,Constants.ComitOrderAddr);
+		map.put(Constants.kPARAMNAME, param);
+		LKHttpRequest areaReq = new LKHttpRequest(map, getAddressHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(areaReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
 	private LKAsyncHttpResponseHandler getAddressHandler(){
 		return new LKAsyncHttpResponseHandler(){
 
@@ -218,20 +245,10 @@ public class ConfirmOrderActivity extends BaseActivity{
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONArray jsonObject = job.getJSONArray("data");
-						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-								.create();
-						ArrayList<AddressModel> addressModels=localGson.fromJson(jsonObject.toString(),
-								new TypeToken<ArrayList<AddressModel>>() {
-								}.getType());
-						if(addressModels.size()==0){
-
-						}else {
-							rl_address.setVisibility(View.VISIBLE);
-							rl_add.setVisibility(View.GONE);
-							AddressModel model=addressModels.get(0);
-							tv_tel.setText(model.lxTel);
-						}
+						Intent intent=new Intent(context,PayTypeActivity.class);
+						intent.putExtra("order_id",order_id);
+						startActivity(intent);
+						ConfirmOrderActivity.this.finish();
 					}
 					else
 					{

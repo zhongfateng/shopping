@@ -287,6 +287,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 							if(interval>0){
 								tv_min.setText("00");
 								tv_seconds.setText("00");
+								ll_bottom.setVisibility(View.GONE);
 							}else {
 								doShowTime(orderModel.createDate.time+15*60*1000);
 							}
@@ -346,9 +347,15 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 					if (day < 0 && hour < 0 && min < 0) {
 //						ll_right.setVisibility(View.GONE);
 //						tv_tag.setText("已关闭");
+						ll_bottom.setVisibility(View.GONE);
 					}
 					tv_min.setText(min + "");
-					tv_seconds.setText(mSecond + "");
+					if(mSecond<10){
+						tv_seconds.setText("0"+mSecond + "");
+					}else {
+						tv_seconds.setText(mSecond + "");
+					}
+
 					break;
 			}
 			super.handleMessage(msg);

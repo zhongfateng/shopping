@@ -91,7 +91,7 @@ public class OrderAdapter extends BaseAdapter {
 		viewHolder.tv_tuikuan.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				onCartClick.tuiKuanClick(productModel);
 			}
 		});
 		viewHolder.tv_name.setText(productModel.childlist.get(0).proName);

@@ -8,6 +8,7 @@ package com.liuwa.shopping.model;
 public class Money {
    public double money;
    public CreateDate createDate;
+   public String type;
    public class CreateDate{
        public long time;
    }

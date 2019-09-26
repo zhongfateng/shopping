@@ -56,8 +56,8 @@ public class IntegralActivity extends BaseActivity implements IntegralFragment.O
 	public void init() {
 		fragmentList = new ArrayList<>();
 		list_Title = new ArrayList<>();
-		fragmentList.add(IntegralFragment.newInstance());
-		fragmentList.add(IntegralFragment.newInstance());
+		fragmentList.add(IntegralFragment.newInstance(Constants.GETINTEGRALORDER));
+		fragmentList.add(IntegralFragment.newInstance(Constants.XIAOFEIORDER));
 		list_Title.add("获取明细");
 		list_Title.add("使用记录");
 	}

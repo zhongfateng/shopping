@@ -38,6 +38,7 @@
                   android:paddingLeft="16dp"
                   android:layout_height="wrap_content">
                   <TextView
+                      android:id="@+id/tv_name"
                       android:layout_width="match_parent"
                       android:text="猫山王榴莲酥饼伴手礼糕点【1份约400g】"
                       android:textSize="13sp"
@@ -48,6 +49,7 @@
                       android:layout_marginTop="27dp"
                       android:layout_height="wrap_content">
                       <TextView
+                          android:id="@+id/tv_price"
                           android:layout_width="wrap_content"
                           android:layout_alignParentLeft="true"
                           android:textSize="20sp"
@@ -55,9 +57,11 @@
                           android:text="@string/ceshi"
                           android:layout_height="wrap_content" />
                       <TextView
+                          android:id="@+id/tv_show_Price"
                           android:layout_width="wrap_content"
                           android:textSize="10sp"
                           android:layout_centerVertical="true"
+                          android:layout_toRightOf="@+id/tv_price"
                           android:layout_marginLeft="11dp"
                           android:textColor="@color/market_money_color"
                           android:text="@string/ceshi"
@@ -104,7 +108,7 @@
             android:textSize="12sp"
             android:text="立即抢"
             android:background="@color/tab_line"
-            android:layout_height="38dp" />
+            android:layout_height="53dp" />
     </RelativeLayout>
 
 </LinearLayout>

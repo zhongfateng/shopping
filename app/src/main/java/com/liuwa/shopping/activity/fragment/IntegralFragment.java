@@ -67,6 +67,7 @@ public class IntegralFragment extends Fragment{
     // TODO: Rename and change types of parameters
     public BaseDataModel<IntegralModel>  baseModel;
     private OnFragmentInteractionListener mListener;
+    public String   mParam1;
 
     public IntegralFragment() {
         // Required empty public constructor
@@ -79,8 +80,11 @@ public class IntegralFragment extends Fragment{
      * @return A new instance of fragment BlankFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static IntegralFragment newInstance() {
+    public static IntegralFragment newInstance(String param1) {
         IntegralFragment fragment = new IntegralFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -88,7 +92,7 @@ public class IntegralFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            mParam1=getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -104,12 +108,13 @@ public class IntegralFragment extends Fragment{
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+             loadData();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                loadMoreData();
+                pullToRefreshListView.onRefreshComplete();
             }
         });
         pullToRefreshListView.setAdapter(integralItemAdapter);
@@ -188,12 +193,12 @@ public class IntegralFragment extends Fragment{
     //根据分类加载商品列表
     private void loadData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page",page);
+        productParam.put("page","1");
         productParam.put("rows",pageSize);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-        requestCategoryMap.put(Constants.kMETHODNAME,Constants.GETINTEGRALORDER);
+        requestCategoryMap.put(Constants.kMETHODNAME,mParam1);
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
@@ -232,6 +237,63 @@ public class IntegralFragment extends Fragment{
     }
 
     private LKAsyncHttpResponseHandler getProductHandler(){
+        return new LKAsyncHttpResponseHandler(){
+
+            @Override
+            public void successAction(Object obj) {
+                String json=(String)obj;
+                try {
+                    JSONObject  job= new JSONObject(json);
+                    int code =	job.getInt("code");
+                    if(code==Constants.CODE)
+                    {
+                        JSONObject jsonObject = job.getJSONObject("data");
+                        Gson localGson = new GsonBuilder().disableHtmlEscaping()
+                                .create();
+                        baseModel = localGson.fromJson(jsonObject.toString(),
+                                new TypeToken<BaseDataModel<IntegralModel>>() {
+                                }.getType());
+                        integralModels.clear();
+                        integralModels.addAll(baseModel.list);
+                        integralItemAdapter.notifyDataSetChanged();
+
+                    }
+                    else
+                    {
+                    }
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+    //根据分类加载商品列表
+    private void loadMoreData(){
+        TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+        productParam.put("page",page++);
+        productParam.put("rows",pageSize);
+        productParam.put("timespan", System.currentTimeMillis()+"");
+        productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+        HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+        requestCategoryMap.put(Constants.kMETHODNAME,mParam1);
+        requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+        LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getMoreHandler());
+        new LKHttpRequestQueue().addHttpRequest(categoryReq)
+                .executeQueue(null, new LKHttpRequestQueueDone(){
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+
+                });
+    }
+
+
+    private LKAsyncHttpResponseHandler getMoreHandler(){
         return new LKAsyncHttpResponseHandler(){
 
             @Override

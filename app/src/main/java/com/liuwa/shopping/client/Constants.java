@@ -33,6 +33,8 @@ public class Constants {
 	public static final int CODE                        = 100;
 	//信息返回CODE值 token生路失效表示正确
 	public static final int TOKENCODE                  = 413 ;
+	public static final int TOKENNULL                  = 412 ;
+
 	public static class Config {
 		public static final boolean DEVELOPER_MODE    = false;
 	}
@@ -92,6 +94,8 @@ public class Constants {
 	public static final String JIESUAN                     = "addorder";
 	//订单列表
 	public static final String ORDERLIST                   = "orderlist";
+	//团长订单列表
+	public static final String LEADERORDERLIST            = "leaderorderlist";
 	//用户积分获得记录
 	public static final String GETINTEGRALORDER           = "memscorehdlistjson";
 	//用户积分获得记录
@@ -108,9 +112,44 @@ public class Constants {
 	public static final String HEADERCETER                 = "leadercenterjson";
 	//订单数量
 	public static final String CountOrder                  = "memordercount";
-
-
-
+	//申请成为副团长页面
+	public static final String ShenQing                    = "leaderfulistjson";
+	//团长订单数量
+	public static final String LeaderOrderCount           = "leaderordercount";
+	//用户待提货
+	public static final String LeaderTihuo                 = "leadertihuo";
+	//用户收货确认核销
+	public static final String LeaderTihuoDo                 = "leadertihuodo";
+	//扫码收货
+	public static final String LeaderShouHuo                 = "leadershouhuo";
+	//确认收货地址
+	public static final String ComitOrderAddr                 = "orderdaddressqr";
+	//订单支付
+	public static final String PAYORDER                      = "payorder";
+	//充值
+	public static final String PAYMoney                      = "memchongzhi";
+	//秒杀列表
+	public static final String MiaoSha                       = "miaolist";
+	//秒杀商品详情
+	public static final String MiaoShaOrder                  = "productinfomiaojson";
+	//秒杀商品下单
+	public static final String MiaoShaOrderADD                 = "addmiaoorder";
+	//团购列表
+	public static final String TUANGOULIST                     = "tuaninfo";
+	//团购商品详情
+	public static final String TUANGOULISTDetail              = "productinfotuanjson";
+	//团购下单
+	public static final String TUANGOUAdd                      = "addtuanorder";
+	//积分商品下单
+	public static final String JiFenADD                         = "addscoreorder";
+	//退款
+	public static final String Orderdaddressqr                 = "orderdaddressqr";
+	//统一成为副团长
+	public static final String TONGYI                            = "leaderfutongyijson";
+	//
+	public static final String ADDLEADERFU                      = "addleaderfujson";
+	//佣金记录
+	public static final String leaderyjhdlistjson               = "leaderyjhdlistjson";
 
 
 }

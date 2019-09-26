@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,7 +189,7 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
     @Override
     public void tuiKuanClick(OrderModel model) {
         Intent intent =new Intent(getActivity(), RefundActivity.class);
-        intent.putExtra("model",model);
+        intent.putExtra("order_id",model.orderId);
         getActivity().startActivity(intent);
     }
 
@@ -220,7 +221,7 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
     //根据分类加载商品列表
     private void loadData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("Type",tag);
+        productParam.put("type",tag);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();

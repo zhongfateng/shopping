@@ -57,6 +57,7 @@
                            android:layout_height="wrap_content">
                            <LinearLayout
                                android:layout_width="match_parent"
+                               android:id="@+id/ll_goto_address"
                                android:layout_height="wrap_content"
                                android:orientation="horizontal">
 
@@ -96,7 +97,7 @@
                                    android:layout_width="wrap_content"
                                    android:textColor="@color/gray_d"
                                    android:textSize="10sp"
-                                   android:text="收货地址"
+                                   android:text="收货地址:   "
                                    android:layout_height="wrap_content" />
                                <TextView
                                    android:id="@+id/tv_detail"
@@ -115,7 +116,7 @@
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/gray_d"
                                 android:textSize="10sp"
-                                android:text="提货地点:"
+                                android:text="提货地点:   "
                                 android:layout_height="wrap_content" />
                             <TextView
                                 android:id="@+id/tv_didian"
@@ -133,7 +134,7 @@
                                 android:layout_width="wrap_content"
                                 android:textColor="@color/gray_d"
                                 android:textSize="10sp"
-                                android:text="团长信息:"
+                                android:text="团长信息:   "
                                 android:layout_height="wrap_content" />
                             <TextView
                                 android:id="@+id/tv_head_name"

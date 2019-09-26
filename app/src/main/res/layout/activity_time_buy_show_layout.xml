@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:background="@color/time_buy_bg"
     android:layout_height="match_parent">
     <include layout="@layout/activity_top_title_layout"></include>
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
@@ -10,10 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         ptr:ptrAnimationStyle="rotate"
-        ptr:ptrMode="both">
+        ptr:ptrMode="pullDownFromTop">
     <LinearLayout android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="@color/time_buy_bg"
         android:orientation="vertical">
         <ImageView
             android:layout_width="match_parent"
@@ -54,7 +54,6 @@
                     android:id="@+id/tv_day"
                     android:layout_width="wrap_content"
                     android:background="@mipmap/time_bg"
-                    android:visibility="invisible"
                     android:textColor="@color/white"
                     android:textSize="10sp"
                     android:gravity="center"
@@ -63,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="10sp"
-                    android:text="："
+                    android:text="天"
                     android:visibility="invisible"
                     android:gravity="center"
                     android:layout_height="wrap_content" />

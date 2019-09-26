@@ -22,7 +22,7 @@
     <string name="show_all_order">查看全部订单</string>
     <string name="my_order">我的订单</string>
     <string name="show_more">查看更多</string>
-    <string name="buy_in_time">限时抢购</string>
+    <string name="buy_in_time">限时秒杀</string>
     <string name="go_to_index">返回首页</string>
     <string name="pay_success">支付成功</string>
     <string name="detail_address_hint">街道、楼牌号</string>

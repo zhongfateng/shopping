@@ -9,12 +9,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.MoneyApplayFragment;
 import com.liuwa.shopping.activity.fragment.MoneyFragment;
+import com.liuwa.shopping.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,10 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 	private ArrayList fragmentList;
 	private ArrayList list_Title;
 	private MyPagerAdapter adapter;
+	private TextView tv_kt,tv_dt;
+	private EditText et_money;
+	private TextView tv_duihuan;
+	private String et_money_str="";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +65,16 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
 		vp_category.setAdapter(adapter);
 		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
+		Util.reflex(tl_tabs);
+		et_money=(EditText)findViewById(R.id.et_money);
+		tv_dt=(TextView)findViewById(R.id.tv_dt);
+		tv_kt=(TextView)findViewById(R.id.tv_kt);
+		tv_duihuan=(TextView)findViewById(R.id.tv_duihuan);
 	}
 
 	public void initEvent() {
 		img_back.setOnClickListener(onClickListener);
+		tv_duihuan.setOnClickListener(onClickListener);
 	}
 
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -71,6 +84,14 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 			switch (v.getId()) {
 				case R.id.img_back:
 					MoneyApplayActivity.this.finish();
+					break;
+				case R.id.tv_duihuan:
+					et_money_str=et_money.getText().toString();
+					if(et_money_str==null||et_money_str.length()==0){
+						Toast.makeText(context,"请输入正确金额",Toast.LENGTH_SHORT).show();
+						return;
+					}
+
 					break;
 			}
 		}

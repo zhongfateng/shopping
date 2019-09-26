@@ -130,6 +130,7 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
+                    android:id="@+id/saomashouhuo"
                     android:gravity="center_horizontal"
                     android:layout_height="wrap_content">
                     <RelativeLayout
@@ -155,6 +156,7 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
+                    android:id="@+id/ll_saomatihuo"
                     android:gravity="center_horizontal"
                     android:layout_height="wrap_content">
                     <RelativeLayout
@@ -171,7 +173,7 @@
                         android:layout_width="wrap_content"
                         android:textSize="12sp"
                         android:textColor="@color/integral_color"
-                        android:text="团长收货"
+                        android:text="扫码核销"
                         android:layout_marginTop="7dp"
                         android:layout_height="wrap_content" />
 
@@ -191,6 +193,7 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
+                    android:id="@+id/tv_xiaoliang"
                     android:gravity="center"
                     android:layout_height="wrap_content">
                     <TextView
@@ -202,6 +205,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/ll_yongjin"
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
@@ -216,6 +220,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/ll_add_header"
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"

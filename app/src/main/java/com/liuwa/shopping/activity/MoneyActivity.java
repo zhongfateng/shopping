@@ -33,7 +33,7 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 	private TextView tv_title;
 	private ViewPager vp_category;
 	private TabLayout tl_tabs;
-	private TextView tv_keyong, tv_jifen, tv_duihuan;
+	private TextView tv_keyong, tv_duihuan;
 	private ArrayList fragmentList;
 	private ArrayList list_Title;
 	private MyPagerAdapter adapter;
@@ -51,8 +51,8 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 	public void init() {
 		fragmentList = new ArrayList<>();
 		list_Title = new ArrayList<>();
-		fragmentList.add(MoneyFragment.newInstance());
-		fragmentList.add(MoneyFragment.newInstance());
+		fragmentList.add(MoneyFragment.newInstance(Constants.MONEYORDER));
+		fragmentList.add(MoneyFragment.newInstance(Constants.XFMONEYORDER));
 		list_Title.add("获取明细");
 		list_Title.add("使用记录");
 	}
@@ -63,7 +63,6 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 		tv_title.setText("余额明细");
 		tv_duihuan = (TextView) findViewById(R.id.tv_duihuan);
 		tv_keyong = (TextView) findViewById(R.id.tv_keyong);
-		tv_jifen = (TextView) findViewById(R.id.tv_jifen);
 		tl_tabs = (TabLayout) findViewById(R.id.tb_top);
 		vp_category = (ViewPager) findViewById(R.id.vp_category);
 		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
@@ -75,7 +74,6 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 		if(userStr!=null){
 			UserModel model =new Gson().fromJson(userStr, UserModel.class);
 			tv_keyong.setText("￥"+model.yuE+"");
-			tv_jifen.setText("累计充值"+model.score);
 		}
 	}
 

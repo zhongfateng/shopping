@@ -22,7 +22,17 @@ public class OrderModel implements Serializable{
         public String fristimg;
         public String proName;
         public double buyPrice;
+        public boolean isChoosed;
         public String typename;
+
+        public void setChoosed(boolean choosed) {
+            isChoosed = choosed;
+        }
+        public boolean isChoosed() {
+            return isChoosed;
+        }
+
+
     }
     public CreateTime createDate;
     public class CreateTime{

@@ -62,9 +62,19 @@ public class MoneyItemAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		Money  model= moneyArrayList.get(position);
-		viewHolder.tv_detail.setText("充值"+model.money+"元");
-		viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time,""));
-		viewHolder.tv_money.setText("+"+model.money);
+		if(model.equals("1")) {
+			viewHolder.tv_detail.setText("充值" + model.money + "元");
+			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
+			viewHolder.tv_money.setText("+" + model.money);
+		}else if(model.type.equals("2")){
+			viewHolder.tv_detail.setText("消费" + model.money + "元");
+			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
+			viewHolder.tv_money.setText("-" + model.money);
+		}else if(model.type.equals("3")){
+			viewHolder.tv_detail.setText("退款" + model.money + "元");
+			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
+			viewHolder.tv_money.setText("+" + model.money);
+		}
 		return convertView;
 	}
 

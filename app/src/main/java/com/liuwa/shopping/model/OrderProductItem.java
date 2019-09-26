@@ -25,5 +25,14 @@ public class OrderProductItem {
     public String proName;
     public String guiGe;
     public double total;
+    public String orderChildId;
+    public boolean isChoosed;
+    public boolean isChoosed() {
+        return isChoosed;
+    }
+
+    public void setChoosed(boolean choosed) {
+        isChoosed = choosed;
+    }
 
 }

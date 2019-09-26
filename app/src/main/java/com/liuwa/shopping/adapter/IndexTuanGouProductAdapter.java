@@ -9,9 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.jaiimageio.impl.common.ImageUtil;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.model.TuanProductModel;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
 
 import java.math.BigDecimal;
@@ -68,9 +70,10 @@ public class IndexTuanGouProductAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final TuanProductModel  productModel=productList.get(position);
-		viewHolder.tv_show_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.realPrice)));
-		viewHolder.tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(productModel.realPrice)));
+		viewHolder.tv_show_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.price)));
+		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.priceA)));
 		viewHolder.tv_title.setText(productModel.proName);
+		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}
 

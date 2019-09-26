@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.fragment.DialogFragmentFromBottom;
 import com.liuwa.shopping.activity.fragment.IntegralDialogFragment;
 import com.liuwa.shopping.activity.fragment.IntegralFragment;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
@@ -35,6 +36,7 @@ import com.liuwa.shopping.model.ProductChildModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
@@ -49,7 +51,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class IntegralProductDetailActivity extends BaseActivity implements IntegralDialogFragment.OnFragmentInteractionListener{
+public class IntegralProductDetailActivity extends BaseActivity implements DialogFragmentFromBottom.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
@@ -108,11 +110,79 @@ public class IntegralProductDetailActivity extends BaseActivity implements Integ
 				IntegralProductDetailActivity.this.finish();
 				break;
 				case R.id.tv_duihuan:
-					showDialog("0");
+					DialogFragmentFromBottom();
 					break;
 			}
 		}
 	};
+
+	private void DialogFragmentFromBottom() {
+		showDialog();
+	}
+	void showDialog() {
+
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		DialogFragmentFromBottom newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels);
+		newFragment.show(ft, "dialog");
+	}
+
+	private void doBuy(String prochildid,int num){
+		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
+		baseParam.put("leaderid", SPUtils.getShequMode(context,Constants.AREA).leaderId);
+		baseParam.put("buynum",num);
+		baseParam.put("buynum",prochildid);
+		baseParam.put("timespan", System.currentTimeMillis()+"");
+		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
+		HashMap<String, Object> requestMap = new HashMap<String, Object>();
+		requestMap.put(Constants.kMETHODNAME,Constants.JiFenADD);
+		requestMap.put(Constants.kPARAMNAME, baseParam);
+		LKHttpRequest cartReq = new LKHttpRequest(requestMap, buyHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(cartReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+
+	}
+	private LKAsyncHttpResponseHandler buyHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code== Constants.CODE) {
+						String order_id=job.getString("data");
+						Intent intent =new Intent(context,ConfirmOrderActivity.class);
+						intent.putExtra("order_id",order_id);
+						startActivity(intent);
+					}
+					else if(code==102){
+						Toast.makeText(context,"当前抢购人数较多请稍后再试",Toast.LENGTH_SHORT).show();
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doGetDatas(){
@@ -214,17 +284,22 @@ public class IntegralProductDetailActivity extends BaseActivity implements Integ
 		};
 	}
 
-	@Override
-	public void onFragmentInteraction(String tag) {
-		if(tag.equals("0")){
-			//去充值
-			Intent intent =new Intent(context,IntegralActivity.class);
-			startActivity(intent);
-		}else if(tag.equals("1")){
-			//成功返回积分商城
+//	@Override
+//	public void onFragmentInteraction(String tag) {
+//		if(tag.equals("0")){
+//			//去充值
 //			Intent intent =new Intent(context,IntegralActivity.class);
 //			startActivity(intent);
-			IntegralProductDetailActivity.this.finish();
-		}
+//		}else if(tag.equals("1")){
+//			//成功返回积分商城
+//			Intent intent =new Intent(context,IntegralActivity.class);
+//			startActivity(intent);
+//			IntegralProductDetailActivity.this.finish();
+//		}
+//	}
+
+	@Override
+	public void onFragmentInteraction(String prochildid, int num) {
+		doBuy(prochildid,num);
 	}
 }

@@ -54,7 +54,6 @@ public class TimeBuyActivity extends BaseActivity{
 	private ArrayList<ProductModel> proList = new ArrayList<ProductModel>();
 	public int page=0;
 	public int pageSize=10;
-	public BaseDataModel<ProductModel>  baseModel;
 	private TextView tv_day,tv_hour,tv_min,tv_second,tv_tag;
 	private long day,hour,min,mSecond;
 	private LinearLayout ll_right;
@@ -68,7 +67,7 @@ public class TimeBuyActivity extends BaseActivity{
 		initViews();
 		initEvent();
 		doGetDatas();
-		doShowTime();
+
 	}
 
 	public void initViews()
@@ -78,16 +77,15 @@ public class TimeBuyActivity extends BaseActivity{
 		tv_title.setText("限时秒杀");
 		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
 		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
-		timeBuyAdapter =  new TimeBuyAdapter(this, DatasUtils.productModels);
+		timeBuyAdapter =  new TimeBuyAdapter(this, proList);
 		gv_favoriate_list.setAdapter(timeBuyAdapter);
-		timeBuyAdapter.notifyDataSetChanged();
 		gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
 				Intent intent=new Intent(context,TimeProductActivity.class);
+				intent.putExtra("miaoinfoid",model.miaoInfoId);
 				startActivity(intent);
-
 			}
 		});
 		tv_tag=(TextView)findViewById(R.id.tv_tag);
@@ -103,8 +101,6 @@ public class TimeBuyActivity extends BaseActivity{
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page=1;
-				proList.clear();
 				doGetDatas();
 				pullToRefreshScrollView.onRefreshComplete();
 			}
@@ -129,18 +125,25 @@ public class TimeBuyActivity extends BaseActivity{
 			}
 		}
 	};
-	public  void doShowTime(){
+	public  void doShowTime(long startTime,long endTime){
 		SimpleDateFormat dataformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			Date date1 = dataformat.parse("2019-11-22 08:30:22");
-			long validTimes = date1.getTime();
 			long timeDQ = new Date().getTime();
-			long date = validTimes - timeDQ;
-			day = date / (1000 * 60 * 60 * 24);
-			hour = (date / (1000 * 60 * 60) - day * 24);
-			min = ((date / (60 * 1000)) - day * 24 * 60 - hour * 60);
-			mSecond = (date / 1000) - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60;
-			startRun();
+			if(timeDQ<startTime){
+				tv_tag.setText("活动尚未开启");
+				ll_right.setVisibility(View.GONE);
+			}else if(timeDQ>startTime&&timeDQ<endTime) {
+				long validTimes = endTime;
+				long date = validTimes - timeDQ;
+				day = date / (1000 * 60 * 60 * 24);
+				hour = (date / (1000 * 60 * 60) - day * 24);
+				min = ((date / (60 * 1000)) - day * 24 * 60 - hour * 60);
+				mSecond = (date / 1000) - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60;
+				startRun();
+			}else if(timeDQ>endTime){
+				tv_tag.setText("活动已结束");
+				ll_right.setVisibility(View.GONE);
+			}
 		}catch (Exception e){
 
 		}
@@ -208,14 +211,10 @@ public class TimeBuyActivity extends BaseActivity{
 
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-		productParam.put("start",page);
-		productParam.put("rows",pageSize);
-		productParam.put("classesid",classesid);
-		productParam.put("type",1);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.MiaoSha);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
@@ -267,12 +266,14 @@ public class TimeBuyActivity extends BaseActivity{
 						JSONObject jsonObject = job.getJSONObject("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						baseModel = localGson.fromJson(jsonObject.toString(),
-								new TypeToken<BaseDataModel<ProductModel>>() {
-								}.getType());
-						proList.addAll(baseModel.list);
+						proList.clear();
+						proList.addAll(localGson.fromJson(jsonObject.getJSONArray("miaoinfolist").toString(),
+								new TypeToken<ArrayList<ProductModel>>() {
+								}.getType()));
+						long startTime=jsonObject.getJSONObject("miao").getJSONObject("beginTime").getLong("time");
+						long endTime=jsonObject.getJSONObject("miao").getJSONObject("endTime").getLong("time");
 						timeBuyAdapter.notifyDataSetChanged();
-
+						doShowTime(startTime,endTime);
 					}
 					else
 					{
