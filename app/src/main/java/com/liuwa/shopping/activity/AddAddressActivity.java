@@ -152,6 +152,7 @@ public class AddAddressActivity extends BaseActivity implements DialogFragmentSh
 			map.put("detail", detail);
 			map.put("lxRen", input_name);
 			map.put("lxTel", input_phone);
+			map.put("moren",tag);
 			map.put("timespan",System.currentTimeMillis()+"");
 			map.put("sign", Md5SecurityUtil.getSignature(map));
 			HashMap<String, Object> mapend2 = new HashMap<String, Object>();

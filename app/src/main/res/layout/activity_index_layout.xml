@@ -51,7 +51,7 @@
                         android:textColor="@color/black"
                         android:singleLine="true"
                         android:ellipsize="end"
-                        android:drawableRight="@mipmap/arrow"></TextView>
+                        android:drawableRight="@mipmap/arrow_down"></TextView>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/tv_go_search"

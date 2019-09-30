@@ -66,7 +66,7 @@ public class MyAddressActivity extends BaseActivity implements AddressAdapter.On
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				AddressModel model=(AddressModel)parent.getAdapter().getItem(position);
 				Intent intent =new Intent();
-				intent.putExtra("addressid",model.addressId);
+				intent.putExtra("address_model",model);
 				setResult(Activity.RESULT_OK,intent);
 				MyAddressActivity.this.finish();
 			}
@@ -95,17 +95,6 @@ public class MyAddressActivity extends BaseActivity implements AddressAdapter.On
 				case R.id.tv_add:
 					intent=new Intent(context,AddAddressActivity.class);
 					startActivityForResult(intent,REQADD);
-					break;
-				case R.id.tv_go_to_order:
-					intent=new Intent(context,LoginActivity.class);
-					startActivity(intent);
-				break;
-				case R.id.tv_go_to_index:
-					intent=new Intent();
-					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
-					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,3);
-					sendBroadcast(intent);//发送标准广播
-					MyAddressActivity.this.finish();
 					break;
 			}
 		}

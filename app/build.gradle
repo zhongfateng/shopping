@@ -36,12 +36,13 @@ dependencies {
     }
     compile project(path: ':imageloaderlibrary')
     compile project(path: ':pulltorefreshlibrary')
-    implementation 'com.google.code.gson:gson:2.2.4'
+    //implementation 'com.google.code.gson:gson:2.2.4'
     implementation 'com.android.support:design:26.1.0'
     implementation project(':social_sdk_library_project')
     implementation files('libs/AMap2DMap_5.2.0_AMapSearch_5.7.0_AMapLocation_3.7.0_20171229.jar')
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.google.zxing:javase:3.3.3'
+    implementation 'com.github.LuoGuoXin:BaseAndroid:1.0.5'//版本更新
     // 添加下面的内容
     compile (name: 'alipaySdk-15.6.5-20190718211148', ext: 'aar')
 }

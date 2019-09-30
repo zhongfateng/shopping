@@ -455,11 +455,58 @@
                 android:layout_width="match_parent"
                 android:background="@color/view_line"
                 android:layout_height="1dp"></View>
+            <RelativeLayout
+                android:id="@+id/rl_sys_message"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="系统消息"
+                    android:textSize="12sp"
+                    android:drawableLeft="@mipmap/connect"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/pay_success_color"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/view_line"
+                android:layout_height="1dp"></View>
+            <RelativeLayout
+                android:id="@+id/rl_logout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="退出登录"
+                    android:textSize="12sp"
+                    android:drawableLeft="@mipmap/logout"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/pay_success_color"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:background="@drawable/bg_myself_top"
             android:layout_marginTop="@dimen/sp_12"
+            android:layout_marginBottom="12dp"
             android:layout_height="110dp">
             <ImageView
                 android:id="@+id/img_qr"

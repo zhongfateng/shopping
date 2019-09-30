@@ -300,6 +300,10 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 
 	@Override
 	public void onFragmentInteraction(String prochildid, int num) {
-		doBuy(prochildid,num);
+		Intent intent =new Intent(context,IntegralConfirmActivity.class);
+		intent.putExtra("model",model);
+		intent.putExtra("prochild",prochildid);
+		intent.putExtra("num",num);
+		startActivity(intent);
 	}
 }

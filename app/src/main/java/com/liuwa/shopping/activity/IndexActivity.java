@@ -68,6 +68,7 @@ import com.liuwa.shopping.util.ListUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.util.TimeUtil;
+import com.liuwa.shopping.util.VersionUpdataHelper;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.CircleImageView;
 import com.liuwa.shopping.view.MyGridView;
@@ -89,6 +90,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
+
+
 
 public class IndexActivity extends BaseActivity implements IndexProductAdapter.OnCartClick{
 	private Context context;
@@ -298,6 +301,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	protected void onResume() {
 		super.onResume();
 		startLocation();
+		getVersionDatas();
 	}
 	
 	private OnClickListener onClickListener = new OnClickListener() {
@@ -435,6 +439,51 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						editor.putString(Constants.AREA, localGson.toJson(sheQuModel));
 						editor.commit();
 
+					} else {
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+	private void getVersionDatas(){
+		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
+		categorymap1.put("currentVersion", Constants.VERSION);
+		categorymap1.put("timespan", System.currentTimeMillis()+"");
+		categorymap1.put("sign",Md5SecurityUtil.getSignature(categorymap1));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.GetVersion);
+		requestCategoryMap.put(Constants.kPARAMNAME, categorymap1);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, versionHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler versionHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  jobObject= new JSONObject(json);
+					int code =	jobObject.getInt("code");
+					if(code==Constants.CODE) {
+						JSONObject job=jobObject.getJSONObject("data");
+					int  newVersion=	job.getInt("newVersion");
+					String isUpdate  =  job.getString("isUpdate");
+					String 	forceUpdate=job.getString("forceUpdate");
+					String apkurl=job.getString("apkurl");
+					//	new VersionUpdataHelper(context, apkurl,true);
+						BaseAndroid.checkUpdate(IndexActivity.this, 2, "http://gdown.baidu.com/data/wisegame/ecd186afa44f0325/youkushipin_205.apk","更新了XXX\n修复OOO", false);
 					} else {
 					}
 
@@ -663,14 +712,14 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						ArrayList<SpecialModel> list=localGson.fromJson(array.toString(),
 								new TypeToken<ArrayList<SpecialModel>>() {
 								}.getType());
-						//ImageShowUtil.showImage(list.get(2).imgPath,img_xihua);
-						ll_down.setTag(list.get(2).proClassesId);
-
-						//ImageShowUtil.showImage(list.get(1).imgPath,tv_ce);
-						ll_content.setTag(list.get(1).proClassesId);
-
-						//ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
-						ll_left.setTag(list.get(0).proClassesId);
+//						ImageShowUtil.showImage(list.get(2).imgPath,img_xihua);
+//						ll_down.setTag(list.get(2).proClassesId);
+//
+//						ImageShowUtil.showImage(list.get(1).imgPath,tv_ce);
+//						ll_content.setTag(list.get(1).proClassesId);
+//
+//						ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
+//						ll_left.setTag(list.get(0).proClassesId);
 					}
 					else {
 					}

@@ -269,8 +269,9 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 							tv_name.setText(model.tname);
 							tv_tel.setText(model.Tel + "");
 							tv_regison.setText("绑定社区：" + model.region);
-							tv_yongjin.setText("我的佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.allMoney)));
-							tv_weidaozhang.setText("未到账佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.nowMoney)));
+							tv_yongjin.setText("总佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.allMoney)));
+							tv_weidaozhang.setText("当前佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.nowMoney)));
+
 
 						}else if(isleader.equals("417")){
 							Intent intent =new Intent(context,HeadApplyActivity.class);

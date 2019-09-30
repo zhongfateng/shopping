@@ -16,4 +16,5 @@ public class SheQuModel implements Serializable {
     public String shiname;
     public String areaname;
     public String tname;
+    public String distance;
 }

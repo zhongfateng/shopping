@@ -26,11 +26,17 @@ public class PaySuccessActivity extends BaseActivity{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title,tv_go_to_order,tv_go_to_index;
+	private String order_id;
+	private TextView tv_commit;
+	private TextView tv_success;
+	private int key;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pay_success_layout);
 		this.context=this;
+		order_id=getIntent().getStringExtra("order_id");
+		key=getIntent().getIntExtra("key",0);
 		initViews();
 		initEvent();
 	}
@@ -39,14 +45,16 @@ public class PaySuccessActivity extends BaseActivity{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("支付成功");
-		tv_go_to_order=(TextView)findViewById(R.id.tv_go_to_order);
-		tv_go_to_index=(TextView)findViewById(R.id.tv_go_to_index);
+		tv_commit=(TextView)findViewById(R.id.tv_commit);
+		tv_success=(TextView)findViewById(R.id.tv_success);
+		if(key!=0){
+			tv_success.setText("兑换成功");
+		}
 	}
 	
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
-		tv_go_to_order.setOnClickListener(onClickListener);
-		tv_go_to_index.setOnClickListener(onClickListener);
+		tv_commit.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -58,17 +66,11 @@ public class PaySuccessActivity extends BaseActivity{
 			    case R.id.img_back:
 				 PaySuccessActivity.this.finish();
 				break;
-				case R.id.tv_go_to_order:
-					intent=new Intent(context,LoginActivity.class);
+				case R.id.tv_commit:
+					intent=new Intent(context,OrderDetailActivity.class);
+					intent.putExtra("order_id",order_id);
 					startActivity(intent);
 				break;
-				case R.id.tv_go_to_index:
-					intent=new Intent();
-					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
-					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,3);
-					sendBroadcast(intent);//发送标准广播
-					PaySuccessActivity.this.finish();
-					break;
 			}
 		}
 	};

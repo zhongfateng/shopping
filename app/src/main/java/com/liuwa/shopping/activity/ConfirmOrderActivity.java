@@ -33,6 +33,7 @@ import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.view.MyListView;
 
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,6 +66,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 	public String addressid="0";
 	public TextView tv_tip,tv_p_num;
 	public LinearLayout ll_goto_address;
+	public TextView tv_total,tv_youhui,tv_youhuii,tv_tall;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -96,6 +99,11 @@ public class ConfirmOrderActivity extends BaseActivity{
 		tv_tip=(TextView)findViewById(R.id.tv_tip);
 		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
 		ll_goto_address=(LinearLayout)findViewById(R.id.ll_goto_address);
+
+		tv_total=(TextView)findViewById(R.id.tv_total);
+		tv_youhui=(TextView)findViewById(R.id.tv_youhui);
+		tv_youhuii=(TextView)findViewById(R.id.tv_youhuii);
+		tv_tall=(TextView)findViewById(R.id.tv_tall);
 
 	}
 	
@@ -172,6 +180,10 @@ public class ConfirmOrderActivity extends BaseActivity{
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
 						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
+						tv_total.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.total)));
+						tv_tall.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.total)));
+						tv_youhui.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.youhui)));
+						tv_youhuii.setText("-￥"+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.youhui)));
 						if(orderModel.address.equals("0")){
 							rl_add.setVisibility(View.VISIBLE);
 							addressid="0";
@@ -265,7 +277,8 @@ public class ConfirmOrderActivity extends BaseActivity{
 	public void onActivityResult(int requestCode, int resultCode, Intent i){
 		if(requestCode == REQCODE){ // 对应启动时那个代号4
 			if(resultCode == Activity.RESULT_OK){ // 对应B里面的标志为成功
-				 addressid = i.getStringExtra("addressid");
+				AddressModel model = (AddressModel) i.getSerializableExtra("address_model");
+				addressid=model.addressId;
 				 rl_add.setVisibility(View.GONE);
 				 rl_address.setVisibility(View.INVISIBLE);
 			}

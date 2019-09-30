@@ -123,7 +123,6 @@ public class LKHttpRequest {
 			Object object=	entry.getValue();
 			if(object  instanceof String)
 			{
-				
 				String	sb =(String) object;
 				requestParams.put(entry.getKey(), sb);
 			}

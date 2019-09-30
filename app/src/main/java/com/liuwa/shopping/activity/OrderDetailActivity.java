@@ -68,7 +68,9 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	public LinearLayout ll_bottom;
 	private long day,hour,min,mSecond;
 	public TextView tv_min,tv_seconds;
+	public TextView tv_status,tv_connect;
 	public TextView tv_tip,tv_shouhuoren,tv_detail_leader,tv_order_num,tv_total,tv_p_num,tv_order_id,tv_time;
+	public LinearLayout ll_top;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,6 +87,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView) findViewById(R.id.tv_title);
 		tv_title.setText("订单详情");
+		ll_top=(LinearLayout)findViewById(R.id.ll_top);
 		lv_show_list=(MyListView)findViewById(R.id.lv_show_list);
 		fpAdapter=new OrderProductAdapter(context,orderProductItems);
 		lv_show_list.setAdapter(fpAdapter);
@@ -125,12 +128,16 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		ll_bottom=(LinearLayout)findViewById(R.id.ll_bottom);
 		tv_min=(TextView)findViewById(R.id.tv_min);
 		tv_seconds=(TextView)findViewById(R.id.tv_seconds);
+
+		tv_status=(TextView)findViewById(R.id.tv_status);
+		tv_connect=(TextView)findViewById(R.id.tv_connect);
 	}
 	
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
 		tv_cancel.setOnClickListener(onClickListener);
 		tv_pay.setOnClickListener(onClickListener);
+		tv_connect.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -149,6 +156,11 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 					intent=new Intent(context,PayTypeActivity.class);
 					startActivity(intent);
 					break;
+				case R.id.tv_connect:
+//					intent=new Intent(context,PayTypeActivity.class);
+//					startActivity(intent);
+					break;
+
 			}
 		}
 	};
@@ -271,6 +283,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 						tv_order_id.setText(orderModel.orderCode+"");
 						tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(orderModel.createDate.time,null));
 						tv_youhui.setText("-￥："+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.youhui)));
+						tv_status.setText(orderModel.type+"");
 						orderProductItems.clear();
 						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
 								new TypeToken<ArrayList<OrderProductItem>>() {
@@ -281,7 +294,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 						fpAdapter.notifyDataSetChanged();
 						if(orderModel.type.equals("0")){
 							ll_bottom.setVisibility(View.VISIBLE);
-
+							ll_top.setVisibility(View.VISIBLE);
 							//当前时间都超过了下单后的15分钟
 							long interval=System.currentTimeMillis()- (orderModel.createDate.time+15*60*1000);
 							if(interval>0){
@@ -291,6 +304,9 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 							}else {
 								doShowTime(orderModel.createDate.time+15*60*1000);
 							}
+						}else if(orderModel.type.equals("1")){
+							ll_top.setVisibility(View.GONE);
+							ll_bottom.setVisibility(View.GONE);
 						}
 					}
 					else

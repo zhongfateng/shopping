@@ -91,7 +91,6 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 						Toast.makeText(context,"请输入正确金额",Toast.LENGTH_SHORT).show();
 						return;
 					}
-
 					break;
 			}
 		}

@@ -56,17 +56,7 @@ public class CommentActivity extends BaseActivity{
 			    case R.id.img_back:
 				 CommentActivity.this.finish();
 				break;
-				case R.id.tv_go_to_order:
-					intent=new Intent(context,LoginActivity.class);
-					startActivity(intent);
-				break;
-				case R.id.tv_go_to_index:
-					intent=new Intent();
-					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
-					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,3);
-					sendBroadcast(intent);//发送标准广播
-					CommentActivity.this.finish();
-					break;
+
 			}
 		}
 	};

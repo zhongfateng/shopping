@@ -88,5 +88,7 @@
     <!-- QRCode scanner color end -->
     <color name="le_color">#FE7199</color>
     <color name="blue_color">#D2E5D1</color>
+    <color name="dd_color">#B3B3B3</color>
+
 
 </resources>

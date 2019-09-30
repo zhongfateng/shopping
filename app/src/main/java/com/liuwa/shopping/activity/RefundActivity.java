@@ -31,6 +31,7 @@ import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.model.ShoppingCartModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.TimeUtil;
@@ -68,6 +69,8 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	public RefundAdapter refundAdapter;
 	public ListView list_shopping_cart;
 	public String 		order_id;
+	public TextView tv_total;
+	public double totalPrice;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,6 +107,8 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 		tv_commit=(TextView)findViewById(R.id.tv_commit);
 		rl_select=(RelativeLayout)findViewById(R.id.rl_select);
 		tv_reason=(TextView)findViewById(R.id.tv_reason);
+
+		tv_total=(TextView)findViewById(R.id.tv_total);
 	}
 	
 	public void initEvent(){
@@ -239,6 +244,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	public void checkGroup(int position, boolean isChecked) {
 		orderProductItems.get(position).setChoosed(isChecked);
 		refundAdapter.notifyDataSetChanged();
+		statistics();
 	}
 	private void lementOnder() {
 		//选中的需要提交的商品清单
@@ -260,6 +266,22 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 		String finalproids = proids.deleteCharAt(proids.length() - 1).toString();
 		tuikuanDatas(finalproids);
 		//提交申请退款
+	}
+	/**
+	 * 统计操作
+	 * 1.先清空全局计数器<br>
+	 * 2.遍历所有子元素，只要是被选中状态的，就进行相关的计算操作
+	 * 3.给底部的textView进行数据填充
+	 */
+	public void statistics() {
+		totalPrice = 0.00;
+		for (int i = 0; i < orderProductItems.size(); i++) {
+			OrderProductItem shoppingCartBean = orderProductItems.get(i);
+			if (shoppingCartBean.isChoosed()) {
+				totalPrice += shoppingCartBean.total;
+			}
+		}
+		tv_total.setText("￥" + MoneyUtils.formatAmountAsString(new BigDecimal(totalPrice)));
 	}
 	private void tuikuanDatas(String orderchildids){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();

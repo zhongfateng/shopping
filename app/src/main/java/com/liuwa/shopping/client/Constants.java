@@ -4,7 +4,7 @@ public class Constants {
 	
 	// 要相应的更新string.xml中的 versionstr 字段
 	// 当前系统的版本号
-	public static final String VERSION					= "1.3.6";
+	public static final String VERSION					= "1.0";
 	//微信key
 	public static final String APP_ID                   = "wxdcd80da641faa3ae";
 	public static final String DESCRIPTOR              = "com.liuwa.shopping";
@@ -150,6 +150,11 @@ public class Constants {
 	public static final String ADDLEADERFU                      = "addleaderfujson";
 	//佣金记录
 	public static final String leaderyjhdlistjson               = "leaderyjhdlistjson";
+	//积分下单
+	public static final String ScoreOrder                        = "addscoreorder";
+	//版本更新
+	public static final String GetVersion                         = "updateContr";
+
 
 
 }

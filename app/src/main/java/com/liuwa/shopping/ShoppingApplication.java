@@ -10,6 +10,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import org.xutils.x;
+
 public class ShoppingApplication extends Application {
 	
 	
@@ -19,6 +21,8 @@ public class ShoppingApplication extends Application {
     public void onCreate() {
 	    super.onCreate();
 		mInstance = this;
+		x.Ext.init(this);
+		x.Ext.setDebug(true);
 		initImageLoader(getApplicationContext());
 	}
 

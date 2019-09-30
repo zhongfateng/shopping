@@ -13,9 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.OrderProductItem;
 import com.liuwa.shopping.model.ShoppingCartModel;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.List;
 
 public class RefundAdapter extends BaseAdapter {
 
-    private boolean isShow = false;//是否显示编辑/完成
+    private boolean isShow = true;//是否显示编辑/完成
     private List<OrderProductItem> shoppingCartModelList;
     private CheckInterface checkInterface;
     private Context context;
@@ -95,9 +97,9 @@ public class RefundAdapter extends BaseAdapter {
 
         holder.tvCommodityAttr.setText(shoppingCartModel.guiGe+"");
         holder.tvCommodityName.setText(shoppingCartModel.proName);
-        holder.tvCommodityPrice.setText(shoppingCartModel.buyPrice+"");
-        holder.tvCommodityShowNum.setText(shoppingCartModel.buyNum);
-        ImageLoader.getInstance().displayImage(shoppingCartModel.fristimg,holder.ivShowPic);
+        holder.tvCommodityPrice.setText("￥"+shoppingCartModel.buyPrice+"");
+        holder.tvCommodityShowNum.setText("x"+shoppingCartModel.buyNum);
+        ImageLoader.getInstance().displayImage(Constants.IMAGEHOSTPRE+shoppingCartModel.fristimg, holder.ivShowPic);
         //单选框按钮
         holder.ckOneChose.setOnClickListener(
                 new View.OnClickListener() {

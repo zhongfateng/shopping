@@ -1,6 +1,8 @@
 package com.liuwa.shopping.activity;
 
 import android.Manifest;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.fragment.LogoutDialogFragment;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
@@ -53,9 +56,9 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class MySelfActivity extends BaseActivity {
+public class MySelfActivity extends BaseActivity implements LogoutDialogFragment.OnFragmentInteractionListener{
 	private Context context;
-	private RelativeLayout rl_address,rl_applay_head,rl_integral_shop,rl_money,rl_connect;
+	private RelativeLayout rl_address,rl_applay_head,rl_integral_shop,rl_money,rl_connect,rl_logout;
 	private TextView tv_my_integral,tv_my_money;
 	private RelativeLayout rl_my_order;
 	private UserModel userModel;
@@ -87,6 +90,7 @@ public class MySelfActivity extends BaseActivity {
 		rl_integral_shop=(RelativeLayout)findViewById(R.id.rl_integral_shop);
 		rl_money=(RelativeLayout)findViewById(R.id.rl_money);
 		rl_connect=(RelativeLayout)findViewById(R.id.rl_connect);
+		rl_logout=(RelativeLayout)findViewById(R.id.rl_logout);
 		tv_nickname=(TextView)findViewById(R.id.tv_nickname);
 		tv_id=(TextView)findViewById(R.id.tv_id);
 		tv_dfk_dot=(TextView)findViewById(R.id.tv_dfk_dot);
@@ -109,6 +113,7 @@ public class MySelfActivity extends BaseActivity {
 		rl_dfh.setOnClickListener(onClickListener);
 		rl_dth.setOnClickListener(onClickListener);
 		pj.setOnClickListener(onClickListener);
+		rl_logout.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -119,6 +124,9 @@ public class MySelfActivity extends BaseActivity {
 				case R.id.tv_my_integral:
 					intent=new Intent(context,IntegralActivity.class);
 					startActivity(intent);
+					break;
+				case R.id.rl_logout:
+					DialogFragmentFromBottom();
 					break;
 				case R.id.rl_dfk:
 					intent=new Intent(context,OrderShowByCategroyActivity.class);
@@ -168,17 +176,26 @@ public class MySelfActivity extends BaseActivity {
 					intent =  new Intent(context,OrderShowByCategroyActivity.class);
 					startActivity(intent);
 					break;
-				case R.id.tv_go_to_index:
-					intent=new Intent();
-					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
-					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,3);
-					sendBroadcast(intent);//发送标准广播
-					MySelfActivity.this.finish();
-					break;
+
 			}
 		}
 	};
+	private void DialogFragmentFromBottom() {
+		showDialog();
+	}
+	void showDialog() {
 
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		LogoutDialogFragment newFragment = LogoutDialogFragment.newInstance();
+		newFragment.show(ft, "dialog");
+	}
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("timespan", System.currentTimeMillis()+"");
@@ -219,7 +236,6 @@ public class MySelfActivity extends BaseActivity {
 								.create();
 						userModel = localGson.fromJson(jsonObject.toString(),UserModel.class);
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-						editor.putString(Constants.Phone, userModel.tel);
 						editor.putString(Constants.USER,localGson.toJson(userModel));
 						editor.commit();
 						tv_nickname.setText(userModel.nickname);
@@ -301,5 +317,19 @@ public class MySelfActivity extends BaseActivity {
 	public void onResume(){
 		super.onResume();
 		doGetDatas();
+	}
+
+	@Override
+	public void onFragmentInteraction() {
+		SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+		editor.putString(Constants.TOKEN, "");
+		editor.putString(Constants.USER,"");
+		boolean flag =editor.commit();
+		if(flag){
+			Intent intent=new Intent();
+			intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
+			intent.putExtra(MainTabActivity.TAB_INDEX_KEY,0);
+			context.sendBroadcast(intent);//发送标准广播
+		}
 	}
 }

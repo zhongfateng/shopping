@@ -56,12 +56,11 @@ public class SheQuAdapter extends BaseAdapter {
 		ViewHolder viewHolder = null;
 		final int location=position;
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.activity_shequ_list_layout, null);
+			convertView = layoutInflater.inflate(R.layout.activity_shequ_list_item_layout, null);
 			viewHolder = new ViewHolder();
-			viewHolder.img_show=(ImageView)convertView.findViewById(R.id.img_show);
 			viewHolder.tv_regison = (TextView) convertView
 					.findViewById(R.id.tv_regison);
-			viewHolder.tv_name=(TextView) convertView.findViewById(R.id.tv_name);
+			viewHolder.tv_distance=(TextView) convertView.findViewById(R.id.tv_distance);
 			viewHolder.tv_detail =(TextView)convertView.findViewById(R.id.tv_detail);
 			convertView.setTag(viewHolder);
 		} else {
@@ -70,13 +69,13 @@ public class SheQuAdapter extends BaseAdapter {
 		final SheQuModel  productModel=productList.get(position);
 		viewHolder.tv_regison.setText(productModel.region);
 		viewHolder.tv_detail.setText(productModel.shiname+" "+productModel.areaname+" "+productModel.region);
-		viewHolder.tv_name.setText(productModel.tname);
+		viewHolder.tv_distance.setText("距离"+productModel.distance+"米");
 		return convertView;
 	}
 
 	public static class ViewHolder {
 		public TextView tv_regison;
-		public TextView tv_name;
+		public TextView tv_distance;
 		public ImageView img_show;
 		public TextView tv_detail;
 	}
