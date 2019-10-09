@@ -59,7 +59,7 @@ public class HeaderOrderAdapter extends BaseAdapter {
 		ViewHolder viewHolder = null;
 		final int location=position;
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.activity_oder_list_item_layout, null);
+			convertView = layoutInflater.inflate(R.layout.activity_header_oder_list_item_layout, null);
 			viewHolder = new ViewHolder();
 			viewHolder.tv_time=(TextView)convertView.findViewById(R.id.tv_time);
 			viewHolder.tv_tag=(TextView)convertView.findViewById(R.id.tv_tag);
@@ -70,7 +70,6 @@ public class HeaderOrderAdapter extends BaseAdapter {
 			viewHolder.tv_total=(TextView)convertView.findViewById(R.id.tv_total);
 			viewHolder.tv_order_num=(TextView)convertView.findViewById(R.id.tv_order_num);
 			viewHolder.tv_detail=(TextView)convertView.findViewById(R.id.tv_detail);
-			viewHolder.tv_tuikuan=(TextView)convertView.findViewById(R.id.tv_tuikuan);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -84,23 +83,12 @@ public class HeaderOrderAdapter extends BaseAdapter {
 				onCartClick.cartOnClick(productModel);
 			}
 		});
-		viewHolder.tv_tuikuan.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onCartClick.tuiKuanClick(productModel);
-			}
-		});
 		viewHolder.tv_name.setText(productModel.childlist.get(0).proName);
 		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.childlist.get(0).buyPrice)));
 		viewHolder.tv_num.setText("x"+productModel.childlist.get(0).buyNum+"");
 		ImageShowUtil.showImage(productModel.childlist.get(0).fristimg,viewHolder.img_show);
 		viewHolder.tv_total.setText("实付：￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.total)));
 		viewHolder.tv_order_num.setText("共"+productModel.allbuynum+"件商品");
-		if(productModel.type.equals("1")||productModel.type.equals("2")){
-			viewHolder.tv_tuikuan.setVisibility(View.VISIBLE);
-		}else{
-			viewHolder.tv_tuikuan.setVisibility(View.GONE);
-		}
 		return convertView;
 	}
 
@@ -114,7 +102,6 @@ public class HeaderOrderAdapter extends BaseAdapter {
 		public TextView tv_total;
 		public TextView tv_order_num;
 		public TextView tv_detail;
-		public TextView tv_tuikuan;
  	}
 	public interface OnCartClick{
 		public void cartOnClick(OrderModel model);

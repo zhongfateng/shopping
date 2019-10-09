@@ -55,7 +55,7 @@
                       <TextView
                           android:id="@+id/tv_num"
                           android:layout_width="wrap_content"
-                          android:textSize="23sp"
+                          android:textSize="12sp"
                           android:layout_alignParentRight="true"
                           android:layout_centerVertical="true"
                           android:textColor="@color/white"
@@ -66,6 +66,8 @@
                       android:background="@mipmap/h"
                       android:gravity="center"
                       android:textSize="12sp"
+                      android:id="@+id/tv_youhui_time"
+                      android:layout_marginTop="5dp"
                       android:textColor="@color/h_line"
                       android:layout_height="wrap_content" />
               </LinearLayout>
@@ -190,32 +192,6 @@
                   android:paddingLeft="15dp"
                   android:paddingRight="15dp"
                   android:background="@color/white"
-                  android:layout_marginTop="15dp"
-                  android:layout_height="42dp">
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:text="规格"
-                      android:textSize="14sp"
-                      android:layout_alignParentLeft="true"
-                      android:layout_centerVertical="true"
-                      android:textColor="@color/product_name_color"
-                      android:layout_height="wrap_content" />
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:text="@string/ceshi"
-                      android:textSize="14sp"
-                      android:layout_alignParentRight="true"
-                      android:layout_centerVertical="true"
-                      android:layout_marginLeft="16dp"
-                      android:textColor="@color/ship_color"
-                      android:layout_height="wrap_content" />
-              </RelativeLayout>
-              <RelativeLayout
-                  android:layout_width="match_parent"
-                  android:orientation="horizontal"
-                  android:paddingLeft="15dp"
-                  android:paddingRight="15dp"
-                  android:background="@color/white"
                   android:layout_marginTop="10dp"
                   android:layout_marginBottom="15dp"
                   android:layout_height="42dp">
@@ -250,6 +226,7 @@
                 app:tabSelectedTextColor="@color/tab_line"
                 app:tabMode="fixed"
                 app:tabIndicatorHeight="0dp"
+                android:background="@color/white"
                 app:tabIndicatorColor="@color/transparent"
                 android:layout_height="42dp"></android.support.design.widget.TabLayout>
             <com.liuwa.shopping.view.MyViewPager

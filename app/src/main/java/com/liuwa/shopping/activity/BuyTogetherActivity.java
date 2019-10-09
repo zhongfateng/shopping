@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,8 +28,10 @@ import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.SPUtils;
+import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.MyGridView;
 
 import org.json.JSONArray;
@@ -54,6 +57,7 @@ public class BuyTogetherActivity extends BaseActivity{
 	public int pageSize=10;
 	public String classesid;
 	public String tuanId;
+	public ImageView img_top;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,6 +75,11 @@ public class BuyTogetherActivity extends BaseActivity{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("团购专区");
+		img_top=(ImageView)findViewById(R.id.img_top);
+		double height = ScreenUtil.resize(this);
+		final ViewGroup.LayoutParams params = img_top.getLayoutParams();
+		params.height = (int) (height);
+		img_top.setLayoutParams(params);
 		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
 		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
 		timeBuyAdapter =  new TugGouBuyAdapter(this, proList);
@@ -126,7 +135,16 @@ public class BuyTogetherActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kMETHODNAME,Constants.TUANGOULIST);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+
+		TreeMap<String, Object> Param = new TreeMap<String, Object>();
+		Param.put("type",Constants.TGType);
+		Param.put("timespan", System.currentTimeMillis()+"");
+		Param.put("sign", Md5SecurityUtil.getSignature(Param));
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put(Constants.kMETHODNAME,Constants.SETTING);
+		Map.put(Constants.kPARAMNAME, Param);
+		LKHttpRequest Req = new LKHttpRequest(Map, getImageHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -137,6 +155,34 @@ public class BuyTogetherActivity extends BaseActivity{
 				});
 	}
 
+	private LKAsyncHttpResponseHandler getImageHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						String imagepaht=jsonObject.getString("imgpath");
+						ImageShowUtil.showImageByType(imagepaht,img_top);
+
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	private LKAsyncHttpResponseHandler getNoticeHandler(){
 		return new LKAsyncHttpResponseHandler(){
 			@Override

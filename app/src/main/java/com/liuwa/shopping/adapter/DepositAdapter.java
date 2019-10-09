@@ -18,10 +18,10 @@ public class DepositAdapter extends BaseAdapter {
 
 	Context context;
 	LayoutInflater inflater;
-	ArrayList<MoneyModel> moneyModels;
+	ArrayList<String> moneyModels;
 	int last_item;
 	private int selectedPosition = -1;
-	public DepositAdapter(Context context, ArrayList<MoneyModel> moneyModels){
+	public DepositAdapter(Context context, ArrayList<String> moneyModels){
 		this.context = context;
 		this.moneyModels = moneyModels;
 		inflater= LayoutInflater.from(context);
@@ -54,17 +54,15 @@ public class DepositAdapter extends BaseAdapter {
 	    holder = new ViewHolder();
 	    holder.ll=(LinearLayout)convertView.findViewById(R.id.ll_item);
         holder.tv_money =(TextView)convertView.findViewById(R.id.tv_money);
-        holder.tv_jifen=(TextView)convertView.findViewById(R.id.tv_jifen);
         convertView.setTag(holder);
 	    }
 	    else{
 	    holder=(ViewHolder)convertView.getTag();
 	    }
 
-		MoneyModel model=moneyModels.get(position);
-	    holder.tv_money.setText("充 "+model.money+" 元");
-		holder.tv_jifen.setText("送 "+model.jifen+" 积分");
-		
+		String model=moneyModels.get(position);
+	    holder.tv_money.setText("充 "+model+" 元");
+
 	    
 	    
 	    // 设置选中效果    
@@ -72,17 +70,15 @@ public class DepositAdapter extends BaseAdapter {
 	    {   
 			holder.ll.setBackgroundResource(R.drawable.shaper_corner_bg);
 			holder.tv_money.setTextColor(context.getResources().getColor(R.color.tab_line));
-			holder.tv_jifen.setTextColor(context.getResources().getColor(R.color.tab_line));
 	   } else {
 			 holder.ll.setBackgroundResource(R.drawable.shaper_corner_unselect_bg);
 			 holder.tv_money.setTextColor(context.getResources().getColor(R.color.tab_color));
-			 holder.tv_jifen.setTextColor(context.getResources().getColor(R.color.tab_color));
-	    }   
+	    }
 		return convertView;
 	}
 
 	public static class ViewHolder{
-		public TextView tv_money,tv_jifen;
+		public TextView tv_money;
 		public LinearLayout ll;
 	}
 

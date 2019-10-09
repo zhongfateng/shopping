@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class LoginActivity extends BaseActivity {
 	private Context context;
 	private EditText  et_login_input_phone,et_login_input_pass;
-	private Button btn_login_commit;
+	private TextView btn_login_commit;
 	private TextView tv_btn_register,tv_btn_forget;
 	//输入的手机号码
 	private String intput_phone_num="";
@@ -54,7 +54,7 @@ public class LoginActivity extends BaseActivity {
 	public void initViews() {
 		et_login_input_phone=(EditText) findViewById(R.id.et_login_input_phone);
 		et_login_input_pass=(EditText) findViewById(R.id.et_login_input_pass);
-		btn_login_commit=(Button) findViewById(R.id.btn_login_commit);
+		btn_login_commit=(TextView) findViewById(R.id.btn_login_commit);
 		tv_btn_register=(TextView)findViewById(R.id.tv_btn_register);
 		tv_btn_forget=(TextView)findViewById(R.id.tv_btn_forget);
 	}

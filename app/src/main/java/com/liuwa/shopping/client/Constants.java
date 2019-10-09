@@ -1,10 +1,15 @@
 package com.liuwa.shopping.client;
 
 public class Constants {
-	
+	//1 团购 3秒杀 5积分 猜你喜欢 7 热销 9
 	// 要相应的更新string.xml中的 versionstr 字段
 	// 当前系统的版本号
 	public static final String VERSION					= "1.0";
+	public static final String FavoriteType				= "7";
+	public static final String IntegralType				= "5";
+	public static final String RXType				    = "9";
+	public static final String TGType				    = "1";
+	public static final String MXType				    = "3";
 	//微信key
 	public static final String APP_ID                   = "wxdcd80da641faa3ae";
 	public static final String DESCRIPTOR              = "com.liuwa.shopping";
@@ -21,6 +26,7 @@ public class Constants {
 	public static final String AREA               		= "area";
 	//用户反馈--xx
 	public static final String content                  = "content";
+	public static final String flag                     = "flag";
 	//用户手机号
 	public static final String Phone                  	= "phone";
 	//联系人
@@ -143,7 +149,7 @@ public class Constants {
 	//积分商品下单
 	public static final String JiFenADD                         = "addscoreorder";
 	//退款
-	public static final String Orderdaddressqr                 = "orderdaddressqr";
+	public static final String Orderdaddressqr                 = "ordertui";
 	//统一成为副团长
 	public static final String TONGYI                            = "leaderfutongyijson";
 	//
@@ -154,6 +160,23 @@ public class Constants {
 	public static final String ScoreOrder                        = "addscoreorder";
 	//版本更新
 	public static final String GetVersion                         = "updateContr";
+	//购物车删除
+	public static final String DeleteCart                         = "delcartjson";
+	//团长申请
+	public static final String HeadApply                         = "addleaderjson";
+	//设置
+	public static final String SETTING                           = "settingjson";
+	//充值item获取
+	public static final String MONEYITEM                           = "memberczpage";
+	//代提可提
+	public static final String MONEYDT                           = "leaderyjtijson";
+	//提现申请
+	public static final String TXAPPLY                           = "leaderyjtxsqjson";
+	//退出
+	public static final String LOGINOUT                           = "memberquit";
+
+
+
 
 
 

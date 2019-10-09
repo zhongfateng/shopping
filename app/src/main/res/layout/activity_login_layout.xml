@@ -105,9 +105,9 @@
                 android:layout_height="wrap_content" />
         </RelativeLayout>
 
-        <Button
+        <TextView
             android:id="@+id/btn_login_commit"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_60"

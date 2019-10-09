@@ -3,6 +3,7 @@ package com.liuwa.shopping.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,12 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.google.gson.Gson;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
+import com.liuwa.shopping.model.UserModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.PayResult;
 
@@ -43,6 +47,8 @@ public class PayTypeActivity extends BaseActivity{
 	public String payment;
 	public TextView tv_pay;
 	private static final int SDK_PAY_FLAG = 1;
+	public TextView tv_yue;
+	public TextView tv_chongzhi;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,6 +69,8 @@ public class PayTypeActivity extends BaseActivity{
 		ck_wx_pay=(CheckBox)findViewById(R.id.ck_wx_pay);
 		ck_alipay=(CheckBox)findViewById(R.id.ck_alipay);
 		tv_pay=(TextView)findViewById(R.id.tv_pay);
+		tv_yue=(TextView)findViewById(R.id.tv_yue);
+		tv_chongzhi=(TextView)findViewById(R.id.tv_chongzhi);
 
 	}
 	
@@ -78,6 +86,7 @@ public class PayTypeActivity extends BaseActivity{
 					}
 			}
 		});
+		tv_chongzhi.setOnClickListener(onClickListener);
 		ck_wx_pay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -109,19 +118,31 @@ public class PayTypeActivity extends BaseActivity{
 			case R.id.img_back:
 				PayTypeActivity.this.finish();
 				break;
+				case R.id.tv_chongzhi:
+					Intent intent =new Intent(context,MyMoneyActivity.class);
+					startActivity(intent);
+					break;
 				case R.id.tv_pay:
 					if(payment==null||payment.length()==0){
 						Toast.makeText(context,"请选择支付方式",Toast.LENGTH_SHORT).show();
 						return;
 					}
-					doGetDatas();
+					if(payment.equals("1")) {
+						doAlipayDatas();
+					}else if(payment.equals("3"))
+					{
+						doMoneyDatas();
+					}else if(payment.equals("2"))
+					{
+
+					}
 					break;
 			}
 		}
 	};
 
 	//加载特殊分类商品 例如猜你喜欢！
-	private void doGetDatas(){
+	private void doAlipayDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 //		productParam.put("start",page);
 //		productParam.put("rows",pageSize);
@@ -211,6 +232,17 @@ public class PayTypeActivity extends BaseActivity{
 			}
 		};
 	}
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
+		String userStr=pre.getString(Constants.USER,"");
+		if(userStr!=null){
+			UserModel model =new Gson().fromJson(userStr, UserModel.class);
+			tv_yue.setText("￥"+model.yuE+"");
+		}
+	}
 
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
@@ -232,6 +264,7 @@ public class PayTypeActivity extends BaseActivity{
 						Intent intent=new Intent(context,PaySuccessActivity.class);
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
+						PayTypeActivity.this.finish();
 					} else {
 						// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 						//showAlert(PayDemoActivity.this, getString(R.string.pay_failed) + payResult);
@@ -244,4 +277,101 @@ public class PayTypeActivity extends BaseActivity{
 		};
 	};
 
+	//加载特殊分类商品 例如猜你喜欢！
+	private void doMoneyDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+//		productParam.put("start",page);
+//		productParam.put("rows",pageSize);
+		productParam.put("orderid",order_id);
+		productParam.put("payment","3");
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PAYORDER);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getMoneyHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+
+	private LKAsyncHttpResponseHandler getMoneyHandler(){
+		return new LKAsyncHttpResponseHandler(){
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE) {
+						Intent intent=new Intent(context,PaySuccessActivity.class);
+						intent.putExtra("order_id",order_id);
+						startActivity(intent);
+						PayTypeActivity.this.finish();
+					}
+					else
+					{
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+	}
+
+	//加载特殊分类商品 例如猜你喜欢！
+	private void doWxDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+//		productParam.put("start",page);
+//		productParam.put("rows",pageSize);
+		productParam.put("orderid",order_id);
+		productParam.put("payment","2");
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PAYORDER);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getWxHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+
+	private LKAsyncHttpResponseHandler getWxHandler(){
+		return new LKAsyncHttpResponseHandler(){
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE) {
+						Intent intent=new Intent(context,PaySuccessActivity.class);
+						intent.putExtra("order_id",order_id);
+						startActivity(intent);
+						PayTypeActivity.this.finish();
+					}
+					else
+					{
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+	}
 }

@@ -2,12 +2,15 @@ package com.liuwa.shopping.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +41,8 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.fragment.LogoutDialogFragment;
+import com.liuwa.shopping.activity.fragment.UpdateDialogFragment;
 import com.liuwa.shopping.adapter.IndexProductAdapter;
 import com.liuwa.shopping.adapter.IndexTuanGouProductAdapter;
 import com.liuwa.shopping.adapter.jakewharton.salvage.RecyclingPagerAdapter;
@@ -93,7 +98,7 @@ import java.util.TreeMap;
 
 
 
-public class IndexActivity extends BaseActivity implements IndexProductAdapter.OnCartClick{
+public class IndexActivity extends BaseActivity implements IndexProductAdapter.OnCartClick,UpdateDialogFragment.OnFragmentInteractionListener{
 	private Context context;
 	private PullToRefreshScrollView pullToRefreshScrollView;
 	private AutoScrollViewPager     index_auto_scroll_view;
@@ -103,6 +108,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private LinearLayout                tv_go_search;
 	private TabLayout               tb_time;
 	private MyGridView              mgw_guangou;
+	public String apkurl;
 	private TextView tv_title;
 	private IndexTuanGouProductAdapter indexTuanGouProductAdapter;
 	private ArrayList<TuanProductModel> tuanItemList=new ArrayList<TuanProductModel>();
@@ -141,7 +147,6 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		initEvent();
 		doGetDatas();
 		getTuangou();
-		getProduct();
 		startLocation();
 	}
 	public void initViews()
@@ -160,7 +165,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 //		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
 //		params.height = (int) (height);
 //		index_auto_scroll_view.setLayoutParams(params);
-		imageAdatper=new ImagePagerAdapter(context, DatasUtils.imageList);
+		imageAdatper=new ImagePagerAdapter(context, imageUrlList);
 		index_auto_scroll_view.setAdapter(imageAdatper);
 		cpi_indicator.setViewPager(index_auto_scroll_view);
 		index_auto_scroll_view.startAutoScroll();
@@ -235,13 +240,14 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-
+				getProduct();
+				refreshView.onRefreshComplete();
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
 				page++;
-				getProduct();
+				getMoreProduct();
 				refreshView.onRefreshComplete();
 			}
 		});
@@ -300,15 +306,17 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	@Override
 	protected void onResume() {
 		super.onResume();
-		startLocation();
-		getVersionDatas();
+		String flag=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.flag,"");
+		if(!flag.equals("1")) {
+			getVersionDatas();
+		}
 	}
 	
 	private OnClickListener onClickListener = new OnClickListener() {
-		
+		Intent intent;
 		@Override
 		public void onClick(View v) {
-			Intent intent;
+
 			switch(v.getId()){
 			case R.id.tv_go_search:
 				intent=new Intent(context,SearchHistoryActivity.class);
@@ -330,12 +338,17 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				startActivityForResult(intent,ReqShequ);
 				break;
 			case R.id.ll_content:
-				intent=new Intent(context,SearchHistoryActivity.class);
+				intent=new Intent(context,FavoriateActivity.class);
+				SpecialModel model=(SpecialModel) v.getTag();
+				intent.putExtra("classesid",model.proClassesId);
+				intent.putExtra("name",model.proClassesName);
 				startActivity(intent);
 				break;
 			case R.id.ll_down:
 				intent=new Intent(context,FavoriateActivity.class);
-				intent.putExtra("classesid",(String)v.getTag());
+				SpecialModel model2=(SpecialModel) v.getTag();
+				intent.putExtra("classesid",model2.proClassesId);
+				intent.putExtra("name",model2.proClassesName);
 				startActivity(intent);
 				break;
 			case R.id.tv_dingwei:
@@ -438,7 +451,8 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
 						editor.putString(Constants.AREA, localGson.toJson(sheQuModel));
 						editor.commit();
-
+						//待定
+						getProduct();
 					} else {
 					}
 
@@ -482,8 +496,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 					String isUpdate  =  job.getString("isUpdate");
 					String 	forceUpdate=job.getString("forceUpdate");
 					String apkurl=job.getString("apkurl");
-					//	new VersionUpdataHelper(context, apkurl,true);
-						BaseAndroid.checkUpdate(IndexActivity.this, 2, "http://gdown.baidu.com/data/wisegame/ecd186afa44f0325/youkushipin_205.apk","更新了XXX\n修复OOO", false);
+						if(isUpdate.equals("1")){
+							//DialogFragmentFromBottom(forceUpdate);
+						}else if(isUpdate.equals("0")) {
+
+						}
 					} else {
 					}
 
@@ -494,6 +511,23 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 
 			}
 		};
+	}
+
+	private void DialogFragmentFromBottom(String flag) {
+		showUpdateDialog(flag);
+	}
+	void showUpdateDialog(String flag) {
+
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		UpdateDialogFragment newFragment = UpdateDialogFragment.newInstance(flag);
+		newFragment.show(ft, "dialog");
 	}
 	//加载分类 公告
 	private void doGetDatas(){
@@ -508,9 +542,9 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getCagegoryHandler());
 
 		TreeMap<String, Object> map = new TreeMap<String, Object>();
-		map.put("page", 1);
-		map.put("rows", 2);
 		map.put("mdtype", "1");
+		map.put("timespan", System.currentTimeMillis()+"");
+		map.put("sign",Md5SecurityUtil.getSignature(map));
 		HashMap<String, Object> noticeMap = new HashMap<String, Object>();
 		noticeMap.put(Constants.kMETHODNAME,Constants.GETNOTICES);
 		noticeMap.put(Constants.kPARAMNAME, map);
@@ -525,7 +559,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		specialMap.put(Constants.kMETHODNAME,Constants.GETSPECIALCATEGORY);
 		specialMap.put(Constants.kPARAMNAME, specilCategory);
 		LKHttpRequest specialCategoryReq = new LKHttpRequest(specialMap, getSpeicalCagegoryHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq,specialCategoryReq)
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,specialCategoryReq,noticeReq)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
@@ -535,9 +569,30 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	}
 	public void getProduct(){
 		TreeMap<String, Object> baseProductParam = new TreeMap<String, Object>();
+		baseProductParam.put("page",1);
+		baseProductParam.put("rows",pageSize);
+		baseProductParam.put("type","1");
+		baseProductParam.put("area",SPUtils.getShequMode(context,Constants.AREA).area);
+		baseProductParam.put("timespan", System.currentTimeMillis()+"");
+		baseProductParam.put("sign", Md5SecurityUtil.getSignature(baseProductParam));
+		HashMap<String, Object> productMap = new HashMap<String, Object>();
+		productMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
+		productMap.put(Constants.kPARAMNAME, baseProductParam);
+		LKHttpRequest productReq = new LKHttpRequest(productMap, getFirstHandler());
+		new LKHttpRequestQueue().addHttpRequest(productReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	public void getMoreProduct(){
+		TreeMap<String, Object> baseProductParam = new TreeMap<String, Object>();
 		baseProductParam.put("page",page);
 		baseProductParam.put("rows",pageSize);
 		baseProductParam.put("type","1");
+		baseProductParam.put("area",SPUtils.getShequMode(context,Constants.AREA).area);
 		baseProductParam.put("timespan", System.currentTimeMillis()+"");
 		baseProductParam.put("sign", Md5SecurityUtil.getSignature(baseProductParam));
 		HashMap<String, Object> productMap = new HashMap<String, Object>();
@@ -602,6 +657,40 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			}
 		};
 	}
+	private LKAsyncHttpResponseHandler getFirstHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						productList.clear();
+						baseModel = localGson.fromJson(jsonObject.toString(),
+								new TypeToken<BaseDataModel<ProductModel>>() {
+								}.getType());
+						productList.addAll(baseModel.list);
+						indexProductAdapter.notifyDataSetChanged();
+
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 
 	private LKAsyncHttpResponseHandler getNoticeHandler(){
 		return new LKAsyncHttpResponseHandler(){
@@ -613,7 +702,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-						JSONArray array=job.getJSONArray("rs");
+						JSONArray array=job.getJSONArray("data");
 						imageUrlList.clear();
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
@@ -712,11 +801,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						ArrayList<SpecialModel> list=localGson.fromJson(array.toString(),
 								new TypeToken<ArrayList<SpecialModel>>() {
 								}.getType());
-//						ImageShowUtil.showImage(list.get(2).imgPath,img_xihua);
-//						ll_down.setTag(list.get(2).proClassesId);
-//
-//						ImageShowUtil.showImage(list.get(1).imgPath,tv_ce);
-//						ll_content.setTag(list.get(1).proClassesId);
+						ImageShowUtil.showImage(list.get(1).imgPath,img_xihua);
+						ll_down.setTag(list.get(1));
+
+						ImageShowUtil.showImage(list.get(0).imgPath,tv_ce);
+						ll_content.setTag(list.get(0));
 //
 //						ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
 //						ll_left.setTag(list.get(0).proClassesId);
@@ -735,8 +824,24 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 
 	@Override
 	public void cartOnClick(ProductModel model) {
-		Toast.makeText(context,model.fristimg,Toast.LENGTH_SHORT).show();
+		Intent intent =new Intent(context,ProductDetailActivity.class);
+		intent.putExtra("model",model);
+		startActivity(intent);
 	}
+
+	@Override
+	public void onOk() {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkurl));
+		startActivity(intent);
+	}
+
+	@Override
+	public void onCancle() {
+		SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+		editor.putString(Constants.flag, "1");
+		editor.commit();
+	}
+
 
 	public class ImagePagerAdapter extends RecyclingPagerAdapter {
 
@@ -783,7 +888,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
 			final ImageItemModel model=imageIdList.get(position);
-			ImageShowUtil.showImage(model.getImageUrl(),holder.imageView);
+			ImageShowUtil.showImageByType(model.img,holder.imageView);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -932,6 +1037,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
 				editor.putString(Constants.AREA, new Gson().toJson(model));
 				editor.commit();
+				getProduct();
 			}
 		}
 	}

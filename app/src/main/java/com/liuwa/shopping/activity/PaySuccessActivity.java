@@ -70,6 +70,7 @@ public class PaySuccessActivity extends BaseActivity{
 					intent=new Intent(context,OrderDetailActivity.class);
 					intent.putExtra("order_id",order_id);
 					startActivity(intent);
+					PaySuccessActivity.this.finish();
 				break;
 			}
 		}

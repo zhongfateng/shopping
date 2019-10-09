@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -64,6 +65,7 @@ public class UserDTOrderActivity extends BaseActivity implements HeaderOrderDtAd
 		tv_title.setText("用户待提货");
 		gv_favoriate_list        = (ListView)findViewById(R.id.lv_show);
 		fpAdapter                 =  new HeaderOrderDtAdapter(this,productList);
+		fpAdapter.setOnCartClick(this);
 		gv_favoriate_list.setAdapter(fpAdapter);
 	}
 	
@@ -190,7 +192,9 @@ public class UserDTOrderActivity extends BaseActivity implements HeaderOrderDtAd
 	}
 	@Override
 	public void cartOnClick(OrderModel model) {
-
+		Intent intent =new Intent(context, OrderDetailActivity.class);
+		intent.putExtra("order_id",model.orderId);
+		startActivity(intent);
 	}
 
 	@Override

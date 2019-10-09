@@ -205,7 +205,7 @@ public class HeaderOrderByCategoryFragment extends Fragment implements HeaderOrd
     //根据分类加载商品列表
     private void loadData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("Type",tag);
+        productParam.put("type",tag);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -248,6 +248,62 @@ public class HeaderOrderByCategoryFragment extends Fragment implements HeaderOrd
     }
 
     private LKAsyncHttpResponseHandler getProductHandler(){
+        return new LKAsyncHttpResponseHandler(){
+
+            @Override
+            public void successAction(Object obj) {
+                String json=(String)obj;
+                try {
+                    JSONObject  job= new JSONObject(json);
+                    int code =	job.getInt("code");
+                    if(code==Constants.CODE)
+                    {
+                        JSONArray jsonObject = job.getJSONArray("data");
+                        Gson localGson = new GsonBuilder().disableHtmlEscaping()
+                                .create();
+                        proList.clear();
+                        proList.addAll((Collection<? extends OrderModel>) localGson.fromJson(jsonObject.toString(),
+                                new TypeToken<ArrayList<OrderModel>>() {
+                                }.getType()));
+                        fpAdapter.notifyDataSetChanged();
+
+                    }
+                    else
+                    {
+                    }
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+    //根据分类加载商品列表
+    private void loadMoreData(){
+        TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+        productParam.put("type",tag);
+        productParam.put("timespan", System.currentTimeMillis()+"");
+        productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+        HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+        requestCategoryMap.put(Constants.kMETHODNAME,Constants.LEADERORDERLIST);
+        requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+        LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductMoreHandler());
+        new LKHttpRequestQueue().addHttpRequest(categoryReq)
+                .executeQueue(null, new LKHttpRequestQueueDone(){
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+
+                });
+    }
+
+
+
+    private LKAsyncHttpResponseHandler getProductMoreHandler(){
         return new LKAsyncHttpResponseHandler(){
 
             @Override

@@ -27,6 +27,7 @@ public class OrderProductItem {
     public double total;
     public String orderChildId;
     public boolean isChoosed;
+    public String typename;
     public boolean isChoosed() {
         return isChoosed;
     }

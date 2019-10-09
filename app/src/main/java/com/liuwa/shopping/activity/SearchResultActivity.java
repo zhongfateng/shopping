@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +25,7 @@ import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.MyGridView;
 
 import org.json.JSONArray;
@@ -71,8 +73,10 @@ public class SearchResultActivity extends BaseActivity implements FavoriateProdu
 		gv_favoriate_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-				Toast.makeText(context,"item"+model.proName,Toast.LENGTH_SHORT).show();
+				ProductModel model=(ProductModel) parent.getAdapter().getItem(position);
+				Intent intent =new Intent(context,ProductDetailActivity.class);
+				intent.putExtra("model",model);
+				startActivity(intent);
 			}
 		});
 	}
@@ -115,6 +119,7 @@ public class SearchResultActivity extends BaseActivity implements FavoriateProdu
 		productParam.put("rows",pageSize);
 		productParam.put("proname",searchStr);
 		productParam.put("type",1);
+		productParam.put("area", SPUtils.getShequMode(context,Constants.AREA).area);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -193,6 +198,8 @@ public class SearchResultActivity extends BaseActivity implements FavoriateProdu
 
 	@Override
 	public void cartOnClick(ProductModel model) {
-		Toast.makeText(this,"购物车点击"+model.proName,Toast.LENGTH_SHORT).show();
+		Intent intent =new Intent(context,ProductDetailActivity.class);
+		intent.putExtra("model",model);
+		startActivity(intent);
 	}
 }

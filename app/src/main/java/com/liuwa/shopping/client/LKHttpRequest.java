@@ -140,6 +140,13 @@ public class LKHttpRequest {
 				requestParams.put(entry.getKey(), sb);
 				
 			}
+			if(object instanceof Double)
+			{
+				Double flo=(Double)object;
+				String	sb=flo.toString();
+				requestParams.put(entry.getKey(), sb);
+
+			}
 			if(object instanceof File)
 			{
 				

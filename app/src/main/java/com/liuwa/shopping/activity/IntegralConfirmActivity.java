@@ -57,6 +57,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 	public int num=1;
 	public String addressid;
 	public static  final  int REQCODE=89;
+	public TextView tv_title;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +74,8 @@ public class IntegralConfirmActivity extends BaseActivity {
 	public void initViews()
 	{
 		img_back=(ImageView)findViewById(R.id.img_back);
+		tv_title=(TextView)findViewById(R.id.tv_title);
+		tv_title.setText("订单确认");
 		rl_add=(RelativeLayout)findViewById(R.id.rl_add);
 		rl_address=(LinearLayout)findViewById(R.id.rl_address);
 		tv_shouhuoren=(TextView)findViewById(R.id.tv_shouhuoren);

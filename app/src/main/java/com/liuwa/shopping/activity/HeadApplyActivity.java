@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.services.core.PoiItem;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.DialogFragmentFromBottom;
 import com.liuwa.shopping.activity.fragment.DialogFragmentShowArea;
@@ -62,6 +64,8 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 	private String param="";
 	private String childparam="";
 	private String tag="0";
+	public double x;
+	public double y;
 	IRequestPermissions requestPermissions = RequestPermissions.getInstance();//动态权限请求
 	IRequestPermissionsResult requestPermissionsResult = RequestPermissionsResultSetApp.getInstance();//动态权限请求结果处理
 	public static final int REQUEST_CODE_DINGWEI = 3;
@@ -179,7 +183,8 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 		if(requestPermissionsResult.doRequestPermissionsResult(this, permissions, grantResults)){
 			//请求的权限全部授权成功，此处可以做自己想做的事了
 			//输出授权结果
-
+			Intent intent =new Intent(context,NeiborActivity.class);
+			startActivityForResult(intent,REQUEST_CODE_DINGWEI);
 		}else{
 			//输出授权结果
 			Toast.makeText(context,"请给APP授权，否则功能无法正常使用！",Toast.LENGTH_LONG).show();
@@ -203,26 +208,29 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 	}
 
 	private void commit(){
-//		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-//		productParam.put("start",page);
-//		productParam.put("rows",pageSize);
-//		productParam.put("classesid","1");
-//		productParam.put("type",1);
-//		productParam.put("timespan", System.currentTimeMillis()+"");
-//		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
-//		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
-//		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
-//		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
-//		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-//		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-//				.executeQueue(null, new LKHttpRequestQueueDone(){
-//
-//					@Override
-//					public void onComplete() {
-//						super.onComplete();
-//					}
-//
-//				});
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("areafatid",param);
+		productParam.put("areaid",childparam);
+		productParam.put("region",address);
+		productParam.put("address",detail);
+		productParam.put("tname",name);
+		productParam.put("x",x);
+		productParam.put("y",y);
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.HeadApply);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
 	}
 	private LKAsyncHttpResponseHandler getProductHandler(){
 		return new LKAsyncHttpResponseHandler(){
@@ -235,14 +243,8 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 					int code =	job.getInt("code");
 					if(code==Constants.CODE)
 					{
-//						JSONObject jsonObject = job.getJSONObject("data");
-//						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-//								.create();
-//						baseModel = localGson.fromJson(jsonObject.toString(),
-//								new TypeToken<BaseDataModel<ProductModel>>() {
-//								}.getType());
-//						proList.addAll(baseModel.list);
-//						fpAdapter.notifyDataSetChanged();
+						Toast.makeText(context,"团长申请已经提交待审核",Toast.LENGTH_SHORT).show();
+						HeadApplyActivity.this.finish();
 
 					}
 					else
@@ -300,10 +302,12 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 		}else if(detail.length()==0){
 			this.showToast("请填写小区");
 			return false;
-		}else if(code.length()==0){
-			this.showToast("请输入验证码");
-			return false;
-		}else if(name.length()==0){
+		}else
+//			if(code.length()==0){
+//			this.showToast("请输入验证码");
+//			return false;
+//		}else
+			if(name.length()==0){
 			this.showToast("请输入姓名");
 			return false;
 		}
@@ -339,4 +343,16 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 			tv_get_code.setText(millisUntilFinished /1000+"秒");
 		}
 	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent i){
+		if(requestCode == REQUEST_CODE_DINGWEI){ // 对应启动时那个代号4
+			if(resultCode == Activity.RESULT_OK){ // 对应B里面的标志为成功
+				PoiItem poiItem=(PoiItem)i.getParcelableExtra("item"); // 拿到B中存储的数据
+				tv_address.setText(poiItem.getTitle()+"");
+				x=poiItem.getLatLonPoint().getLatitude();
+				y=poiItem.getLatLonPoint().getLongitude();
+			}
+		}
+	}
+
 }

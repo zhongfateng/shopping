@@ -68,9 +68,9 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	public LinearLayout ll_bottom;
 	private long day,hour,min,mSecond;
 	public TextView tv_min,tv_seconds;
-	public TextView tv_status,tv_connect;
-	public TextView tv_tip,tv_shouhuoren,tv_detail_leader,tv_order_num,tv_total,tv_p_num,tv_order_id,tv_time;
+	public TextView tv_tip,tv_shouhuoren,tv_detail_leader,tv_order_num,tv_total,tv_p_num,tv_order_id,tv_time,tv_shouhuo_dz;
 	public LinearLayout ll_top;
+	public TextView tv_leader_name_tel;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,8 +94,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		lv_show_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-				Toast.makeText(context,"item"+model.proName,Toast.LENGTH_SHORT).show();
+
 			}
 		});
 		//推荐购买
@@ -117,7 +116,9 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		tv_pay=(TextView)findViewById(R.id.tv_pay_order);
 		tv_tip=(TextView)findViewById(R.id.tv_tip);
 		tv_shouhuoren=(TextView)findViewById(R.id.tv_tihuoren);
+		tv_shouhuo_dz=(TextView)findViewById(R.id.tv_shouhuo_dz);
 		tv_detail_leader=(TextView)findViewById(R.id.tv_detail_leader);
+		tv_leader_name_tel=(TextView)findViewById(R.id.tv_leader_name_tel);
 		tv_order_num=(TextView)findViewById(R.id.tv_order_num);
 		tv_total=(TextView)findViewById(R.id.tv_total);
 		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
@@ -129,15 +130,12 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		tv_min=(TextView)findViewById(R.id.tv_min);
 		tv_seconds=(TextView)findViewById(R.id.tv_seconds);
 
-		tv_status=(TextView)findViewById(R.id.tv_status);
-		tv_connect=(TextView)findViewById(R.id.tv_connect);
 	}
 	
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
 		tv_cancel.setOnClickListener(onClickListener);
 		tv_pay.setOnClickListener(onClickListener);
-		tv_connect.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -273,9 +271,11 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
 							JSONObject add=jsonObject.getJSONObject("addressmap");
 							tv_shouhuoren.setText(add.getString("lxRen")+"  "+add.getString("lxTel"));
+							tv_shouhuo_dz.setText(add.getString("detail"));
 						{
 							JSONObject leader = jsonObject.getJSONObject("leadermap");
 							tv_detail_leader.setText(leader.getString("taddress"));
+							tv_leader_name_tel.setText(leader.getString("tname")+"    "+leader.getString("tel"));
 						}
 						{
 
@@ -283,13 +283,12 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 						tv_order_id.setText(orderModel.orderCode+"");
 						tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(orderModel.createDate.time,null));
 						tv_youhui.setText("-￥："+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.youhui)));
-						tv_status.setText(orderModel.type+"");
 						orderProductItems.clear();
 						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
 								new TypeToken<ArrayList<OrderProductItem>>() {
 								}.getType()));
-						tv_order_num.setText("共"+orderModel.allbuynum+"件商品");
-						tv_p_num.setText(orderModel.allbuynum+"件商品");
+						tv_order_num.setText("共"+jsonObject.getString("allbuynum")+"件商品");
+						tv_p_num.setText(jsonObject.getString("allbuynum")+"件商品");
 						tv_total.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.total)));
 						fpAdapter.notifyDataSetChanged();
 						if(orderModel.type.equals("0")){
@@ -305,6 +304,15 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 								doShowTime(orderModel.createDate.time+15*60*1000);
 							}
 						}else if(orderModel.type.equals("1")){
+							ll_top.setVisibility(View.GONE);
+							ll_bottom.setVisibility(View.GONE);
+						}else if(orderModel.type.equals("2"))
+						{
+							ll_top.setVisibility(View.GONE);
+							ll_bottom.setVisibility(View.GONE);
+						}
+						else if(orderModel.type.equals("2"))
+						{
 							ll_top.setVisibility(View.GONE);
 							ll_bottom.setVisibility(View.GONE);
 						}

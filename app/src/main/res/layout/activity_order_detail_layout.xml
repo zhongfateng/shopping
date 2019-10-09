@@ -20,6 +20,7 @@
                     android:background="@mipmap/order_time_bg"
                     android:orientation="vertical"
                     android:id="@+id/ll_top"
+                    android:visibility="gone"
                     android:gravity="center"
                     android:layout_height="wrap_content">
                     <LinearLayout
@@ -86,7 +87,7 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="70dp"
-                            android:text="提货人"
+                            android:text="收货人"
                             android:textSize="12sp"
                             android:textColor="@color/detail_address_color"
                             android:layout_height="wrap_content" />
@@ -105,7 +106,45 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="70dp"
-                            android:text="提货地点"
+                            android:text="收货地址"
+                            android:textSize="12sp"
+                            android:textColor="@color/detail_address_color"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="提货人"
+                            android:id="@+id/tv_shouhuo_dz"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="70dp"
+                            android:text="团长"
+                            android:textSize="12sp"
+                            android:textColor="@color/detail_address_color"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="提货人"
+                            android:id="@+id/tv_leader_name_tel"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="70dp"
+                            android:text="提货地址"
                             android:textSize="12sp"
                             android:textColor="@color/detail_address_color"
                             android:layout_height="wrap_content" />
@@ -165,7 +204,7 @@
                         <TextView
                             android:id="@+id/tv_tip"
                             android:layout_width="wrap_content"
-                            android:textColor="@color/gray_d"
+                            android:textColor="@color/tab_line"
                             android:textSize="12sp"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
@@ -187,33 +226,9 @@
                         android:id="@+id/lv_show_list"
                         android:layout_width="match_parent"
                         android:divider="@color/transparent"
+                        android:listSelector="@color/transparent"
                         android:layout_height="match_parent"></com.liuwa.shopping.view.MyListView>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:id="@+id/tv_connect"
-                            android:layout_width="wrap_content"
-                            android:background="@mipmap/conect_bg"
-                            android:text="联系客服"
-                            android:gravity="center"
-                            android:textColor="@color/view_line"
-                            android:textSize="12sp"
-                            android:layout_toLeftOf="@+id/tv_status"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="8dp"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            android:id="@+id/tv_status"
-                            android:layout_width="wrap_content"
-                            android:background="@mipmap/peihuo"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:gravity="center"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:layout_height="wrap_content" />
-                    </RelativeLayout>
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"

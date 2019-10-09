@@ -2,11 +2,14 @@ package com.liuwa.shopping.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,8 +33,14 @@ import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.MyGridView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +67,7 @@ public class TimeBuyActivity extends BaseActivity{
 	private long day,hour,min,mSecond;
 	private LinearLayout ll_right;
 	public String classesid;
+	public ImageView img_top;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,6 +85,11 @@ public class TimeBuyActivity extends BaseActivity{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("限时秒杀");
+		img_top=(ImageView)findViewById(R.id.img_top);
+		double height = ScreenUtil.resize(this);
+		final ViewGroup.LayoutParams params = img_top.getLayoutParams();
+		params.height = (int) (height);
+		img_top.setLayoutParams(params);
 		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
 		gv_favoriate_list        = (MyGridView)findViewById(R.id.gv_favoriate_list);
 		timeBuyAdapter =  new TimeBuyAdapter(this, proList);
@@ -217,7 +232,16 @@ public class TimeBuyActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kMETHODNAME,Constants.MiaoSha);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+
+		TreeMap<String, Object> Param = new TreeMap<String, Object>();
+		Param.put("type",Constants.MXType);
+		Param.put("timespan", System.currentTimeMillis()+"");
+		Param.put("sign", Md5SecurityUtil.getSignature(Param));
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put(Constants.kMETHODNAME,Constants.SETTING);
+		Map.put(Constants.kPARAMNAME, Param);
+		LKHttpRequest Req = new LKHttpRequest(Map, getImageHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -252,6 +276,34 @@ public class TimeBuyActivity extends BaseActivity{
 		};
 	}
 
+	private LKAsyncHttpResponseHandler getImageHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						String imagepaht=jsonObject.getString("imgpath");
+						ImageShowUtil.showImageByType(imagepaht,img_top);
+
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	private LKAsyncHttpResponseHandler getProductHandler(){
 		return new LKAsyncHttpResponseHandler(){
 

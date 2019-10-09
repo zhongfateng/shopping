@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:id="@+id/tv_goto_shopping"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:background="@mipmap/gotogou"

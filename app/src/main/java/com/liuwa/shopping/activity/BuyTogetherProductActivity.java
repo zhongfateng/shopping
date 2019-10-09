@@ -56,8 +56,6 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 	private TextView tv_title;
 	private ViewPager vp_category;
 	private TabLayout tl_tabs;
-	private ArrayList fragmentList;
-	private ArrayList list_Title;
 	private MyPagerAdapter adapter;
 	private AutoScrollViewPager     index_auto_scroll_view;
 	private CirclePageIndicator     cpi_indicator;
@@ -65,11 +63,13 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 	private String tuanInfoId;
 	private ArrayList<ImageItemModel> imgs=new ArrayList<>();
 	private TextView tv_name;
-	private TextView tv_price,tv_num;
+	private TextView tv_price,tv_num,tv_youhui_time;
 	private TextView tv_p_num,tv_price_small;
 	private TextView tv_center_price,tv_min,tv_large;
 	private TextView tv_lnum,tv_price_r;
 	private TextView tv_botoom,tv_peisong;
+	List<Fragment> fragmentList = new ArrayList<>();
+	List<String >list_Title = new ArrayList<>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,18 +77,16 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 		setContentView(R.layout.activity_buy_together_product_layout);
 		this.context = this;
 		tuanInfoId=getIntent().getStringExtra("tuanInfoId");
-		init();
+		//init();
 		initViews();
 		initEvent();
 		doGetDatas();
 	}
 
-	public void init() {
-		fragmentList = new ArrayList<>();
-		list_Title = new ArrayList<>();
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+	public void init(ProductModel model) {
+		fragmentList.add(WebFragment.newInstance("dsaf",model.content));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.pjcontent));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
 		list_Title.add("详情");
 		list_Title.add("评价");
 		list_Title.add("售后");
@@ -126,12 +124,11 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 		index_auto_scroll_view.startAutoScroll();
 		index_auto_scroll_view.setInterval(4000);
 		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
-		imageAdatper.notifyDataSetChanged();
 
 		tv_name=(TextView)findViewById(R.id.tv_name);
 		tv_price=(TextView)findViewById(R.id.tv_price);
 		tv_num=(TextView)findViewById(R.id.tv_num);
-
+		tv_youhui_time=(TextView)findViewById(R.id.tv_youhui_time);
 		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
 		tv_price_small=(TextView)findViewById(R.id.tv_price_small);
 		tv_large=(TextView)findViewById(R.id.tv_large);
@@ -242,13 +239,17 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 						tv_name.setText(model.proName);
 						tv_peisong.setText(model.peiSong);
 						tv_price.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
+						tv_youhui_time.setText(oo.getString("youhuitime"));
 						imgs.clear();
 						imgs.addAll((Collection<? extends ImageItemModel>)localGson.fromJson(jsonObject.getJSONArray("proimglist").toString(),
 								new TypeToken<ArrayList<ImageItemModel>>() {
 								}.getType()));
 						imageAdatper.notifyDataSetChanged();
+						fragmentList.clear();
+						init(model);
+						adapter.notifyDataSetChanged();
 						JSONObject tuaninfo=jsonObject.getJSONObject("tuaninfo");
-
+						tv_num.setText("已拼"+tuaninfo.getString("saleNum")+"件");
 						tv_p_num.setText("1、人数＜"+tuaninfo.getString("priceBNum")+"人，");
 						tv_price_small.setText("价格为："+tuaninfo.getString("priceA")+"元");
 						tv_large.setText("2、人数＞"+tuaninfo.getString("priceBNum")+"人");

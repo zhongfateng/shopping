@@ -129,7 +129,7 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 		ft.addToBackStack(null);
 
 		// Create and show the dialog.
-		DialogFragmentFromBottom newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels);
+		DialogFragmentFromBottom newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels,model.fristimg);
 		newFragment.show(ft, "dialog");
 	}
 

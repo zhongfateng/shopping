@@ -12,16 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="13sp"
         android:text="@string/ceshi"
+        android:gravity="center"
         android:textColor="@color/tab_line"
         android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tv_jifen"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:textSize="10sp"
-        android:text="@string/ceshi"
-        android:textColor="@color/tab_line"
-        android:layout_height="wrap_content" />
-
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -17,10 +18,22 @@ import android.widget.Toast;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.MoneyApplayFragment;
 import com.liuwa.shopping.activity.fragment.MoneyFragment;
+import com.liuwa.shopping.client.Constants;
+import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
+import com.liuwa.shopping.client.LKHttpRequest;
+import com.liuwa.shopping.client.LKHttpRequestQueue;
+import com.liuwa.shopping.client.LKHttpRequestQueueDone;
+import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.Util;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFragment.OnFragmentInteractionListener{
@@ -33,9 +46,11 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 	private ArrayList list_Title;
 	private MyPagerAdapter adapter;
 	private TextView tv_kt,tv_dt;
-	private EditText et_money;
+	private EditText et_money,et_alipay;
 	private TextView tv_duihuan;
 	private String et_money_str="";
+	private String et_alipay_str="";
+	double kemoney;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +60,7 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		init();
 		initViews();
 		initEvent();
+		doDatas();
 	}
 
 	public void init() {
@@ -55,6 +71,51 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		list_Title.add("佣金记录");
 		list_Title.add("使用记录");
 	}
+	private void doDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.MONEYDT);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getNoticeHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+	private LKAsyncHttpResponseHandler getNoticeHandler(){
+		return new LKAsyncHttpResponseHandler(){
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE) {
+					JSONObject oo=	job.getJSONObject("data");
+						tv_dt.setText("待提佣金："+"￥"+oo.getString("dtmoney"));
+						tv_kt.setText("可提佣金："+"￥"+oo.getString("ktmoney"));
+						kemoney=oo.getDouble("ktmoney");
+
+					}
+					else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+	}
+
 
 	public void initViews() {
 		img_back = (ImageView) findViewById(R.id.img_back);
@@ -67,6 +128,7 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
 		Util.reflex(tl_tabs);
 		et_money=(EditText)findViewById(R.id.et_money);
+		et_alipay=(EditText)findViewById(R.id.et_alipay);
 		tv_dt=(TextView)findViewById(R.id.tv_dt);
 		tv_kt=(TextView)findViewById(R.id.tv_kt);
 		tv_duihuan=(TextView)findViewById(R.id.tv_duihuan);
@@ -87,10 +149,16 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 					break;
 				case R.id.tv_duihuan:
 					et_money_str=et_money.getText().toString();
-					if(et_money_str==null||et_money_str.length()==0){
+					et_alipay_str=et_alipay.getText().toString();
+					if(et_alipay_str==null||et_alipay_str.length()==0){
+						Toast.makeText(context,"请输入支付宝账号",Toast.LENGTH_SHORT).show();
+						return;
+					}
+					if(et_money_str==null||et_money_str.length()==0||Double.parseDouble(et_money_str)>kemoney){
 						Toast.makeText(context,"请输入正确金额",Toast.LENGTH_SHORT).show();
 						return;
 					}
+					comitDatas();
 					break;
 			}
 		}
@@ -134,6 +202,50 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		public CharSequence getPageTitle(int position) {
 			return list_Title.get(position);
 		}
+	}
+	private void comitDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("account", et_alipay_str);
+		productParam.put("money", et_money_str);
+		productParam.put("qudao", "1");
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.TXAPPLY);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, commitHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+	private LKAsyncHttpResponseHandler commitHandler(){
+		return new LKAsyncHttpResponseHandler(){
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE) {
+						Toast.makeText(context, "提现申请已经提交待审核", Toast.LENGTH_SHORT).show();
+						MoneyApplayActivity.this.finish();
+					}
+					else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
 	}
 }
 

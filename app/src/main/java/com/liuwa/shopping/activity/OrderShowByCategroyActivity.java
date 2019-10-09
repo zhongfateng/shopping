@@ -71,7 +71,7 @@ public class OrderShowByCategroyActivity extends BaseActivity implements OrderSh
 		tl_tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
-				tv_title.setText(tab.getText());;
+				//tv_title.setText(tab.getText());;
 			}
 
 			@Override

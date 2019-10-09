@@ -93,6 +93,7 @@ public class MoneyActivity extends BaseActivity implements MoneyFragment.OnFragm
 				case R.id.tv_duihuan:
 					Intent intent=new Intent(context,MyMoneyActivity.class);
 					startActivity(intent);
+					MoneyActivity.this.finish();
 					break;
 			}
 		}

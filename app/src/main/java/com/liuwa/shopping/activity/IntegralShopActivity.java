@@ -2,6 +2,7 @@ package com.liuwa.shopping.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -34,6 +35,12 @@ import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
+import com.liuwa.shopping.util.ScreenUtil;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,11 +85,10 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 		tv_title = (TextView) findViewById(R.id.tv_title);
 		tv_title.setText("积分商城");
 		img_top=(ImageView)findViewById(R.id.img_top);
-		double height = getScreenPixel().widthPixels / (360 / 148.0);
+		double height = ScreenUtil.resize(this);
 		final ViewGroup.LayoutParams params = img_top.getLayoutParams();
 		params.height = (int) (height);
 		img_top.setLayoutParams(params);
-		ImageShowUtil.showImage("http://img4.imgtn.bdimg.com/it/u=508387608,2848974022&fm=26&gp=0.jpg",img_top);
 		pullToRefreshScrollView=(PullToRefreshScrollView)findViewById(R.id.pullToScrollView);
 		pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
 			@Override
@@ -141,13 +147,23 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 		productParam.put("rows",pageSize);
 		productParam.put("classesid","63");
 		productParam.put("type",1);
+		productParam.put("area", SPUtils.getShequMode(context,Constants.AREA).area);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
 		requestCategoryMap.put(Constants.kMETHODNAME,Constants.PRODUCTLIST);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+
+		TreeMap<String, Object> Param = new TreeMap<String, Object>();
+		Param.put("type",Constants.IntegralType);
+		Param.put("timespan", System.currentTimeMillis()+"");
+		Param.put("sign", Md5SecurityUtil.getSignature(Param));
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put(Constants.kMETHODNAME,Constants.SETTING);
+		Map.put(Constants.kPARAMNAME, Param);
+		LKHttpRequest Req = new LKHttpRequest(Map, getImageHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -156,6 +172,34 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 					}
 
 				});
+	}
+	private LKAsyncHttpResponseHandler getImageHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						String imagepaht=jsonObject.getString("imgpath");
+						ImageShowUtil.showImageByType(imagepaht,img_top);
+
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
 	}
 	private LKAsyncHttpResponseHandler getProductHandler(){
 		return new LKAsyncHttpResponseHandler(){

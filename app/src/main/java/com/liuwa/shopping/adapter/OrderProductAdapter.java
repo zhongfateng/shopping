@@ -64,6 +64,7 @@ public class OrderProductAdapter extends BaseAdapter {
 					.findViewById(R.id.tv_num);
 			viewHolder.tv_p_num = (TextView) convertView
 					.findViewById(R.id.tv_p_num);
+			viewHolder.tv_status=(TextView)convertView.findViewById(R.id.tv_status);
 			viewHolder.tv_pay=(TextView)convertView.findViewById(R.id.tv_pay);
 			viewHolder.tv_price=(TextView) convertView.findViewById(R.id.tv_price);
 			convertView.setTag(viewHolder);
@@ -75,6 +76,7 @@ public class OrderProductAdapter extends BaseAdapter {
 		viewHolder.tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.buyPrice)));
 		viewHolder.tv_num.setText("x"+productModel.buyNum);
 		viewHolder.tv_pay.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.total)));
+		viewHolder.tv_status.setText(productModel.typename);
 		ImageShowUtil.showImage(productModel.fristimg,viewHolder.img_show);
 		return convertView;
 	}
@@ -84,5 +86,6 @@ public class OrderProductAdapter extends BaseAdapter {
 		public TextView tv_price;
 		public ImageView img_show;
 		public TextView tv_name,tv_pay,tv_p_num;
+		public TextView tv_status,tv_connect;
 	}
 }

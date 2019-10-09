@@ -61,8 +61,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 	private TextView tv_title;
 	private ViewPager vp_category;
 	private TabLayout tl_tabs;
-	private ArrayList fragmentList;
-	private ArrayList list_Title;
+
 	private MyPagerAdapter adapter;
 	private AutoScrollViewPager     index_auto_scroll_view;
 	private CirclePageIndicator     cpi_indicator;
@@ -74,25 +73,24 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 	public TextView tv_show_Price;
 	public TextView tv_botoom;
 	public TimeCount time;
-
+	private ArrayList fragmentList = new ArrayList<>();
+	private ArrayList list_Title = new ArrayList<>();
+	int num;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_time_product_layout);
 		this.context = this;
 		miaoinfoid=getIntent().getStringExtra("miaoinfoid");
-		init();
 		initViews();
 		initEvent();
 		doGetDatas();
 	}
 
-	public void init() {
-		fragmentList = new ArrayList<>();
-		list_Title = new ArrayList<>();
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+	public void init(ProductModel model) {
+		fragmentList.add(WebFragment.newInstance("dsaf",model.content));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.pjcontent));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
 		list_Title.add("详情");
 		list_Title.add("评价");
 		list_Title.add("售后");
@@ -137,6 +135,8 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 						tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
 						tv_show_Price.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 						tv_show_Price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.price)));
+						init(model);
+						adapter.notifyDataSetChanged();
 						imgs.clear();
 						imgs.addAll((Collection<? extends ImageItemModel>)localGson.fromJson(jsonObject.getJSONArray("proimglist").toString(),
 								new TypeToken<ArrayList<ImageItemModel>>() {
@@ -189,7 +189,6 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		index_auto_scroll_view.startAutoScroll();
 		index_auto_scroll_view.setInterval(4000);
 		index_auto_scroll_view.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_TO_PARENT);
-		imageAdatper.notifyDataSetChanged();
 		tv_name=(TextView)findViewById(R.id.tv_name);
 		tv_price=(TextView)findViewById(R.id.tv_price);
 		tv_show_Price=(TextView)findViewById(R.id.tv_show_Price);
@@ -242,7 +241,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 
 				});
 
-		time.start();
+
 	}
 	private LKAsyncHttpResponseHandler buyHandler(){
 		return new LKAsyncHttpResponseHandler(){
@@ -258,6 +257,14 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 						Intent intent =new Intent(context,ConfirmOrderActivity.class);
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
+					}else if(code==406){
+						num++;
+						if(num==1) {
+							time.start();
+						}else
+						{
+							Toast.makeText(context,"稍后再试",Toast.LENGTH_SHORT).show();
+						}
 					}
 					else if(code==102){
 						Toast.makeText(context,"当前抢购人数较多请稍后再试",Toast.LENGTH_SHORT).show();
@@ -312,14 +319,15 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		}
 		@Override
 		public void onFinish() {//计时完毕时触发
-			tv_botoom.setText("立即抢");
+			tv_botoom.setText("抢购中");
 			tv_botoom.setClickable(true);
+			doBuy(1);
 		}
 		@Override
 		public void onTick(long millisUntilFinished){//计时过程显示
 
 			tv_botoom.setClickable(false);
-			tv_botoom.setText(millisUntilFinished /1000+"秒");
+			tv_botoom.setText("三秒后自动刷新重试");
 		}
 	}
 }

@@ -13,11 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuwa.shopping.model.ShoppingCartModel;
+import com.liuwa.shopping.util.ImageShowUtil;
+import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.StringUtils;
 
 import com.liuwa.shopping.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ import java.util.List;
 
 public class ShoppingCartAdapter extends BaseAdapter {
 
-    private boolean isShow = true;//是否显示编辑/完成
+    private boolean isShow = false;//是否显示编辑/完成
     private List<ShoppingCartModel> shoppingCartModelList;
     private CheckInterface checkInterface;
     private ModifyCountInterface modifyCountInterface;
@@ -88,7 +91,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.activity_cart_list_item_v3_layout, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.activity_cart_list_item_layout, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -109,10 +112,10 @@ public class ShoppingCartAdapter extends BaseAdapter {
 //        }
         holder.tvCommodityAttr.setText(shoppingCartModel.guiGe+"");
         holder.tvCommodityName.setText(shoppingCartModel.getProName());
-        holder.tvCommodityPrice.setText(shoppingCartModel.getSalePrice()+"");
+        holder.tvCommodityPrice.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(shoppingCartModel.showprice))+"");
         holder.tvCommodityNum.setText(" X"+ shoppingCartModel.getNum()+"");
         holder.tvCommodityShowNum.setText(shoppingCartModel.getNum()+"");
-        ImageLoader.getInstance().displayImage(shoppingCartModel.getImageUrl(),holder.ivShowPic);
+        ImageShowUtil.showImage(shoppingCartModel.fristimg,holder.ivShowPic);
         //单选框按钮
         holder.ckOneChose.setOnClickListener(
                 new View.OnClickListener() {

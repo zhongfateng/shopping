@@ -51,6 +51,8 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	private double totalPrice = 0.00;// 购买的商品总价
 	private int totalCount = 0;// 购买的商品总数量
 	private static final String TAG = "CartShopActivity";
+	public int positon;
+	public TextView tv_goto_shopping;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,6 +74,9 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		ckAll=(CheckBox) findViewById(R.id.ck_all);
 		tvSettlement=(TextView)findViewById(R.id.tv_settlement);
 		tv_show_price=(TextView) findViewById(R.id.tv_show_price);
+
+		tv_goto_shopping=(TextView)findViewById(R.id.tv_goto_shopping);
+
 		//装配数据
 		shoppingCartAdapter = new ShoppingCartAdapter(this);
 		shoppingCartAdapter.setCheckInterface(this);
@@ -84,6 +89,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	public void initEvent(){
 		btnEdit.setOnClickListener(onClickListener);
 		ckAll.setOnClickListener(onClickListener);
+		tv_goto_shopping.setOnClickListener(onClickListener);
 		tvSettlement.setOnClickListener(onClickListener);
 	}
 	
@@ -121,6 +127,13 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 				case R.id.tv_settlement: //结算
 					lementOnder();
 					break;
+				case R.id.tv_goto_shopping: //去购物
+					Intent intent=new Intent();
+					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
+					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,1);
+					sendBroadcast(intent);//发送标准广播
+					break;
+
 			}
 		}
 	};
@@ -215,8 +228,8 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 			if (choosed){
 				String shoppingName = bean.getShoppingName();
 				int count = bean.getNum();
-				double price = bean.getSalePrice();
-				proids.append(bean.getProHeadId());
+				double price = bean.showprice;
+				proids.append(bean.proChildId);
 				proids.append(",");
 				nums.append(bean.getNum());
 				nums.append(",");
@@ -270,7 +283,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 			ShoppingCartModel shoppingCartBean = shoppingCartBeanList.get(i);
 			if (shoppingCartBean.isChoosed()) {
 				totalCount++;
-				totalPrice += shoppingCartBean.getSalePrice() * shoppingCartBean.getNum();
+				totalPrice += shoppingCartBean.showprice * shoppingCartBean.getNum();
 			}
 		}
 		tv_show_price.setText("￥" + totalPrice);
@@ -319,9 +332,30 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 	 */
 	@Override
 	public void childDelete(int position) {
-		shoppingCartBeanList.remove(position);
-		shoppingCartAdapter.notifyDataSetChanged();
-		statistics();
+//		shoppingCartBeanList.remove(position);
+//		shoppingCartAdapter.notifyDataSetChanged();
+//		statistics();
+		positon=position;
+		delete(shoppingCartBeanList.get(position).cartId);
+	}
+	private void delete(String cartid){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("cartid", cartid);
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.DeleteCart);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, DeleteHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
 	}
 	public void onResume(){
 		super.onResume();
@@ -365,6 +399,34 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 						Intent intent =new Intent(context,ConfirmOrderActivity.class);
 						intent.putExtra("order_id",orderid);
 						startActivity(intent);
+					}
+					else if(code==402)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+	private LKAsyncHttpResponseHandler DeleteHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						shoppingCartBeanList.remove(positon);
+						shoppingCartAdapter.notifyDataSetChanged();
+		                statistics();
 					}
 					else if(code==402)
 					{

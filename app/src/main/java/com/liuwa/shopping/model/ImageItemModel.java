@@ -9,6 +9,8 @@ public class ImageItemModel {
     private String imageUrl;
     private String imageType;
     public  String  imgPath;
+    public String newsId;
+    public String img;
 
     public String getImageId() {
         return imageId;

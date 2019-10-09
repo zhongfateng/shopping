@@ -29,11 +29,11 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/img_left"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/img_show"
-            android:layout_height="wrap_content" />
+            android:layout_height="70dp" />
            <TextView
                android:id="@+id/tv_name"
                android:layout_width="wrap_content"
@@ -51,9 +51,10 @@
             android:layout_width="wrap_content"
             android:layout_alignBottom="@+id/img_left"
             android:layout_toRightOf="@+id/img_left"
-            android:textSize="23sp"
+            android:textSize="16sp"
             android:text="@string/ceshi"
             android:textColor="@color/black"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content" />
     </RelativeLayout>
@@ -91,6 +92,7 @@
                     android:layout_width="200dp"
                     android:gravity="right"
                     android:numColumns="3"
+                    android:listSelector="@color/transparent"
                     android:layout_alignParentRight="true"
                     android:horizontalSpacing="5dp"
                     android:layout_centerVertical="true"

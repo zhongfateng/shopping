@@ -302,7 +302,12 @@ public class NeiborActivity extends Activity {
                                 position = mList.size();
                             }
                             PoiItem poiItem = mList.get(position);
-                            Toast.makeText(NeiborActivity.this, "发送：" + poiItem.getTitle() + "  " + poiItem.getSnippet() + "  " + "纬度：" + poiItem.getLatLonPoint().getLatitude() + "  " + "经度：" + poiItem.getLatLonPoint().getLongitude(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(NeiborActivity.this, "发送：" + poiItem.getTitle() + "  " + poiItem.getSnippet() + "  " + "纬度：" + poiItem.getLatLonPoint().getLatitude() + "  " + "经度：" + poiItem.getLatLonPoint().getLongitude(), Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent();
+                            i.putExtra("item",poiItem);
+                            setResult(Activity.RESULT_OK, i);// 第一个参数是常量，标志本次结果成功。第二个参数i存储的本次购买的数量
+                            finish();
+
                         }
                         break;
                 }

@@ -17,9 +17,21 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 public class ImageShowUtil {
     public static void showImage(String url, ImageView imageView){
         ImageLoader.getInstance().displayImage(Constants.IMAGEHOSTPRE+url, imageView, new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.mipmap.ic_launcher)
-                .showImageOnFail(R.mipmap.ic_launcher)
-                .showImageOnLoading(R.mipmap.ic_launcher)
+                .showImageForEmptyUri(R.mipmap.ic_default)
+                .showImageOnFail(R.mipmap.ic_default)
+                .showImageOnLoading(R.mipmap.ic_default)
+                .resetViewBeforeLoading(true)
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .considerExifParams(true)
+                .displayer(new FadeInBitmapDisplayer(100))
+                .build(), new SimpleImageLoadingListener());
+    }
+    public static void showImageByType(String url, ImageView imageView){
+        ImageLoader.getInstance().displayImage(Constants.IMAGEHOSTPRE+url, imageView, new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.mipmap.ic_top)
+                .showImageOnFail(R.mipmap.ic_top)
+                .showImageOnLoading(R.mipmap.ic_top)
                 .resetViewBeforeLoading(true)
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)

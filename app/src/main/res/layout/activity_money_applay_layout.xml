@@ -22,38 +22,62 @@
             android:paddingRight="12dp"
             android:paddingTop="19dp"
             android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="提现金额"
-                android:textSize="14sp"
-                android:textColor="@color/l_line"
-                android:layout_height="wrap_content" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
-                android:layout_marginTop="35dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:layout_height="wrap_content">
+               <ImageView
+                   android:layout_width="20dp"
+                   android:src="@mipmap/apli"
+                   android:scaleType="centerInside"
+                   android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/et_alipay"
+                    android:layout_width="match_parent"
+                    android:textSize="14sp"
+                    android:background="@null"
+                    android:textColorHint="#7D838C"
+                    android:layout_marginLeft="11dp"
+                    android:layout_weight="1"
+                    android:hint="请输入支付宝账号"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/tixian"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"></View>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:gravity="center_vertical"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/tv_keyong"
-                    android:layout_width="wrap_content"
-                    android:text="￥"
-                    android:textSize="35sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                <ImageView
+                    android:layout_width="20dp"
+                    android:src="@mipmap/mony"
+                    android:scaleType="centerInside"
                     android:layout_height="wrap_content" />
                 <EditText
                     android:id="@+id/et_money"
                     android:layout_width="match_parent"
-                    android:textSize="35sp"
+                    android:textSize="14sp"
                     android:background="@null"
+                    android:layout_weight="1"
+                    android:hint="请输入金额"
+                    android:layout_marginLeft="11dp"
                     android:inputType="numberDecimal"
+                    android:textColorHint="#7D838C"
                     android:textColor="@color/tixian"
                     android:layout_height="wrap_content" />
             </LinearLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.4dp"
+                    android:layout_height="1dp"
                     android:background="@color/view_line"></View>
                 <RelativeLayout
                     android:layout_width="match_parent"

@@ -22,4 +22,5 @@ public class ProductChildModel {
     public String proHeadId;
     public String proChildId;
     public double salePrice;
+    public double showprice;
 }

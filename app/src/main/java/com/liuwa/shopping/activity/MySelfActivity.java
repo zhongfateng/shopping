@@ -122,7 +122,8 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 			Intent intent;
 			switch (v.getId()) {
 				case R.id.tv_my_integral:
-					intent=new Intent(context,IntegralActivity.class);
+					//intent=new Intent(context,IntegralActivity.class);
+					intent=new Intent(context,HeaderOrderByCategroyActivity.class);
 					startActivity(intent);
 					break;
 				case R.id.rl_logout:
@@ -241,7 +242,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 						tv_nickname.setText(userModel.nickname);
 						tv_id.setText("用户 ID:"+userModel.memberId);
 						tv_my_integral.setText("我的积分："+userModel.score+">");
-						tv_my_money.setText("我的余额：￥："+ MoneyUtils.formatAmountAsString(new BigDecimal(userModel.yuE))+">");
+						tv_my_money.setText("我的余额：￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(userModel.yuE))+">");
 						String flag=userModel.isLeader;
 						if(flag!=null&&flag.equals("1")){
 							tv_show.setText("团长中心");
@@ -321,15 +322,56 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 
 	@Override
 	public void onFragmentInteraction() {
-		SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-		editor.putString(Constants.TOKEN, "");
-		editor.putString(Constants.USER,"");
-		boolean flag =editor.commit();
-		if(flag){
-			Intent intent=new Intent();
-			intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
-			intent.putExtra(MainTabActivity.TAB_INDEX_KEY,0);
-			context.sendBroadcast(intent);//发送标准广播
-		}
+		logout();
+	}
+	private void logout(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.LOGINOUT);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, outHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler outHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+						editor.putString(Constants.TOKEN, "");
+						editor.putString(Constants.USER,"");
+						editor.putString(Constants.flag,"");
+						boolean flag =editor.commit();
+						if(flag){
+							Intent intent=new Intent();
+							intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
+							intent.putExtra(MainTabActivity.TAB_INDEX_KEY,0);
+							context.sendBroadcast(intent);//发送标准广播
+						}
+						Toast.makeText(context,"已经退出当前用户",Toast.LENGTH_SHORT).show();
+					}
+					else {
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
 	}
 }

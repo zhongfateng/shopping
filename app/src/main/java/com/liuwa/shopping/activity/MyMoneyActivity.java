@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.adapter.DepositAdapter;
 import com.liuwa.shopping.client.ApplicationEnvironment;
@@ -32,7 +34,9 @@ import com.liuwa.shopping.model.MoneyModel;
 import com.liuwa.shopping.model.UserModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.PayResult;
+import com.liuwa.shopping.util.QrCodeUtil;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.wxapi.WXPayEntryActivity;
 import com.tencent.mm.sdk.modelpay.PayReq;
@@ -42,6 +46,8 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -63,9 +69,11 @@ public class MyMoneyActivity extends BaseActivity{
 	private IWXAPI api;
 	private String order_id;
 	private TextView tv_commit;
-	private MoneyModel selectModel;
+	private String selectModel;
 	private TextView tv_money_detail;
 	private TextView tv_money;
+	private TextView tv_info;
+	public ArrayList<String> moneyModels=new ArrayList<>();
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,6 +83,7 @@ public class MyMoneyActivity extends BaseActivity{
 		init();
 		initViews();
 		initEvent();
+		getMoney();
 	}
 	public void init(){
 		uid= ApplicationEnvironment.getInstance().getPreferences().getString(Constants.USER_ID, "");
@@ -86,14 +95,15 @@ public class MyMoneyActivity extends BaseActivity{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("我的余额");
+		tv_info=(TextView)findViewById(R.id.tv_info);
 		tv_commit=(TextView)findViewById(R.id.tv_commit);
 		mg_list=(MyGridView)findViewById(R.id.mg_list);
-		depositAdapter=new DepositAdapter(context, DatasUtils.moneyList);
+		depositAdapter=new DepositAdapter(context, moneyModels);
 		mg_list.setAdapter(depositAdapter);
 		mg_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				selectModel=(MoneyModel) parent.getAdapter().getItem(position);
+				selectModel=(String) parent.getAdapter().getItem(position);
 				depositAdapter.setSelectedPosition(position);
 				depositAdapter.notifyDataSetChanged();
 			}
@@ -115,12 +125,58 @@ public class MyMoneyActivity extends BaseActivity{
 		});
 		tv_money_detail=(TextView)findViewById(R.id.tv_money_detail);
 
-		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
-		String userStr=pre.getString(Constants.USER,"");
-		if(userStr!=null) {
-			UserModel model = new Gson().fromJson(userStr, UserModel.class);
-			tv_money.setText("￥" + model.yuE + "");
-		}
+
+	}
+	//微信支付详情
+	private void getMoney(){
+
+		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
+		categorymap1.put("timespan", System.currentTimeMillis()+"");
+		categorymap1.put("sign",Md5SecurityUtil.getSignature(categorymap1));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.MONEYITEM);
+		requestCategoryMap.put(Constants.kPARAMNAME, categorymap1);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, Handler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler Handler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+					JSONObject oo=	job.getJSONObject("data");
+					String money1=oo.getString("money1");
+						String money2=oo.getString("money2");
+						String money3=oo.getString("money3");
+						String money4=oo.getString("money4");
+						moneyModels.add(money1);
+						moneyModels.add(money2);
+						moneyModels.add(money3);
+						moneyModels.add(money4);
+						tv_info.setText(oo.getString("info"));;
+						depositAdapter.notifyDataSetChanged();
+					}
+					else {
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
 	}
 	//微信支付详情
 	private void payWEIXINOrder(){
@@ -253,7 +309,7 @@ public class MyMoneyActivity extends BaseActivity{
 	private void payZhiFuBaoOrder(){
 		TreeMap<String, Object> map = new TreeMap<String, Object>();
 		map.put("payment", "1");
-		map.put("total",selectModel.money);
+		map.put("total",selectModel);
 		map.put("timespan", System.currentTimeMillis()+"");
 		map.put("sign", Md5SecurityUtil.getSignature(map));
 		HashMap<String, Object> mapend = new HashMap<String, Object>();
@@ -414,5 +470,16 @@ public class MyMoneyActivity extends BaseActivity{
 
 			}
 		};
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
+		String userStr=pre.getString(Constants.USER,"");
+		if(userStr!=null||userStr.length()!=0) {
+			UserModel model = new Gson().fromJson(userStr, UserModel.class);
+			tv_money.setText("￥" + model.yuE + "");
+		}
 	}
 }

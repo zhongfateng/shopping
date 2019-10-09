@@ -30,23 +30,23 @@ package com.liuwa.shopping.model;
 public class ShoppingCartModel {
 
     private int id;
-    private String imageUrl="http://pic25.nipic.com/20121112/9252150_150552938000_2.jpg";
+    private String imageUrl="";
     private String shoppingName;
 
     private int dressSize;
     private String attribute;
 
-    private double salePrice;
 
     public boolean isChoosed;
     public boolean isCheck = false;
     private int num;
-
+    public String fristimg;
     public String proName;
     public String proHeadId;
     public String proChildId;
     public String cartId;
     public String guiGe;
+    public double showprice;
 
     public void setCartId(String cartId) {
         this.cartId = cartId;
@@ -97,7 +97,6 @@ public class ShoppingCartModel {
         this.shoppingName = shoppingName;
         this.attribute = attribute;
         this.dressSize = dressSize;
-        this.salePrice = salePrice;
         this.num = num;
 
     }
@@ -150,15 +149,4 @@ public class ShoppingCartModel {
     public void setDressSize(int dressSize) {
         this.dressSize = dressSize;
     }
-
-
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
-
-
 }

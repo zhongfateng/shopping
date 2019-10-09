@@ -18,6 +18,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:src="@mipmap/top_bg"
+            android:id="@+id/img_top"
             android:layout_height="wrap_content" />
         <RelativeLayout
             android:layout_width="match_parent"

@@ -24,6 +24,7 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.adapter.GuiGeAdapter;
 import com.liuwa.shopping.model.ProductChildModel;
 import com.liuwa.shopping.util.DisplayHelper;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.view.HorizontalListView;
 
@@ -61,9 +62,11 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
+    private String mParam3;
     private ArrayList<ProductChildModel> mParam2=new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
@@ -72,7 +75,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
     private TextView iv_sub,iv_add,tv_commodity_show_num,tv_ok;
     private GridView hlv;
     private GuiGeAdapter adapter;
-    private ImageView img_show;
+    private ImageView img_left;
     private ImageView img_close;
     //选择的数量和属性
     private String selectProid;
@@ -93,10 +96,11 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
      * @return A new instance of fragment BlankFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DialogFragmentFromBottom newInstance(String param1, ArrayList<ProductChildModel> prochildid) {
+    public static DialogFragmentFromBottom newInstance(String param1, ArrayList<ProductChildModel> prochildid,String img) {
         DialogFragmentFromBottom fragment = new DialogFragmentFromBottom();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM3, img);
         //args.putParcelableArrayList(ARG_PARAM2, prochildid);
         args.putSerializable(ARG_PARAM2,prochildid);
         fragment.setArguments(args);
@@ -107,6 +111,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam3 = getArguments().getString(ARG_PARAM3);
             mParam2 = (ArrayList<ProductChildModel>)getArguments().getSerializable(ARG_PARAM2);
         }
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.NiceDialog);
@@ -129,7 +134,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_bottom_product_detail_layout, container, false);
         tv_name=(TextView)view.findViewById(R.id.tv_name);
-        img_show=(ImageView)view.findViewById(R.id.img_show);
+        img_left=(ImageView)view.findViewById(R.id.img_left);
         img_close=(ImageView)view.findViewById(R.id.img_close);
         tv_price=(TextView)view.findViewById(R.id.tv_price);
         iv_sub=(TextView)view.findViewById(R.id.iv_sub);
@@ -306,7 +311,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
         adapter.notifyDataSetChanged();
         ProductChildModel model= (ProductChildModel) parent.getAdapter().getItem(position);
         selectProid=model.proChildId;
-        tv_price.setText(MoneyUtils.formatAmountAsString(new BigDecimal(model.salePrice)));
+        tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
     }
 
     /**
@@ -326,6 +331,7 @@ public class DialogFragmentFromBottom extends DialogFragment implements  View.On
     //装在数据
     public void loadData(){
         tv_name.setText(mParam1+"");
+        ImageShowUtil.showImage(mParam3,img_left);
         adapter=new GuiGeAdapter(getActivity(),mParam2);
         hlv.setAdapter(adapter);
         adapter.notifyDataSetChanged();

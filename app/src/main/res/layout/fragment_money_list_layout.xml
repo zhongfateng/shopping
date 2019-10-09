@@ -5,7 +5,10 @@
     android:id="@+id/pullToListView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@color/view_line"
+    android:dividerHeight="1dp"
     ptr:ptrAnimationStyle="rotate"
+    android:scrollbars="none"
     ptr:ptrMode="both">
 
 </com.handmark.pulltorefresh.library.PullToRefreshListView>

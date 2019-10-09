@@ -32,6 +32,11 @@ public class ScreenUtil {
 		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
 		return dm.widthPixels;
 	}
+	public  static double resize(Activity activity) {
+		DisplayMetrics dm = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.widthPixels/ (360 / 148.0);
+	}
 	
 
 }

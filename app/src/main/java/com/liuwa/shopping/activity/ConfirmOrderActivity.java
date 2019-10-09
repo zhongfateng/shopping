@@ -211,7 +211,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
 								new TypeToken<ArrayList<OrderProductItem>>() {
 								}.getType()));
-						tv_p_num.setText("共"+orderModel.allbuynum+"件商品");
+						tv_p_num.setText("共"+jsonObject.getString("allbuynum")+"件商品");
 						fpAdapter.notifyDataSetChanged();
 					}
 					else
@@ -280,7 +280,10 @@ public class ConfirmOrderActivity extends BaseActivity{
 				AddressModel model = (AddressModel) i.getSerializableExtra("address_model");
 				addressid=model.addressId;
 				 rl_add.setVisibility(View.GONE);
-				 rl_address.setVisibility(View.INVISIBLE);
+				 rl_address.setVisibility(View.VISIBLE);
+				tv_shouhuoren.setText(model.lxRen);
+				tv_tel.setText(model.lxTel);
+				tv_detail.setText(model.detail);
 			}
 		}
 	}

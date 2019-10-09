@@ -31,6 +31,7 @@ import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.CategoryModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.MyGridView;
 
 import org.json.JSONArray;
@@ -209,6 +210,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
         productParam.put("rows",pageSize);
         productParam.put("classesid",mParam1.getProClassesId());
         productParam.put("type",1);
+        productParam.put("area", SPUtils.getShequMode(getContext(),Constants.AREA).area);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
         HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -232,6 +234,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
         productParam.put("page",1);
         productParam.put("rows",pageSize);
         productParam.put("classesid",mParam1.getProClassesId());
+        productParam.put("area", SPUtils.getShequMode(getContext(),Constants.AREA).area);
         productParam.put("type",1);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));

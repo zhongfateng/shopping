@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 
-public class HeaderOrderByCategroyActivity extends BaseActivity implements OrderShowByCategoryFragment.OnFragmentInteractionListener {
+public class HeaderOrderByCategroyActivity extends BaseActivity implements HeaderOrderByCategoryFragment.OnFragmentInteractionListener {
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
@@ -59,7 +59,7 @@ public class HeaderOrderByCategroyActivity extends BaseActivity implements Order
 	public void initViews() {
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title =(TextView)findViewById(R.id.tv_title);
-		tv_title.setText("订单列表");
+		tv_title.setText("我的团单");
 		tl_tabs   =(TabLayout)findViewById(R.id.tl_tabs);
 		vp_category =(ViewPager)findViewById(R.id.vp_category);
 		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
@@ -68,7 +68,7 @@ public class HeaderOrderByCategroyActivity extends BaseActivity implements Order
 		tl_tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
-				tv_title.setText(tab.getText());;
+
 			}
 
 			@Override

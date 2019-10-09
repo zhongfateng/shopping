@@ -4,9 +4,10 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/activity_top_title_layout"></include>
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:scrollbars="none"
+        android:orientation="vertical"
         android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -48,7 +49,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:layout_below="@+id/rl_top"
-        android:layout_marginTop="-20dp"
+        android:layout_marginTop="-10dp"
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -184,6 +185,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:gravity="center_vertical"
             android:layout_height="55dp">
             <TextView
@@ -210,6 +212,7 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:layout_height="55dp">
             <TextView
                 android:id="@+id/tv_yzm"
@@ -250,6 +253,7 @@
         <View
             android:layout_width="match_parent"
             android:background="@color/view_line"
+            android:visibility="gone"
             android:layout_height="0.5dp"></View>
         <LinearLayout
             android:layout_width="match_parent"
@@ -280,11 +284,11 @@
             android:background="@mipmap/app_head"
             android:layout_below="@+id/ll_top"
             android:textColor="@color/white"
-            android:layout_marginTop="44dp"
             android:text="提交申请"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
             android:layout_height="wrap_content" />
 
     </RelativeLayout>
-    </ScrollView>
+    </LinearLayout>
 </LinearLayout>

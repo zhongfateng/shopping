@@ -89,6 +89,7 @@
                 app:tabTextColor="@color/name_color"
                 app:tabSelectedTextColor="@color/tab_line"
                 app:tabMode="fixed"
+                android:background="@color/white"
                 app:tabIndicatorHeight="0dp"
                 app:tabIndicatorColor="@color/transparent"
                 android:layout_height="42dp"></android.support.design.widget.TabLayout>
@@ -108,7 +109,7 @@
             android:textSize="12sp"
             android:text="立即抢"
             android:background="@color/tab_line"
-            android:layout_height="53dp" />
+            android:layout_height="45dp" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -71,6 +71,15 @@
                 android:horizontalSpacing="6dp"
                 android:layout_height="wrap_content"
                 android:numColumns="4"></com.liuwa.shopping.view.MyGridView>
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/tv_info"
+                android:textColor="@color/b_color"
+                android:textSize="10sp"
+                android:lines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="15dp"
+                android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

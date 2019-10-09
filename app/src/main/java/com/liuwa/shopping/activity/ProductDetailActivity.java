@@ -111,8 +111,8 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 
 	public void init(ProductModel model) {
 		fragmentList.add(WebFragment.newInstance("dsaf",model.content));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
-		fragmentList.add(WebFragment.newInstance("dsaf","BlankFragment"));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.pjcontent));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
 		list_Title.add("详情");
 		list_Title.add("评价");
 		list_Title.add("售后");
@@ -272,7 +272,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		ft.addToBackStack(null);
 
 		// Create and show the dialog.
-		DialogFragmentFromBottom	newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels);
+		DialogFragmentFromBottom	newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels,model.fristimg);
 		newFragment.show(ft, "dialog");
 	}
 	private void doGetDatas(){
@@ -400,7 +400,9 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
 					}
-					else {
+					else  if(code==402)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 
 				} catch (JSONException e) {
@@ -445,7 +447,9 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 					if(code== Constants.CODE) {
 						Toast.makeText(context,"添加购物车成功!!!",Toast.LENGTH_SHORT).show();
 					}
-					else {
+					else if(code==402)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 
 				} catch (JSONException e) {
