@@ -6,10 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +28,10 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.DialogFragmentFromBottom;
 import com.liuwa.shopping.activity.fragment.IntegralDialogFragment;
 import com.liuwa.shopping.activity.fragment.IntegralFragment;
+import com.liuwa.shopping.activity.fragment.WebFragment;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.ImagePagerAdapter;
+import com.liuwa.shopping.adapter.MyPagerAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
@@ -37,6 +44,7 @@ import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.DatasUtils;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.SPUtils;
+import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.AutoScrollViewPager;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
@@ -51,7 +59,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class IntegralProductDetailActivity extends BaseActivity implements DialogFragmentFromBottom.OnFragmentInteractionListener{
+public class IntegralProductDetailActivity extends BaseActivity implements DialogFragmentFromBottom.OnFragmentInteractionListener,WebFragment.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
@@ -62,7 +70,14 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 	private TextView tv_duihuan;
 	private ProductModel model;
 	public TextView tv_name,tv_kucun;
+	public String peiSong="";
 	private ArrayList<ProductChildModel> productChildModels=new ArrayList<>();
+	private ArrayList fragmentList = new ArrayList<>();
+	private ArrayList list_Title = new ArrayList<>();
+	public TabLayout tl_tabs;
+	public ViewPager vp_category;
+	public MyPagerAdapter adapter;
+	public TextView tv_jifen;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,7 +88,14 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 		initEvent();
 		doGetDatas();
 	}
-
+	public void init(ProductModel model) {
+		fragmentList.add(WebFragment.newInstance("dsaf",model.content));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.pjcontent));
+		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
+		list_Title.add("详情");
+		list_Title.add("评价");
+		list_Title.add("售后");
+	}
 	public void initViews() {
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView)findViewById(R.id.tv_title);
@@ -94,6 +116,21 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 		tv_duihuan=(TextView)findViewById(R.id.tv_duihuan);
 		tv_name=(TextView)findViewById(R.id.tv_name);
 		tv_kucun=(TextView)findViewById(R.id.tv_kucun);
+		tv_jifen=(TextView)findViewById(R.id.tv_jifen);
+		tl_tabs = (TabLayout) findViewById(R.id.tb_top);
+		//设置TabLayout的模式
+		tl_tabs.setTabMode(TabLayout.MODE_FIXED);
+
+		//设置分割线
+		LinearLayout linearLayout = (LinearLayout) tl_tabs.getChildAt(0);
+		linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+		linearLayout.setDividerDrawable(ContextCompat.getDrawable(context,
+				R.drawable.divider)); //设置分割线的样式
+		linearLayout.setDividerPadding(ScreenUtil.dip2px(context,2)); //设置分割线间隔
+		vp_category = (ViewPager) findViewById(R.id.vp_category);
+		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
+		vp_category.setAdapter(adapter);
+		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
 	}
 	
 	public void initEvent(){
@@ -258,9 +295,12 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 						JSONObject oo=jsonObject.getJSONObject("product_head");
 						ProductModel model = localGson.fromJson(oo.toString(),
 								ProductModel.class);
+						peiSong=model.peiSong;
 						tv_name.setText(model.proName+"");
 						tv_kucun.setText("剩余"+model.allKuCun+"件");
-
+						tv_jifen.setText((int)model.showprice+"积分");
+						init(model);
+						adapter.notifyDataSetChanged();
 						imgs.clear();
 						imgs.addAll((Collection<? extends ImageItemModel>)localGson.fromJson(jsonObject.getJSONArray("proimglist").toString(),
 								new TypeToken<ArrayList<ImageItemModel>>() {
@@ -302,8 +342,14 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 	public void onFragmentInteraction(String prochildid, int num) {
 		Intent intent =new Intent(context,IntegralConfirmActivity.class);
 		intent.putExtra("model",model);
+		intent.putExtra("peiSong",peiSong);
 		intent.putExtra("prochild",prochildid);
 		intent.putExtra("num",num);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onFragmentInteraction(Uri uri) {
+
 	}
 }

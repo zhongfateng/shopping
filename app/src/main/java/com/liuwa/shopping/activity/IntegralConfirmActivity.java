@@ -29,6 +29,7 @@ import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.AddressModel;
 import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.ProductModel;
+import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.MyGridView;
@@ -58,6 +59,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 	public String addressid;
 	public static  final  int REQCODE=89;
 	public TextView tv_title;
+	public String peiSong="";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +68,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 		model=(ProductModel) getIntent().getSerializableExtra("model");
 		prochild=getIntent().getStringExtra("prochild");
 		num=getIntent().getIntExtra("num",1);
+		peiSong=getIntent().getStringExtra("peiSong");
 		initViews();
 		initEvent();
 		doGetDatas();
@@ -86,14 +89,15 @@ public class IntegralConfirmActivity extends BaseActivity {
 
 
 		tv_tip=(TextView)findViewById(R.id.tv_tip);
-		tv_tip.setText(model.peiSong);
+		tv_tip.setText(peiSong);
 
 		tv_p_num=(TextView)findViewById(R.id.tv_p_num);
-		tv_p_num.setText("1件商品");
+		tv_p_num.setText(num+"件商品");
 
 		img_show=(ImageView)findViewById(R.id.img_show);
 		tv_name=(TextView)findViewById(R.id.tv_name);
 		tv_name.setText(model.proName);
+		ImageShowUtil.showImage(model.fristimg,img_show);
 		tv_count=(TextView)findViewById(R.id.tv_count);
 		tv_count.setText(Double.toString(model.showprice));
 		tv_confirm=(TextView)findViewById(R.id.tv_confirm);
@@ -105,6 +109,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 		img_back.setOnClickListener(onClickListener);
 		tv_commit.setOnClickListener(onClickListener);
 		rl_add.setOnClickListener(onClickListener);
+		rl_address.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -114,6 +119,10 @@ public class IntegralConfirmActivity extends BaseActivity {
 			switch (v.getId()) {
 			case R.id.img_back:
 				IntegralConfirmActivity.this.finish();
+				break;
+			case R.id.rl_address:
+				Intent intent2 =new Intent(context,MyAddressActivity.class);
+				startActivityForResult(intent2,REQCODE);
 				break;
 			case R.id.rl_add:
 				Intent intent =new Intent(context,MyAddressActivity.class);
@@ -166,6 +175,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 						String order_id=job.getString("data");
 						Intent intent =new Intent(context,PaySuccessActivity.class);
 						intent.putExtra("order_id",order_id);
+						intent.putExtra("key",1);
 						startActivity(intent);
 						IntegralConfirmActivity.this.finish();
 					} else
@@ -251,6 +261,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 							rl_add.setVisibility(View.GONE);
 							rl_address.setVisibility(View.VISIBLE);
 							AddressModel model=list.get(0);
+							addressid=model.addressId;
 							setData(model);
 						}
 						tv_didian.setText(SPUtils.getShequMode(context,Constants.AREA).region);

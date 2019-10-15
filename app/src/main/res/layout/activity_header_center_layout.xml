@@ -252,7 +252,7 @@
                 android:layout_height="45dp">
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="返回个人中心"
+                    android:text="我的团单"
                     android:layout_centerVertical="true"
                     android:textSize="12sp"
                     android:drawableLeft="@mipmap/person_left"

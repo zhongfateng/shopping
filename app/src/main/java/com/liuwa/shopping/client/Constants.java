@@ -66,6 +66,8 @@ public class Constants {
 	public static final String LOGIN      				 =  "logindo";
 	//注册接口
 	public static final String REGISTER      			 =  "zhucedo";
+	//修改密码
+	public static final String XGCode      			     =  "xgmimado";
 	//3.5.2支付订单/api/stu/order/pay
 	public static final String PayOrder                  = "api/stu2/order/pay";
 	//邻居购买
@@ -92,6 +94,9 @@ public class Constants {
 	public static final String Area                       = "indexsqjson";
 	//添加地址
 	public static final String ADDADDRESS                = "addmemaddressjson";
+	//修改地址
+	public static final String UPDATEADDADDRESS                = "updatememaddressjson";
+
 	//删除地址
 	public static final String DELETEADDRESS             = "deladdressjson";
 	//默认地址
@@ -152,6 +157,8 @@ public class Constants {
 	public static final String Orderdaddressqr                 = "ordertui";
 	//统一成为副团长
 	public static final String TONGYI                            = "leaderfutongyijson";
+	public static final String QUXIAO                            = "leaderfuquxiaojson";
+	//删除副团长
 	//
 	public static final String ADDLEADERFU                      = "addleaderfujson";
 	//佣金记录
@@ -174,7 +181,10 @@ public class Constants {
 	public static final String TXAPPLY                           = "leaderyjtxsqjson";
 	//退出
 	public static final String LOGINOUT                           = "memberquit";
-
+	//评价
+	public static final String COmment                           = "addevaulation";
+	//修改昵称
+	public static final String UPDATENAME                         = "updatememnick";
 
 
 

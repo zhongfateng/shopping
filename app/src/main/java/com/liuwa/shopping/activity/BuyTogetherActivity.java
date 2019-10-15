@@ -88,9 +88,14 @@ public class BuyTogetherActivity extends BaseActivity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-				Intent intent=new Intent(context,BuyTogetherProductActivity.class);
-				intent.putExtra("tuanInfoId",model.tuanInfoId);
-				startActivity(intent);
+				if(model.isbegin.equals("2")) {
+					Intent intent = new Intent(context, BuyTogetherProductActivity.class);
+					intent.putExtra("tuanInfoId", model.tuanInfoId);
+					startActivity(intent);
+				}else if(model.isbegin.equals("1"))
+				{
+					Toast.makeText(context,"活动尚未开始",Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}

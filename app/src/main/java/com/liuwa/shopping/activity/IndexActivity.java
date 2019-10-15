@@ -138,6 +138,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	public static  final  int ReqShequ= 67;
 	public TextView show_more;
 	public String tuanId;
+	public int tag;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -191,9 +192,14 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				TuanProductModel model=(TuanProductModel) parent.getAdapter().getItem(position);
-				Intent intent=new Intent(context,BuyTogetherProductActivity.class);
-				intent.putExtra("tuanInfoId",model.tuanInfoId);
-				startActivity(intent);
+				if (model.isbegin.equals("2")) {
+					Intent intent = new Intent(context, BuyTogetherProductActivity.class);
+					intent.putExtra("tuanInfoId", model.tuanInfoId);
+					startActivity(intent);
+				}else if(model.isbegin.equals("1"))
+				{
+					Toast.makeText(context,"活动尚未开始",Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		tb_time.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -247,7 +253,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
 				page++;
-				getMoreProduct();
+				if(page>baseModel.totalpage){
+					Toast.makeText(context,"暂无更多商品",Toast.LENGTH_SHORT).show();
+				}else{
+					getMoreProduct();
+				}
 				refreshView.onRefreshComplete();
 			}
 		});
@@ -306,6 +316,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(tag!=0) {
+			SheQuModel model = SPUtils.getShequMode(context, Constants.AREA);
+			tv_dingwei.setText(model.region);
+		}
 		String flag=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.flag,"");
 		if(!flag.equals("1")) {
 			getVersionDatas();
@@ -334,8 +348,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				startActivity(intent);
 				break;
 			case R.id.go_shequ:
+				tag=1;
 				intent=new Intent(context,SheQuListActivity.class);
-				startActivityForResult(intent,ReqShequ);
+				//startActivityForResult(intent,ReqShequ);
+				startActivity(intent);
 				break;
 			case R.id.ll_content:
 				intent=new Intent(context,FavoriateActivity.class);
@@ -892,7 +908,10 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
+					Intent intent =new Intent(context,WebActivity.class);
+					intent.putExtra("url",model.newsurl);
+					intent.putExtra("title","公告");
+					context.startActivity(intent);
 				}
 			});
 
@@ -1028,17 +1047,17 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			locationClient.onDestroy();
 		}
 	}
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode==ReqShequ){
-			if (resultCode == Activity.RESULT_OK){
-				SheQuModel model = (SheQuModel)data.getSerializableExtra(Constants.AREA);
-				tv_dingwei.setText(model.region);
-				SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-				editor.putString(Constants.AREA, new Gson().toJson(model));
-				editor.commit();
-				getProduct();
-			}
-		}
-	}
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if(requestCode==ReqShequ){
+//			if (resultCode == Activity.RESULT_OK){
+//				SheQuModel model = (SheQuModel)data.getSerializableExtra(Constants.AREA);
+//				tv_dingwei.setText(model.region);
+//				SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+//				editor.putString(Constants.AREA, new Gson().toJson(model));
+//				editor.commit();
+//				getProduct();
+//			}
+//		}
+//	}
 }

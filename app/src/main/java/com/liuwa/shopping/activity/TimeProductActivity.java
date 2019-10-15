@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +42,8 @@ import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.AutoScrollViewPager;
+import com.liuwa.shopping.view.LoadingDialog;
+import com.liuwa.shopping.view.LoadingTimeDialog;
 import com.liuwa.shopping.view.MyViewPager;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
 
@@ -75,7 +78,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 	public TimeCount time;
 	private ArrayList fragmentList = new ArrayList<>();
 	private ArrayList list_Title = new ArrayList<>();
-	int num;
+	public int num;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -209,6 +212,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 					TimeProductActivity.this.finish();
 					break;
 				case R.id.tv_botoom:
+					num=0;
 					doBuy(1);
 					break;
 			}
@@ -258,13 +262,23 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
 					}else if(code==406){
-						num++;
-						if(num==1) {
-							time.start();
-						}else
-						{
-							Toast.makeText(context,"稍后再试",Toast.LENGTH_SHORT).show();
-						}
+							//time.start();
+							if(num==0) {
+								LoadingTimeDialog loadingDialog = new LoadingTimeDialog(context);
+								loadingDialog.setCanceledOnTouchOutside(false);
+								loadingDialog.show();
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										//操作内容
+										loadingDialog.dismiss();
+										num++;
+										doBuy(1);
+									}
+								}, 3000);
+							}else {
+								Toast.makeText(context, "库存紧张，请稍后再试", Toast.LENGTH_SHORT).show();
+							}
 					}
 					else if(code==102){
 						Toast.makeText(context,"当前抢购人数较多请稍后再试",Toast.LENGTH_SHORT).show();

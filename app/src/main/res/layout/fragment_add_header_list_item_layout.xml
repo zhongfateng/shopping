@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,7 +13,6 @@
     <com.liuwa.shopping.view.CircleImageView
         android:id="@+id/circle_left"
         android:layout_width="45dp"
-        android:src="@mipmap/img_show"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_height="45dp" />

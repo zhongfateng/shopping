@@ -95,6 +95,7 @@
                 android:layout_height="42dp"></android.support.design.widget.TabLayout>
             <com.liuwa.shopping.view.MyViewPager
                 android:id="@+id/vp_category"
+                android:layout_marginTop="1dp"
                 android:layout_width="match_parent"
                 android:layout_height="500dp"></com.liuwa.shopping.view.MyViewPager>
         </LinearLayout>

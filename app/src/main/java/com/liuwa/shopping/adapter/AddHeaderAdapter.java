@@ -14,6 +14,8 @@ import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.TimeUtil;
+import com.liuwa.shopping.view.CircleImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,6 +38,11 @@ public class AddHeaderAdapter extends BaseAdapter {
 
 	public void setOnCartClick(OnCartClick onCartClick) {
 		this.onCartClick = onCartClick;
+	}
+	public void setList(ArrayList<HeaderApplayModel> productList,String mparam) {
+		this.mparam=mparam;
+		this.productList = productList;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -64,6 +71,7 @@ public class AddHeaderAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = layoutInflater.inflate(R.layout.fragment_add_header_list_item_layout, null);
 			viewHolder = new ViewHolder();
+			viewHolder.circle_left=(CircleImageView)convertView.findViewById(R.id.circle_left);
 			viewHolder.tv_time=(TextView)convertView.findViewById(R.id.tv_time);
 			viewHolder.tv_name=(TextView)convertView.findViewById(R.id.tv_name);
 			viewHolder.tv_agress=(TextView)convertView.findViewById(R.id.tv_agress);
@@ -104,6 +112,7 @@ public class AddHeaderAdapter extends BaseAdapter {
 			}
 		});
 		viewHolder.tv_name.setText(productModel.nickname);
+		ImageLoader.getInstance().displayImage(productModel.headImg,viewHolder.circle_left);
 		return convertView;
 	}
 
@@ -113,6 +122,7 @@ public class AddHeaderAdapter extends BaseAdapter {
 		public TextView tv_name;
 		public TextView tv_agress;
 		public TextView tv_sc;
+		public CircleImageView circle_left;
  	}
 	public interface OnCartClick{
 		public void agressClick(HeaderApplayModel model);

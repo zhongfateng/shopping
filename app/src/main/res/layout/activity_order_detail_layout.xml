@@ -372,19 +372,10 @@
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="gone"
             android:layout_height="51dp">
-            <TextView
-                android:id="@+id/tv_cancel"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:text="取消订单"
-                android:gravity="center"
-                android:background="@color/white"
-                android:textColor="@color/black"
-                android:layout_height="match_parent" />
             <TextView
                 android:id="@+id/tv_pay_order"
                 android:layout_width="match_parent"

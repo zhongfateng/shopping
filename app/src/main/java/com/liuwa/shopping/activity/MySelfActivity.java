@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.LogoutDialogFragment;
+import com.liuwa.shopping.activity.fragment.UpdateNameFragment;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
@@ -56,7 +57,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class MySelfActivity extends BaseActivity implements LogoutDialogFragment.OnFragmentInteractionListener{
+public class MySelfActivity extends BaseActivity implements LogoutDialogFragment.OnFragmentInteractionListener,UpdateNameFragment.OnFragmentInteractionListener {
 	private Context context;
 	private RelativeLayout rl_address,rl_applay_head,rl_integral_shop,rl_money,rl_connect,rl_logout;
 	private TextView tv_my_integral,tv_my_money;
@@ -67,6 +68,11 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 	private TextView tv_show;
 	private ImageView img_qr;
 	public LinearLayout rl_dfk,rl_dfh,rl_dth,pj;
+	public String questionurl;
+	public String messageurl;
+	public String kftel;
+	public RelativeLayout rl_question;
+	public RelativeLayout rl_sys_message;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,6 +97,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		rl_money=(RelativeLayout)findViewById(R.id.rl_money);
 		rl_connect=(RelativeLayout)findViewById(R.id.rl_connect);
 		rl_logout=(RelativeLayout)findViewById(R.id.rl_logout);
+		rl_sys_message=(RelativeLayout)findViewById(R.id.rl_sys_message);
 		tv_nickname=(TextView)findViewById(R.id.tv_nickname);
 		tv_id=(TextView)findViewById(R.id.tv_id);
 		tv_dfk_dot=(TextView)findViewById(R.id.tv_dfk_dot);
@@ -98,6 +105,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		tv_dth_dot=(TextView)findViewById(R.id.tv_dth_dot);
 		tv_pj=(TextView)findViewById(R.id.tv_pj);
 		img_qr=(ImageView)findViewById(R.id.img_qr);
+		rl_question=(RelativeLayout)findViewById(R.id.rl_question);
 
 	}
 	public void initEvent(){
@@ -114,6 +122,9 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		rl_dth.setOnClickListener(onClickListener);
 		pj.setOnClickListener(onClickListener);
 		rl_logout.setOnClickListener(onClickListener);
+		rl_question.setOnClickListener(onClickListener);
+		rl_sys_message.setOnClickListener(onClickListener);
+		tv_nickname.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -122,12 +133,22 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 			Intent intent;
 			switch (v.getId()) {
 				case R.id.tv_my_integral:
-					//intent=new Intent(context,IntegralActivity.class);
-					intent=new Intent(context,HeaderOrderByCategroyActivity.class);
+					intent=new Intent(context,IntegralActivity.class);
+					//intent=new Intent(context,HeaderOrderByCategroyActivity.class);
 					startActivity(intent);
 					break;
 				case R.id.rl_logout:
 					DialogFragmentFromBottom();
+					break;
+				case R.id.tv_nickname:
+					String name=tv_nickname.getText().toString();
+					showNameDialog(name);
+					break;
+				case R.id.rl_sys_message:
+					intent=new Intent(context,WebActivity.class);
+					intent.putExtra("title","系统消息");
+					intent.putExtra("url",messageurl);
+					startActivity(intent);
 					break;
 				case R.id.rl_dfk:
 					intent=new Intent(context,OrderShowByCategroyActivity.class);
@@ -169,8 +190,14 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 					intent=new Intent(context,MyMoneyActivity.class);
 					startActivity(intent);
 					break;
+				case R.id.rl_question:
+					intent=new Intent(context,WebActivity.class);
+					intent.putExtra("title","常见问题");
+					intent.putExtra("url",questionurl);
+					startActivity(intent);
+					break;
 				case R.id.rl_connect:
-					intent =  new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + Constants.CONNECTNUM));
+					intent =  new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + kftel));
 					startActivity(intent);
 					break;
 				case R.id.rl_my_order:
@@ -195,6 +222,20 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 
 		// Create and show the dialog.
 		LogoutDialogFragment newFragment = LogoutDialogFragment.newInstance();
+		newFragment.show(ft, "dialog");
+	}
+
+	public void showNameDialog(String name) {
+
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		UpdateNameFragment newFragment = UpdateNameFragment.newInstance(name);
 		newFragment.show(ft, "dialog");
 	}
 	private void doGetDatas(){
@@ -243,7 +284,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 						tv_id.setText("用户 ID:"+userModel.memberId);
 						tv_my_integral.setText("我的积分："+userModel.score+">");
 						tv_my_money.setText("我的余额：￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(userModel.yuE))+">");
-						String flag=userModel.isLeader;
+						String flag=jsonObject.getString("isLeader");
 						if(flag!=null&&flag.equals("1")){
 							tv_show.setText("团长中心");
 							rl_applay_head.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +294,19 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 									startActivity(intent);
 								}
 							});
+						}else {
+							tv_show.setText("申请成为团长");
+							rl_applay_head.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									Intent intent =new Intent(context,HeadApplyActivity.class);
+									startActivity(intent);
+								}
+							});
 						}
+						questionurl=jsonObject.getString("questionurl");
+						messageurl=jsonObject.getString("messageurl");
+						kftel=jsonObject.getString("kftel");
 						//生成的二维码图片
 						Bitmap qr = QrCodeUtil.createQRImage(userModel.memberId,300,300,null);
 						img_qr.setImageBitmap(qr);
@@ -286,21 +339,33 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 						if(dfk!=0){
 							tv_dfk_dot.setVisibility(View.VISIBLE);
 							tv_dfk_dot.setText(dfk+"");
+						}else
+						{
+							tv_dfk_dot.setVisibility(View.GONE);
 						}
 						int dfh=jsonObject.getInt("count2");
 						if(dfh!=0){
 							tv_dfh_dot.setVisibility(View.VISIBLE);
 							tv_dfh_dot.setText(dfh+"");
+						}else
+						{
+							tv_dfh_dot.setVisibility(View.GONE);
 						}
 						int dth=jsonObject.getInt("count3");
 						if(dth!=0){
 							tv_dth_dot.setVisibility(View.VISIBLE);
 							tv_dth_dot.setText(dth+"");
+						}else
+						{
+							tv_dth_dot.setVisibility(View.GONE);
 						}
 						int pj=jsonObject.getInt("count4");
 						if(pj!=0){
 							tv_pj.setVisibility(View.VISIBLE);
 							tv_pj.setText(pj+"");
+						}else
+						{
+							tv_pj.setVisibility(View.GONE);
 						}
 					}
 					else {
@@ -373,5 +438,56 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 
 			}
 		};
+	}
+
+	private void updateName(String name){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("nick", name);
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.UPDATENAME);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, nameHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler nameHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						doGetDatas();
+					}
+					else {
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+
+	@Override
+	public void onOk(String name) {
+		updateName(name);
+	}
+
+	@Override
+	public void onCancle() {
+
 	}
 }

@@ -60,6 +60,7 @@
     </LinearLayout>
     <include layout="@layout/activity_shequ_list_layout"
         android:layout_width="match_parent"
+        android:id="@+id/current_shequ"
         android:layout_height="wrap_content"
         android:layout_marginTop="-40dp"></include>
     <TextView

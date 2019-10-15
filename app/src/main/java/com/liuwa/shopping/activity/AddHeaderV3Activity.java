@@ -3,9 +3,6 @@ package com.liuwa.shopping.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -15,7 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,38 +20,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.activity.CaptureActivity;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
-import com.liuwa.shopping.activity.fragment.HeaderFragment;
 import com.liuwa.shopping.activity.fragment.TianJiaLeaderFragment;
 import com.liuwa.shopping.activity.fragment.TianJiaLeaderV2Fragment;
+import com.liuwa.shopping.adapter.AddHeaderAdapter;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.HeaderApplayModel;
-import com.liuwa.shopping.model.ImageItemModel;
-import com.liuwa.shopping.model.ProductChildModel;
-import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.permission.PermissionUtils;
 import com.liuwa.shopping.permission.request.IRequestPermissions;
 import com.liuwa.shopping.permission.request.RequestPermissions;
 import com.liuwa.shopping.permission.requestresult.IRequestPermissionsResult;
 import com.liuwa.shopping.permission.requestresult.RequestPermissionsResultSetApp;
 import com.liuwa.shopping.util.Md5SecurityUtil;
-import com.liuwa.shopping.util.MoneyUtils;
-import com.liuwa.shopping.util.QrCodeUtil;
-import com.liuwa.shopping.util.SPUtils;
-import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.util.Util;
-import com.liuwa.shopping.view.MyViewPager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,33 +50,34 @@ import java.util.TreeMap;
 import static com.google.zxing.activity.CaptureActivity.RESULT_CODE_QR_SCAN;
 
 
-public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fragment.OnFragmentInteractionListener{
+public class AddHeaderV3Activity extends BaseActivity implements AddHeaderAdapter.OnCartClick{
 	private Context context;
 	private ImageView img_back;
 	private TextView tv_title;
-	private ViewPager vp_category;
 	private TabLayout tl_tabs;
 	private ArrayList fragmentList=new ArrayList<>();;
 	private ArrayList list_Title= new ArrayList<>();;
-	private MyPagerAdapter adapter;
+	private AddHeaderAdapter adapter;
 	public ArrayList<HeaderApplayModel> leaderApplyModels=new ArrayList<>();
 	public ArrayList<HeaderApplayModel> leaderApplyModels2=new ArrayList<>();
 	public ImageView leader_img;
 	public String leaderId;
+	public int flag=1;
 	IRequestPermissions requestPermissions = RequestPermissions.getInstance();//动态权限请求
 	IRequestPermissionsResult requestPermissionsResult = RequestPermissionsResultSetApp.getInstance();//动态权限请求结果处理
 	//打开扫描界面请求码
 	private int REQUEST_CODE = 0x01;
+	public ListView lv_show;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_header_layout);
+		setContentView(R.layout.activity_add_v3_header_layout);
 		this.context = this;
 		leaderId=getIntent().getStringExtra("leaderId");
-		init();
+		//init();
 		initViews();
 		initEvent();
-		//getTuangou();
+		getTuangou();
 	}
 
 	public void init() {
@@ -108,14 +95,19 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 		tv_title.setText("添加副团长");
 		leader_img=(ImageView)findViewById(R.id.leader_img);
 		tl_tabs = (TabLayout) findViewById(R.id.tb_top);
-		vp_category = (ViewPager) findViewById(R.id.vp_category);
-		adapter = new MyPagerAdapter(getSupportFragmentManager(), context, fragmentList, list_Title);
-		vp_category.setAdapter(adapter);
-		tl_tabs.setupWithViewPager(vp_category);//此方法就是让tablayout和ViewPager联动
-		Util.reflex(tl_tabs);
+		TabLayout.Tab tab1=tl_tabs.newTab().setText("已添加");
+		TabLayout.Tab tab2=tl_tabs.newTab().setText("待审核");
+		tl_tabs.addTab(tab1);
+		tl_tabs.addTab(tab2);
 		tl_tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
+				if(tab.getPosition()==0) {
+					adapter.setList(leaderApplyModels, "1");
+				}else if(tab.getPosition()==1)
+				{
+					adapter.setList(leaderApplyModels2, "2");
+				}
 			}
 
 			@Override
@@ -128,6 +120,13 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 
 			}
 		});
+		lv_show=(ListView)findViewById(R.id.lv_show);
+		adapter=new AddHeaderAdapter(context,leaderApplyModels,"1");
+		adapter.setOnCartClick(this);
+		lv_show.setAdapter(adapter);
+		Util.reflex(tl_tabs);
+
+
 	}
 
 	public void initEvent() {
@@ -141,7 +140,7 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 		public void onClick(View v) {
 			switch (v.getId()) {
 				case R.id.img_back:
-					AddHeaderActivity.this.finish();
+					AddHeaderV3Activity.this.finish();
 					break;
 				case R.id.leader_img:
 					if(!requestPermissions()){
@@ -190,20 +189,6 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 			Toast.makeText(context,"请给APP授权，否则功能无法正常使用！",Toast.LENGTH_LONG).show();
 		}
 	}
-	@Override
-	public void agress(HeaderApplayModel model) {
-		doGetDatas(model);
-	}
-
-	@Override
-	public void delete(HeaderApplayModel model) {
-
-	}
-
-	@Override
-	public void sc(HeaderApplayModel model) {
-
-	}
 
 	private void doGetDatas(HeaderApplayModel model){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
@@ -236,14 +221,53 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 					int code =	job.getInt("code");
 					if(code== Constants.CODE) {
 						//tl_tabs.getTabAt(0).select();
-						ArrayList<Fragment> fragments1=new ArrayList<>();
-						ArrayList<String> lists=new ArrayList<>();
-						fragments1.add(TianJiaLeaderV2Fragment.newInstance("1"));
-						fragments1.add(TianJiaLeaderV2Fragment.newInstance("2"));
-						lists.add("已添加");
-						lists.add("待审核");
-						adapter.setNotyfice(fragments1,lists);
+						flag=1;
+						getTuangou();
+					}
+					else
+					{
+					}
 
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+	private void doCancelDatas(HeaderApplayModel model){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("memberid",model.memberId);
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.QUXIAO);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getCancleHandler());
+
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+
+				});
+	}
+	private LKAsyncHttpResponseHandler getCancleHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code== Constants.CODE) {
+						flag=1;
+						getTuangou();
 					}
 					else
 					{
@@ -258,6 +282,21 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 		};
 	}
 
+	@Override
+	public void agressClick(HeaderApplayModel model) {
+		doGetDatas(model);
+	}
+
+	@Override
+	public void deleteClick(HeaderApplayModel model) {
+		doCancelDatas(model);
+	}
+
+	@Override
+	public void scClick(HeaderApplayModel model) {
+		doCancelDatas(model);
+	}
+
 	public class MyPagerAdapter extends FragmentPagerAdapter {
 		private Context context;
 		private List<Fragment> fragmentList=new ArrayList<>();
@@ -268,12 +307,6 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 			this.context = context;
 			this.fragmentList = fragmentList;
 			this.list_Title = list_Title;
-		}
-		public void setNotyfice(List<Fragment> fragmentList,List<String> list_Title)
-		{
-			this.fragmentList = fragmentList;
-			this.list_Title=list_Title;
-			notifyDataSetChanged();
 		}
 		@Override
 		public Fragment getItem(int position) {
@@ -332,14 +365,13 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 						leaderApplyModels2.addAll((Collection<? extends HeaderApplayModel>)(localGson.fromJson(object.getJSONArray("memlistsq").toString(),
 								new TypeToken<ArrayList<HeaderApplayModel>>() {
 								}.getType())));
-						fragmentList.clear();
-						fragmentList.add(TianJiaLeaderFragment.newInstance(leaderApplyModels,"1"));
-						fragmentList.add(TianJiaLeaderFragment.newInstance(leaderApplyModels2,"2"));
-						list_Title.clear();
-						list_Title.add("已添加");
-						list_Title.add("待审核");
 						adapter.notifyDataSetChanged();
-						tl_tabs.getTabAt(0).select();
+						if(flag==0) {
+							tl_tabs.getTabAt(1).select();
+						}else if(flag==1)
+						{
+							tl_tabs.getTabAt(0).select();
+						}
 					}
 					else {
 					}
@@ -388,6 +420,7 @@ public class AddHeaderActivity extends BaseActivity implements TianJiaLeaderV2Fr
 					JSONObject  job= new JSONObject(json);
 					int code =	job.getInt("code");
 					if(code==Constants.CODE) {
+						flag=0;
 						getTuangou();
 					}
 					else if(code==200)

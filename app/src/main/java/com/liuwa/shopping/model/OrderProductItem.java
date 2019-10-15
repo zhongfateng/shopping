@@ -1,5 +1,7 @@
 package com.liuwa.shopping.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ZFT on 2019/9/9.
  * "buyPrice": 1,
@@ -16,7 +18,7 @@ package com.liuwa.shopping.model;
  "leaderId": 1
  */
 
-public class OrderProductItem {
+public class OrderProductItem implements Serializable{
     public String name;
     public String time;
     public double buyPrice;
@@ -28,6 +30,7 @@ public class OrderProductItem {
     public String orderChildId;
     public boolean isChoosed;
     public String typename;
+    public String type;
     public boolean isChoosed() {
         return isChoosed;
     }

@@ -12,4 +12,5 @@ public class TuanProductModel {
     public double priceA;
     public double price;
     public String tuanInfoId;
+    public String isbegin;
 }

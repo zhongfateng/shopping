@@ -3,7 +3,7 @@
     xmlns:android= "http://schemas.android.com/apk/res/android"
     android:shape= "oval"
     android:useLevel= "false" >
-    <solid android:color= "@color/tab_line" />
-    <size android:width= "10dp"
-        android:height= "10dp" />
+    <solid android:color= "@color/b_color" />
+    <size android:width= "12dp"
+        android:height= "12dp" />
 </shape>

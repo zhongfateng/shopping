@@ -62,6 +62,9 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 	public int tag;
 	private LinearLayout ll_yongjin,tv_xiaoliang,ll_add_header;
 	public HeaderCenterModel model;
+	public String questionurl;
+	public String kftel;
+	public String xsphurl;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,11 +114,18 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 			case R.id.img_back:
 				HeaderCenterActivity.this.finish();
 				break;
+				case R.id.rl_question:
+					intent=new Intent(context,WebActivity.class);
+					intent.putExtra("title","常见问题");
+					intent.putExtra("url",questionurl);
+					startActivity(intent);
+					break;
 				case R.id.rl_back:
-					HeaderCenterActivity.this.finish();
+					intent=new Intent(context,HeaderOrderByCategroyActivity.class);
+					startActivity(intent);
 					break;
 				case R.id.rl_connect:
-					intent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Constants.CONNECTNUM));
+					intent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +kftel));
 					startActivity(intent);
 					break;
 				case R.id.ll_saomatihuo:
@@ -133,14 +143,17 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 					startToScan();
 					break;
 				case R.id.tv_xiaoliang:
-
+					intent=new Intent(context,WebActivity.class);
+					intent.putExtra("title","销售排行");
+					intent.putExtra("url",xsphurl);
+					startActivity(intent);
 					break;
 				case R.id.ll_yongjin:
 					intent=new Intent(context, MoneyApplayActivity.class);
 					startActivity(intent);
 					break;
 				case R.id.ll_add_header:
-					intent=new Intent(context, AddHeaderActivity.class);
+					intent=new Intent(context, AddHeaderV3Activity.class);
 					intent.putExtra("leaderId",model.leaderId);
 					startActivity(intent);
 					break;
@@ -271,14 +284,14 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 							tv_regison.setText("绑定社区：" + model.region);
 							tv_yongjin.setText("总佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.allMoney)));
 							tv_weidaozhang.setText("当前佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.nowMoney)));
-
-
+							questionurl=jsonObject.getString("questionurl");
+							kftel=jsonObject.getString("kftel");
+							xsphurl=jsonObject.getString("xsphurl");
 						}else if(isleader.equals("417")){
 							Intent intent =new Intent(context,HeadApplyActivity.class);
 							startActivity(intent);
 							HeaderCenterActivity.this.finish();
 						}
-
 					}
 					else
 					{

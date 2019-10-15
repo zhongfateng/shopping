@@ -17,7 +17,7 @@
         android:id="@+id/iv_show_pic"
         android:layout_width="106dp"
         android:layout_height="106dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerInside"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/ck_chose" />
@@ -59,7 +59,7 @@
             android:layout_toRightOf="@+id/iv_show_pic"
             android:layout_below="@+id/rl_top"
             android:layout_marginLeft="11dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_commodity_attr"
                 android:layout_width="wrap_content"
@@ -68,6 +68,13 @@
                 android:text="属性:粉蓝色"
                 android:textSize="11sp"
                 android:textColor="@color/ship_color" />
+            <TextView
+                android:id="@+id/tv_kuncun"
+                android:layout_width="match_parent"
+                android:layout_marginTop="3dp"
+                android:textSize="9sp"
+                android:textColor="#EB330E"
+                android:layout_height="wrap_content" />
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"

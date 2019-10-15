@@ -8,14 +8,14 @@ import android.widget.TextView;
 
 import com.liuwa.shopping.R;
 
-public class LoadingDialog extends Dialog {
+public class LoadingTimeDialog extends Dialog {
 	private TextView tv;
 
-	public LoadingDialog(Context context) {
+	public LoadingTimeDialog(Context context) {
 		super(context, R.style.loadingDialogStyle);
 	}
 
-	private LoadingDialog(Context context, int theme) {
+	private LoadingTimeDialog(Context context, int theme) {
 		super(context, theme);
 	}
 
@@ -24,7 +24,7 @@ public class LoadingDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_loading);
 		tv = (TextView)this.findViewById(R.id.tv);
-		tv.setText("正在加载中...");
+		tv.setText("正在抢购中...");
 		LinearLayout linearLayout = (LinearLayout)this.findViewById(R.id.LinearLayout);
 		linearLayout.getBackground().setAlpha(210);
 	}

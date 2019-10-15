@@ -109,12 +109,23 @@ public class IntegralFragment extends Fragment{
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
              loadData();
+                pullToRefreshListView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshListView.onRefreshComplete();
+                    }
+                }, 1000);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 loadMoreData();
-                pullToRefreshListView.onRefreshComplete();
+                pullToRefreshListView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshListView.onRefreshComplete();
+                    }
+                }, 1000);
             }
         });
         pullToRefreshListView.setAdapter(integralItemAdapter);

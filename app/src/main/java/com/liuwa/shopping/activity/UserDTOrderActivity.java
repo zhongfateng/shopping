@@ -67,6 +67,7 @@ public class UserDTOrderActivity extends BaseActivity implements HeaderOrderDtAd
 		fpAdapter                 =  new HeaderOrderDtAdapter(this,productList);
 		fpAdapter.setOnCartClick(this);
 		gv_favoriate_list.setAdapter(fpAdapter);
+		gv_favoriate_list.setEmptyView(findViewById(android.R.id.empty));
 	}
 	
 	public void initEvent(){

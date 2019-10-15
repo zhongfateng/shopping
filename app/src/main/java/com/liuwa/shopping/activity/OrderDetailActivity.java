@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class OrderDetailActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick{
+public class OrderDetailActivity extends BaseActivity implements FavoriateProductAdapter.OnCartClick,OrderProductAdapter.OnCartClick{
 	private Context context;
 	private ImageView img_back;
 	private MyGridView gv_favoriate_list;
@@ -59,7 +59,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	public BaseDataModel<ProductModel>  baseModel;
 	private ArrayList<ProductModel> tuiJianList=new ArrayList<>();
 	private FavoriateProductAdapter adapter;
-	private TextView tv_cancel,tv_pay;
+	private TextView tv_pay;
 	private MyListView lv_show_list;
 	private ArrayList<OrderProductItem> orderProductItems =new ArrayList<OrderProductItem>();
 	public String order_id;
@@ -90,6 +90,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 		ll_top=(LinearLayout)findViewById(R.id.ll_top);
 		lv_show_list=(MyListView)findViewById(R.id.lv_show_list);
 		fpAdapter=new OrderProductAdapter(context,orderProductItems);
+		fpAdapter.setOnCartClick(this);
 		lv_show_list.setAdapter(fpAdapter);
 		lv_show_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -111,8 +112,6 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 			}
 		});
 		gw_tuijian.setAdapter(adapter);
-
-		tv_cancel=(TextView)findViewById(R.id.tv_cancel);
 		tv_pay=(TextView)findViewById(R.id.tv_pay_order);
 		tv_tip=(TextView)findViewById(R.id.tv_tip);
 		tv_shouhuoren=(TextView)findViewById(R.id.tv_tihuoren);
@@ -134,7 +133,6 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	
 	public void initEvent(){
 		img_back.setOnClickListener(onClickListener);
-		tv_cancel.setOnClickListener(onClickListener);
 		tv_pay.setOnClickListener(onClickListener);
 	}
 	
@@ -146,12 +144,9 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 			case R.id.img_back:
 				OrderDetailActivity.this.finish();
 				break;
-				case R.id.tv_cancel:
-					intent=new Intent(context,RefundActivity.class);
-					startActivity(intent);
-					break;
 				case R.id.tv_pay_order:
 					intent=new Intent(context,PayTypeActivity.class);
+					intent.putExtra("order_id",order_id);
 					startActivity(intent);
 					break;
 				case R.id.tv_connect:
@@ -282,7 +277,7 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 						}
 						tv_order_id.setText(orderModel.orderCode+"");
 						tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(orderModel.createDate.time,null));
-						tv_youhui.setText("-￥："+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.youhui)));
+						tv_youhui.setText("-￥"+MoneyUtils.formatAmountAsString(new BigDecimal(orderModel.youhui)));
 						orderProductItems.clear();
 						orderProductItems.addAll((Collection<? extends OrderProductItem>)localGson.fromJson(jsonObject.getJSONArray("order_childlist").toString(),
 								new TypeToken<ArrayList<OrderProductItem>>() {
@@ -312,6 +307,10 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 							ll_bottom.setVisibility(View.GONE);
 						}
 						else if(orderModel.type.equals("2"))
+						{
+							ll_top.setVisibility(View.GONE);
+							ll_bottom.setVisibility(View.GONE);
+						}else
 						{
 							ll_top.setVisibility(View.GONE);
 							ll_bottom.setVisibility(View.GONE);
@@ -409,5 +408,12 @@ public class OrderDetailActivity extends BaseActivity implements FavoriateProduc
 	@Override
 	public void cartOnClick(ProductModel model) {
 		Toast.makeText(this,"购物车点击"+model.proName,Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void pjClick(OrderProductItem model) {
+		Intent intent =new Intent(context,CommentActivity.class);
+		intent.putExtra("model",model);
+		startActivity(intent);
 	}
 }

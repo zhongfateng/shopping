@@ -286,7 +286,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 
 		TreeMap<String, Object> baseParam = new TreeMap<String, Object>();
-		baseParam.put("leaderId", SPUtils.getShequMode(context,Constants.AREA));
+		baseParam.put("leaderId", SPUtils.getShequMode(context,Constants.AREA).leaderId);
 		baseParam.put("timespan", System.currentTimeMillis()+"");
 		baseParam.put("sign", Md5SecurityUtil.getSignature(baseParam));
 		HashMap<String, Object> requestNeiborMap = new HashMap<String, Object>();

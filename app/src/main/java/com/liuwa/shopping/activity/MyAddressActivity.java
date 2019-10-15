@@ -198,6 +198,9 @@ public class MyAddressActivity extends BaseActivity implements AddressAdapter.On
 	@Override
 	public void editClick(AddressModel model) {
 		//编辑
+		Intent intent =new Intent(context,UpdateAddressActivity.class);
+		intent.putExtra("areamodel",model);
+		startActivity(intent);
 	}
 
 	@Override

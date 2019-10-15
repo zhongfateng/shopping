@@ -333,14 +333,13 @@ public class MyMoneyActivity extends BaseActivity{
 			@Override
 			public void successAction(Object obj) {
 				String json=(String)obj;
-				JSONObject jobj;
 				try {
-					jobj = new JSONObject(json);
-					int code =	jobj.getInt("code");
-					String msg  =	jobj.getString("msg");
+					JSONObject job = new JSONObject(json);
+					int code =	job.getInt("code");
+					String msg  =	job.getString("msg");
 					if(code==Constants.CODE)
 					{
-						final String orderInfo=jobj.getString("data");
+						final String orderInfo=job.getString("data");
 						final Runnable payRunnable = new Runnable() {
 
 							@Override
@@ -390,9 +389,15 @@ public class MyMoneyActivity extends BaseActivity{
 					if (TextUtils.equals(resultStatus, "9000")) {
 						// 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 						//showAlert(PayDemoActivity.this, getString(R.string.pay_success) + payResult);
-						Intent intent=new Intent(context,PaySuccessActivity.class);
-						intent.putExtra("order_id",order_id);
-						startActivity(intent);
+//						Intent intent=new Intent(context,PaySuccessActivity.class);
+//						intent.putExtra("order_id",order_id);
+//						startActivity(intent);
+						Toast.makeText(context,"充值成功",Toast.LENGTH_LONG).show();
+						new Handler().postDelayed(new Runnable() {
+							public void run() {
+								MyMoneyActivity.this.finish();
+							}
+						}, 1000 * 3);
 					} else {
 						// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 						//showAlert(PayDemoActivity.this, getString(R.string.pay_failed) + payResult);

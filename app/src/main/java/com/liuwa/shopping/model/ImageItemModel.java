@@ -11,6 +11,7 @@ public class ImageItemModel {
     public  String  imgPath;
     public String newsId;
     public String img;
+    public String newsurl;
 
     public String getImageId() {
         return imageId;

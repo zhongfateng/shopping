@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
@@ -18,6 +20,7 @@ import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
+import com.liuwa.shopping.model.UserModel;
 import com.liuwa.shopping.util.MD5;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 
@@ -159,15 +162,20 @@ public class LoginActivity extends BaseActivity {
 					JSONObject object=new JSONObject(str);
 					int  code=  object.getInt("code");
 					if(code==Constants.CODE) {
-						String token = object.getString("data");
+						JSONObject oo = object.getJSONObject("data");
+						String token=oo.getString("token");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						UserModel userModel = localGson.fromJson(oo.getJSONObject("member").toString(),UserModel.class);
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+						editor.putString(Constants.USER,localGson.toJson(userModel));
 						editor.putString(Constants.TOKEN, token);
 						boolean flag =editor.commit();
 						if(flag==true) {
 							LoginActivity.this.finish();
 						}
 					}
-					else {
+					else if(code==200){
 						Toast.makeText(context, object.getString("msg"), Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {

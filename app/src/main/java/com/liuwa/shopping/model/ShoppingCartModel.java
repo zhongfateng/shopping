@@ -47,6 +47,7 @@ public class ShoppingCartModel {
     public String cartId;
     public String guiGe;
     public double showprice;
+    public String kucunjz;
 
     public void setCartId(String cartId) {
         this.cartId = cartId;

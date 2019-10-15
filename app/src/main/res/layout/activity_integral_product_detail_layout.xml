@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <include layout="@layout/activity_top_title_layout"
         android:layout_height="45dp"
         android:id="@+id/rl_top"
@@ -67,6 +68,7 @@
                         android:layout_width="wrap_content"
                         android:textColor="@color/tab_line"
                         android:textSize="12sp"
+                        android:id="@+id/tv_jifen"
                         android:text="@string/ceshi"
                         android:layout_marginTop="17dp"
                         android:gravity="left"
@@ -75,9 +77,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
+                    android:layout_marginTop="7dp"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:padding="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
                         android:layout_width="match_parent"
                         android:lines="2"
                         android:layout_marginTop="15dp"
@@ -87,7 +91,27 @@
                         android:text="不支持配送区域：内蒙古自治区.西藏自治区.甘肃省.青海省.宁夏回族自治区.新疆维吾尔自治区"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="7dp"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tb_top"
+                        android:layout_width="match_parent"
+                        app:tabTextColor="@color/name_color"
+                        app:tabSelectedTextColor="@color/tab_line"
+                        app:tabMode="fixed"
+                        android:background="@color/white"
+                        app:tabIndicatorHeight="0dp"
+                        app:tabIndicatorColor="@color/transparent"
+                        android:layout_height="42dp"></android.support.design.widget.TabLayout>
+                    <com.liuwa.shopping.view.MyViewPager
+                        android:id="@+id/vp_category"
+                        android:layout_marginTop="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"></com.liuwa.shopping.view.MyViewPager>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

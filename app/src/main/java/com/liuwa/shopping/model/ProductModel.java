@@ -38,4 +38,5 @@ public class ProductModel implements Serializable{
     public double priceA;
     public String pjcontent;
     public String shcontent;
+    public String isbegin;
 }

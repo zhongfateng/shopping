@@ -165,13 +165,13 @@
                     <TextView
                         android:id="@+id/tv_dfk_dot"
                         android:textColor="@color/white"
-                        android:layout_width="10dp"
-                        android:textSize="5sp"
+                        android:layout_width="@dimen/sp_12"
+                        android:textSize="8sp"
                         android:visibility="invisible"
                         android:gravity="center"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_daifukuan"
-                        android:layout_height="10dp" />
+                        android:layout_height="@dimen/sp_12" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -202,14 +202,14 @@
                         android:layout_height="wrap_content" />
                     <TextView
                         android:id="@+id/tv_dfh_dot"
-                        android:layout_width="10dp"
+                        android:layout_width="@dimen/sp_12"
                         android:textColor="@color/white"
                         android:visibility="invisible"
-                        android:textSize="5sp"
+                        android:textSize="8sp"
                         android:gravity="center"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_daifahuo"
-                        android:layout_height="10dp" />
+                        android:layout_height="@dimen/sp_12" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -242,12 +242,12 @@
                         android:id="@+id/tv_dth_dot"
                         android:textColor="@color/white"
                         android:visibility="invisible"
-                        android:layout_width="10dp"
+                        android:layout_width="@dimen/sp_12"
                         android:gravity="center"
-                        android:textSize="5sp"
+                        android:textSize="8sp"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_daitihuo"
-                        android:layout_height="10dp" />
+                        android:layout_height="@dimen/sp_12" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -280,12 +280,12 @@
                         android:id="@+id/tv_pj"
                         android:textColor="@color/white"
                         android:visibility="invisible"
-                        android:layout_width="10dp"
+                        android:layout_width="@dimen/sp_12"
                         android:gravity="center"
-                        android:textSize="5sp"
+                        android:textSize="8sp"
                         android:background="@drawable/bg_circle_dot"
                         android:layout_toRightOf="@+id/img_comment"
-                        android:layout_height="10dp" />
+                        android:layout_height="@dimen/sp_12" />
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -408,6 +408,7 @@
                 android:layout_height="1dp"></View>
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:id="@+id/rl_question"
                 android:layout_height="48dp">
                 <TextView
                     android:layout_width="wrap_content"
@@ -465,7 +466,7 @@
                     android:layout_centerVertical="true"
                     android:text="系统消息"
                     android:textSize="12sp"
-                    android:drawableLeft="@mipmap/connect"
+                    android:drawableLeft="@mipmap/sys_icon"
                     android:drawablePadding="12dp"
                     android:textColor="@color/pay_success_color"
                     android:layout_height="wrap_content" />

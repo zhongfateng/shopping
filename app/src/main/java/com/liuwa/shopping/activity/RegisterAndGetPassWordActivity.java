@@ -151,12 +151,16 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 			 return new LKAsyncHttpResponseHandler(){
 				@Override
 				public void successAction(Object obj) {
-				
 				String str=(String)obj;
 				try {
 					JSONObject object=new JSONObject(str);
-					String flag=object.getString("code");
-					Toast.makeText(context, object.getString("msg"), Toast.LENGTH_SHORT).show();
+					int  code=  object.getInt("code");
+					if(code==Constants.CODE) {
+						Toast.makeText(context, "验证码已发送！注意查收", Toast.LENGTH_SHORT).show();
+					}
+					else if(code==200){
+						Toast.makeText(context,object.getString("msg"),Toast.LENGTH_SHORT).show();
+					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -177,7 +181,11 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 				map.put("timespan",System.currentTimeMillis()+"");
 				map.put("sign",Md5SecurityUtil.getSignature(map));
 				HashMap<String, Object> mapend2 = new HashMap<String, Object>();
-				mapend2.put(Constants.kMETHODNAME,Constants.REGISTER);
+				if(tag==LoginActivity.CodeRegister) {
+					mapend2.put(Constants.kMETHODNAME, Constants.REGISTER);
+				}else if(tag==LoginActivity.CodeForget){
+					mapend2.put(Constants.kMETHODNAME, Constants.XGCode);
+				}
 				mapend2.put(Constants.kPARAMNAME, map);
 				LKHttpRequest req1 = new LKHttpRequest(mapend2, registerHandler());
 				new LKHttpRequestQueue().addHttpRequest(req1)
@@ -206,12 +214,16 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 						editor.putString(Constants.TOKEN, token);
 						boolean flag =editor.commit();
 						if(flag==true) {
-							Toast.makeText(context,"注册成功，请登录",Toast.LENGTH_SHORT).show();
+							if(tag==LoginActivity.CodeRegister){
+								Toast.makeText(context,"注册成功，请登录",Toast.LENGTH_SHORT).show();
+							}else if(tag==LoginActivity.CodeForget){
+								Toast.makeText(context,"修改成功，请登录",Toast.LENGTH_SHORT).show();
+							}
 							RegisterAndGetPassWordActivity.this.finish();
 						}
 					}
-					else {
-
+					else if(code==200){
+						Toast.makeText(context,object.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

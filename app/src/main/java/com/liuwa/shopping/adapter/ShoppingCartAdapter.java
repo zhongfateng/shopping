@@ -115,6 +115,14 @@ public class ShoppingCartAdapter extends BaseAdapter {
         holder.tvCommodityPrice.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(shoppingCartModel.showprice))+"");
         holder.tvCommodityNum.setText(" X"+ shoppingCartModel.getNum()+"");
         holder.tvCommodityShowNum.setText(shoppingCartModel.getNum()+"");
+        if(shoppingCartModel.kucunjz.equals("1")) {
+            holder.tv_kuncun.setVisibility(View.VISIBLE);
+            holder.tv_kuncun.setText("库存紧张");
+        }else
+        {
+            holder.tv_kuncun.setVisibility(View.GONE);
+            holder.tv_kuncun.setText("库存紧张");
+        }
         ImageShowUtil.showImage(shoppingCartModel.fristimg,holder.ivShowPic);
         //单选框按钮
         holder.ckOneChose.setOnClickListener(
@@ -183,7 +191,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
     //初始化控件
     class ViewHolder {
         ImageView ivShowPic,tvCommodityDelete;
-        TextView tvCommodityName, tvCommodityAttr, tvCommodityPrice, tvCommodityNum, tvCommodityShowNum,ivSub, ivAdd;
+        TextView tvCommodityName, tvCommodityAttr, tvCommodityPrice, tvCommodityNum, tvCommodityShowNum,ivSub, ivAdd,tv_kuncun;
         CheckBox ckOneChose;
         LinearLayout rlEdit;
         public ViewHolder(View itemView) {
@@ -198,6 +206,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
             tvCommodityShowNum = (TextView) itemView.findViewById(R.id.tv_commodity_show_num);
             tvCommodityDelete = (ImageView) itemView.findViewById(R.id.tv_commodity_delete);
             rlEdit = (LinearLayout) itemView.findViewById(R.id.rl_edit);
+            tv_kuncun=(TextView)itemView.findViewById(R.id.tv_kuncun);
         }
     }
     /**

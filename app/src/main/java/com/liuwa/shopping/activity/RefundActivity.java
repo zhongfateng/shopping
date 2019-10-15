@@ -71,6 +71,8 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	public String 		order_id;
 	public TextView tv_total;
 	public double totalPrice;
+	public String reasonStr;
+	public String mark;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -183,7 +185,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 					if(code==Constants.CODE)
 					{
 						Toast.makeText(context,"退款申请已经提交!",Toast.LENGTH_SHORT).show();
-
+						RefundActivity.this.finish();
 					}
 					else
 					{
@@ -247,25 +249,37 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 		statistics();
 	}
 	private void lementOnder() {
+		reasonStr=tv_reason.getText().toString();
+		mark=tv_total.getText().toString();
 		//选中的需要提交的商品清单
 		StringBuffer proids = new StringBuffer();
 		int i=0;
+		int y=0;
 		for (OrderProductItem bean:orderProductItems ){
 			boolean choosed = bean.isChoosed();
+			int type=Integer.parseInt(bean.type);
+			if(type>=5){
+				y++;
+			}
 			if (choosed){
 				proids.append(bean.orderChildId);
 				proids.append(",");
 				i++;
 			}
 		}
-		if(i==0) {
-			Toast.makeText(context,"请勾选退款订单",Toast.LENGTH_SHORT).show();
+		if(y<orderProductItems.size()) {
+					if(i==0) {
+						Toast.makeText(context, "请勾选退款订单", Toast.LENGTH_SHORT).show();
+						return;
+					}
+			String finalproids = proids.deleteCharAt(proids.length() - 1).toString();
+			tuikuanDatas(finalproids);
+			//提交申请退款
+		}else {
+			Toast.makeText(context, "当前无可申请退款商品", Toast.LENGTH_SHORT).show();
 			return;
-
 		}
-		String finalproids = proids.deleteCharAt(proids.length() - 1).toString();
-		tuikuanDatas(finalproids);
-		//提交申请退款
+
 	}
 	/**
 	 * 统计操作
@@ -286,6 +300,8 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	private void tuikuanDatas(String orderchildids){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("orderchildids",orderchildids);
+		productParam.put("remark1",reasonStr);
+		productParam.put("remark2",mark);
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();

@@ -283,7 +283,7 @@ public class WheelView extends ScrollView {
         if (null == paint) {
             paint = new Paint();
             //分割线的颜色
-            paint.setColor(context.getResources().getColor(R.color.line));
+            paint.setColor(context.getResources().getColor(R.color.view_line));
             paint.setStrokeWidth(ABTextUtil.dip2px(context, 1f));
         }
 

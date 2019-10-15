@@ -111,6 +111,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 		img_back.setOnClickListener(onClickListener);
 		tv_pay.setOnClickListener(onClickListener);
 		rl_add.setOnClickListener(onClickListener);
+		rl_address.setOnClickListener(onClickListener);
 		ll_goto_address.setOnClickListener(onClickListener);
 	}
 	
@@ -121,6 +122,10 @@ public class ConfirmOrderActivity extends BaseActivity{
 			switch (v.getId()) {
 			case R.id.img_back:
 				ConfirmOrderActivity.this.finish();
+				break;
+			case R.id.rl_address:
+				intent =new Intent(context,MyAddressActivity.class);
+				startActivityForResult(intent,REQCODE);
 				break;
 			case R.id.ll_goto_address:
 				intent =new Intent(context,MyAddressActivity.class);

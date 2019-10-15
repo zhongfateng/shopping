@@ -135,6 +135,12 @@ public class RefundAdapter extends BaseAdapter {
                 alert.show();
             }
         });
+        int type=Integer.parseInt(shoppingCartModel.type);
+        if(type>=5){
+            holder.ckOneChose.setVisibility(View.INVISIBLE);
+        }else{
+            holder.ckOneChose.setVisibility(View.VISIBLE);
+        }
         //判断是否在编辑状态下
         if (isShow) {
             holder.tvCommodityName.setVisibility(View.VISIBLE);

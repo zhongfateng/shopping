@@ -104,7 +104,7 @@
                         android:id="@+id/tv_ce"
                         android:layout_width="wrap_content"
                         android:src="@mipmap/icon_rexiao"
-                        android:scaleType="center"
+                        android:scaleType="centerInside"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
@@ -126,7 +126,7 @@
                         android:id="@+id/img_xihua"
                         android:layout_width="wrap_content"
                         android:src="@mipmap/icon_rexiao"
-                        android:scaleType="center"
+                        android:scaleType="centerInside"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <LinearLayout

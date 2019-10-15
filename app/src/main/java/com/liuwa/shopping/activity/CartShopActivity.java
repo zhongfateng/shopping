@@ -201,7 +201,12 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 								new TypeToken<ArrayList<ShoppingCartModel>>() {
 								}.getType()));
 						shoppingCartAdapter.setShoppingCartModelList(shoppingCartBeanList);
-
+						if (isAllCheck())
+							ckAll.setChecked(true);
+						else
+							ckAll.setChecked(false);
+						shoppingCartAdapter.notifyDataSetChanged();
+						statistics();
 					}
 					else
 					{

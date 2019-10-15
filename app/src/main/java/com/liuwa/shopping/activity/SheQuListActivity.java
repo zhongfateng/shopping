@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +82,7 @@ public class SheQuListActivity extends BaseActivity{
 	private AMapLocation location;
 	private AMapLocationListener mAMapLocationListener;
 	private TextView tv_name,tv_regison,tv_detail;
+	public RelativeLayout current_shequ;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,6 +99,7 @@ public class SheQuListActivity extends BaseActivity{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView) findViewById(R.id.tv_title);
 		tv_title.setText("社区");
+		current_shequ=(RelativeLayout)findViewById(R.id.current_shequ);
 		et_search=(EditText)findViewById(R.id.et_search);
 		pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pullToScrollView);
 		gv_favoriate_list        = (ListView)findViewById(R.id.lv_show_shequ);
@@ -106,10 +109,18 @@ public class SheQuListActivity extends BaseActivity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				SheQuModel model=(SheQuModel)parent.getAdapter().getItem(position);
-				Intent intent =new Intent();
-				intent.putExtra(Constants.AREA,model);
-				setResult(Activity.RESULT_OK,intent);
-				SheQuListActivity.this.finish();
+//				Intent intent =new Intent();
+//				intent.putExtra(Constants.AREA,model);
+//				setResult(Activity.RESULT_OK,intent);
+//				SheQuListActivity.this.finish();
+				Gson localGson = new GsonBuilder().disableHtmlEscaping()
+						.create();
+				SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+				editor.putString(Constants.AREA, localGson.toJson(model));
+				boolean flag=editor.commit();
+				if(flag){
+					SheQuListActivity.this.finish();
+				};
 			}
 		});
 		gv_favoriate_list.setEmptyView(findViewById(android.R.id.empty));
@@ -206,6 +217,7 @@ public class SheQuListActivity extends BaseActivity{
 				}
 			}
 		};
+		current_shequ.setOnClickListener(onClickListener);
 	}
 	private void updateDatas(String lon,String lat){
 		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
@@ -268,6 +280,12 @@ public class SheQuListActivity extends BaseActivity{
 			case R.id.img_back:
 				SheQuListActivity.this.finish();
 				break;
+				case R.id.current_shequ:
+//					Intent intent =new Intent();
+//					intent.putExtra(Constants.AREA,sheQuModel);
+//					setResult(Activity.RESULT_OK,intent);
+//					SheQuListActivity.this.finish();
+					break;
 			}
 		}
 	};

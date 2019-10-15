@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +38,8 @@ import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.util.ScreenUtil;
 import com.liuwa.shopping.view.AutoScrollViewPager;
+import com.liuwa.shopping.view.LoadingDialog;
+import com.liuwa.shopping.view.LoadingTimeDialog;
 import com.liuwa.shopping.view.indicator.CirclePageIndicator;
 
 import org.json.JSONException;
@@ -70,6 +73,7 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 	private TextView tv_botoom,tv_peisong;
 	List<Fragment> fragmentList = new ArrayList<>();
 	List<String >list_Title = new ArrayList<>();
+	public int num;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -155,6 +159,7 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 					BuyTogetherProductActivity.this.finish();
 					break;
 				case R.id.tv_botoom:
+					num=0;
 					doBuy(1);
 					break;
 			}
@@ -309,6 +314,24 @@ public class BuyTogetherProductActivity extends BaseActivity implements WebFragm
 						Intent intent =new Intent(context,ConfirmOrderActivity.class);
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
+					}else if(code==406){
+							//time.start();
+							if(num==0) {
+								LoadingTimeDialog loadingDialog = new LoadingTimeDialog(context);
+								loadingDialog.setCanceledOnTouchOutside(false);
+								loadingDialog.show();
+								new Handler().postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										//操作内容
+										loadingDialog.dismiss();
+										num++;
+										doBuy(1);
+									}
+								}, 3000);
+							}else {
+								Toast.makeText(context, "库存紧张，请稍后再试", Toast.LENGTH_SHORT).show();
+							}
 					}
 					else if(code==102){
 						Toast.makeText(context,"当前抢购人数较多请稍后再试",Toast.LENGTH_SHORT).show();

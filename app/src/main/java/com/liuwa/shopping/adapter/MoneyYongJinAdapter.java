@@ -55,6 +55,7 @@ public class MoneyYongJinAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			viewHolder.tv_time=(TextView)convertView.findViewById(R.id.tv_time);
 			viewHolder.tv_status=(TextView)convertView.findViewById(R.id.tv_status);
+			viewHolder.tv_money=(TextView)convertView.findViewById(R.id.tv_money);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
