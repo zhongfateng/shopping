@@ -70,7 +70,7 @@ public class IntegralItemAdapter extends BaseAdapter {
 		}
 		IntegralModel  model= integralList.get(position);
 		if(model.type.equals("1")) {
-			viewHolder.tv_detail.setText("充值" + model.score + "积分");
+			viewHolder.tv_detail.setText("获得" + model.score + "积分");
 			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
 			viewHolder.tv_score.setText("+" + model.score);
 		}else if(model.type.equals("2")){
@@ -81,6 +81,11 @@ public class IntegralItemAdapter extends BaseAdapter {
 			viewHolder.tv_detail.setText("退回" + model.score + "积分");
 			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
 			viewHolder.tv_score.setText("+" + model.score);
+		}else if(model.type.equals("4"))
+		{
+			viewHolder.tv_detail.setText("退货扣除" + model.score + "积分");
+			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
+			viewHolder.tv_score.setText("-" + model.score);
 		}
 		return convertView;
 	}

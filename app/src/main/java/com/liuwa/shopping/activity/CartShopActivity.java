@@ -131,6 +131,7 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 					Intent intent=new Intent();
 					intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
 					intent.putExtra(MainTabActivity.TAB_INDEX_KEY,1);
+					IndexActivity.pos=0;
 					sendBroadcast(intent);//发送标准广播
 					break;
 
@@ -404,10 +405,13 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 						Intent intent =new Intent(context,ConfirmOrderActivity.class);
 						intent.putExtra("order_id",orderid);
 						startActivity(intent);
-					}
-					else if(code==402)
-					{
+					} else if(code==200) {
 						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}else if(code==402) {
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+						doGetDatas();
+					}else {
+
 					}
 
 				} catch (JSONException e) {
@@ -434,6 +438,9 @@ public class CartShopActivity extends BaseActivity  implements ShoppingCartAdapt
 		                statistics();
 					}
 					else if(code==402)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}else if(code==200)
 					{
 						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}

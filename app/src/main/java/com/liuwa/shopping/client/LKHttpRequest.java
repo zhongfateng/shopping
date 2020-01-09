@@ -43,7 +43,7 @@ public class LKHttpRequest {
 			hostStr = pre.getString(Constants.kHOSTNAME, Constants.DEFAULTHOST);
 		}
 		
-		System.out.println("URL:"+hostStr + requestDataMap.get(Constants.kMETHODNAME));
+		//System.out.println("URL:"+hostStr + requestDataMap.get(Constants.kMETHODNAME));
 		return hostStr + requestDataMap.get(Constants.kMETHODNAME);
 	}
 	

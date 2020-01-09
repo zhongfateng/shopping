@@ -10,10 +10,11 @@
     >
     <ImageView
         android:id="@+id/img_show"
-        android:layout_width="108dp"
+        android:layout_width="80dp"
         android:layout_marginTop="11dp"
+        android:scaleType="fitXY"
         android:layout_gravity="center_horizontal"
-        android:layout_height="143dp" />
+        android:layout_height="80dp" />
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"

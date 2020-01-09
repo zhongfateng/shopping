@@ -49,9 +49,10 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 	private EditText et_money,et_alipay;
 	private TextView tv_duihuan;
 	private String et_money_str="";
+	private String txtruenameStr="";
 	private String et_alipay_str="";
 	double kemoney;
-
+	private EditText et_txtruename;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,8 +67,8 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 	public void init() {
 		fragmentList = new ArrayList<>();
 		list_Title = new ArrayList<>();
-		fragmentList.add(MoneyApplayFragment.newInstance());
-		fragmentList.add(MoneyApplayFragment.newInstance());
+		fragmentList.add(MoneyApplayFragment.newInstance(Constants.leaderyjhdlistjson));
+		fragmentList.add(MoneyApplayFragment.newInstance(Constants.leaderyjtxlistjson));
 		list_Title.add("佣金记录");
 		list_Title.add("使用记录");
 	}
@@ -132,6 +133,7 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		tv_dt=(TextView)findViewById(R.id.tv_dt);
 		tv_kt=(TextView)findViewById(R.id.tv_kt);
 		tv_duihuan=(TextView)findViewById(R.id.tv_duihuan);
+		et_txtruename=(EditText)findViewById(R.id.et_txtruename);
 	}
 
 	public void initEvent() {
@@ -150,8 +152,13 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 				case R.id.tv_duihuan:
 					et_money_str=et_money.getText().toString();
 					et_alipay_str=et_alipay.getText().toString();
+					txtruenameStr=et_txtruename.getText().toString();
 					if(et_alipay_str==null||et_alipay_str.length()==0){
 						Toast.makeText(context,"请输入支付宝账号",Toast.LENGTH_SHORT).show();
+						return;
+					}
+					if(txtruenameStr==null||txtruenameStr.length()==0){
+						Toast.makeText(context,"请输入真实姓名",Toast.LENGTH_SHORT).show();
 						return;
 					}
 					if(et_money_str==null||et_money_str.length()==0||Double.parseDouble(et_money_str)>kemoney){
@@ -207,6 +214,7 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("account", et_alipay_str);
 		productParam.put("money", et_money_str);
+		productParam.put("txtruename",txtruenameStr);
 		productParam.put("qudao", "1");
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
@@ -215,7 +223,7 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, commitHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -235,6 +243,7 @@ public class MoneyApplayActivity extends BaseActivity implements MoneyApplayFrag
 					if(code==Constants.CODE) {
 						Toast.makeText(context, "提现申请已经提交待审核", Toast.LENGTH_SHORT).show();
 						MoneyApplayActivity.this.finish();
+						startActivity(new Intent(getApplicationContext(),MoneyApplayActivity.class));
 					}
 					else if(code==200)
 					{

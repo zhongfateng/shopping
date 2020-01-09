@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,8 +102,13 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page++;
+
+				if(page>baseModel.totalpage){
+					Toast.makeText(context,Constants.NOMOREDATA,Toast.LENGTH_SHORT).show();
+				}else{
+					page++;
 				doGetDatas();
+				}
 				pullToRefreshScrollView.onRefreshComplete();
 			}
 		});
@@ -164,7 +170,7 @@ public class IntegralShopActivity extends BaseActivity implements IntegralFragme
 		Map.put(Constants.kPARAMNAME, Param);
 		LKHttpRequest Req = new LKHttpRequest(Map, getImageHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {

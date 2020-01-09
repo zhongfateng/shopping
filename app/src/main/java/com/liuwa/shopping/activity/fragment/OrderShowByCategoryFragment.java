@@ -1,6 +1,8 @@
 package com.liuwa.shopping.activity.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -191,6 +193,74 @@ public class OrderShowByCategoryFragment extends Fragment implements OrderAdapte
         Intent intent =new Intent(getActivity(), RefundActivity.class);
         intent.putExtra("order_id",model.orderId);
         getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void querenClick(OrderModel model) {
+        AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+        alert.setTitle("操作提示");
+        alert.setMessage("您确定已经收到商品吗？");
+        alert.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                });
+        alert.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        commit(model);
+                    }
+                });
+        alert.show();
+    }
+    private void commit(OrderModel model){
+        TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+        productParam.put("orderid",model.orderId);
+        productParam.put("timespan", System.currentTimeMillis()+"");
+        productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+        HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+        requestCategoryMap.put(Constants.kMETHODNAME,Constants.MEMBERSHDO);
+        requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+        LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getHandler());
+        new LKHttpRequestQueue().addHttpRequest(categoryReq)
+                .executeQueue("请稍候", new LKHttpRequestQueueDone(){
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+
+                });
+    }
+    private LKAsyncHttpResponseHandler getHandler(){
+        return new LKAsyncHttpResponseHandler(){
+
+            @Override
+            public void successAction(Object obj) {
+                String json=(String)obj;
+                try {
+                    JSONObject  job= new JSONObject(json);
+                    int code =	job.getInt("code");
+                    if(code==Constants.CODE)
+                    {
+                        loadData();
+                    } else if(code==200)
+                    {
+                        Toast.makeText(getActivity(),job.getString("msg"),Toast.LENGTH_SHORT).show();
+                    }else {
+
+                    }
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        };
     }
 
     /**

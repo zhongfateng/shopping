@@ -1,12 +1,12 @@
 package com.liuwa.shopping.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -94,7 +94,7 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
 		list_Title.add("详情");
 		list_Title.add("评价");
-		list_Title.add("售后");
+		list_Title.add("服务");
 	}
 	public void initViews() {
 		img_back=(ImageView)findViewById(R.id.img_back);
@@ -158,8 +158,8 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 	}
 	void showDialog() {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -183,7 +183,7 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 		LKHttpRequest cartReq = new LKHttpRequest(requestMap, buyHandler());
 
 		new LKHttpRequestQueue().addHttpRequest(cartReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -266,8 +266,8 @@ public class IntegralProductDetailActivity extends BaseActivity implements Dialo
 		};
 	}
 	private void showDialog(String tag) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}

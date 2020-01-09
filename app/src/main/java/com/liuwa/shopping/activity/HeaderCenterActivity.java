@@ -65,6 +65,8 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 	public String questionurl;
 	public String kftel;
 	public String xsphurl;
+	public TextView tv_status;
+	public int flag;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,6 +93,7 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 		tv_xiaoliang=(LinearLayout)findViewById(R.id.tv_xiaoliang);
 		ll_yongjin=(LinearLayout)findViewById(R.id.ll_yongjin);
 		ll_add_header=(LinearLayout)findViewById(R.id.ll_add_header);
+		tv_status=(TextView)findViewById(R.id.tv_status);
 	}
 	
 	public void initEvent(){
@@ -100,7 +103,6 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 		rl_back.setOnClickListener(onClickListener);
 		saomashouhuo.setOnClickListener(onClickListener);
 		ll_saomatihuo.setOnClickListener(onClickListener);
-
 		tv_xiaoliang.setOnClickListener(onClickListener);
 		ll_yongjin.setOnClickListener(onClickListener);
 		ll_add_header.setOnClickListener(onClickListener);
@@ -121,41 +123,90 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 					startActivity(intent);
 					break;
 				case R.id.rl_back:
-					intent=new Intent(context,HeaderOrderByCategroyActivity.class);
-					startActivity(intent);
+					if(flag==0){
+						Toast.makeText(context,"您申请还未被审核，请等待管理员审核",Toast.LENGTH_SHORT).show();
+						return;
+					}else if(flag==2)
+					{
+						Toast.makeText(context,"您的团长状态为已被停用，请等待管理员开启",Toast.LENGTH_SHORT).show();
+						return;
+					}else {
+						intent = new Intent(context, HeaderOrderByCategroyActivity.class);
+						startActivity(intent);
+					}
 					break;
 				case R.id.rl_connect:
 					intent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +kftel));
 					startActivity(intent);
 					break;
 				case R.id.ll_saomatihuo:
-					if(!requestPermissions()){
+					if(flag==0){
+						Toast.makeText(context,"您申请还未被审核，请等待管理员审核",Toast.LENGTH_SHORT).show();
 						return;
+					}else if(flag==2)
+					{
+						Toast.makeText(context,"您的团长状态为已被停用，请等待管理员开启",Toast.LENGTH_SHORT).show();
+						return;
+					}else {
+						if (!requestPermissions()) {
+							return;
+						}
+						tag = 0;
+						startToScan();
 					}
-					tag=0;
-					startToScan();
 					break;
 				case R.id.saomashouhuo:
-					if(!requestPermissions()){
-					return;
+					if(flag==0){
+						Toast.makeText(context,"您申请还未被审核，请等待管理员审核",Toast.LENGTH_SHORT).show();
+						return;
+					}else if(flag==2)
+					{
+						Toast.makeText(context,"您的团长状态为已被停用，请等待管理员开启",Toast.LENGTH_SHORT).show();
+						return;
+					}else {
+						if (!requestPermissions()) {
+							return;
+						}
+						tag = 1;
+						startToScan();
 					}
-					tag=1;
-					startToScan();
 					break;
 				case R.id.tv_xiaoliang:
-					intent=new Intent(context,WebActivity.class);
-					intent.putExtra("title","销售排行");
-					intent.putExtra("url",xsphurl);
-					startActivity(intent);
+					if(flag==0){
+						Toast.makeText(context,"您申请还未被审核，请等待管理员审核",Toast.LENGTH_SHORT).show();
+						return;
+					}else if(flag==2)
+					{
+						Toast.makeText(context,"您的团长状态为已被停用，请等待管理员开启",Toast.LENGTH_SHORT).show();
+						return;
+					}else {
+						intent = new Intent(context, WebActivity.class);
+						intent.putExtra("title", "销售排行");
+						intent.putExtra("url", xsphurl);
+						startActivity(intent);
+					}
 					break;
 				case R.id.ll_yongjin:
-					intent=new Intent(context, MoneyApplayActivity.class);
-					startActivity(intent);
+					if(flag==0||flag==2){
+
+					}else {
+						intent = new Intent(context, MoneyApplayActivity.class);
+						startActivity(intent);
+					}
 					break;
 				case R.id.ll_add_header:
-					intent=new Intent(context, AddHeaderV3Activity.class);
-					intent.putExtra("leaderId",model.leaderId);
-					startActivity(intent);
+					if(flag==0){
+						Toast.makeText(context,"您申请还未被审核，请等待管理员审核",Toast.LENGTH_SHORT).show();
+						return;
+					}else if(flag==2)
+					{
+						Toast.makeText(context,"您的团长状态为已被停用，请等待管理员开启",Toast.LENGTH_SHORT).show();
+						return;
+					}else {
+						intent = new Intent(context, AddHeaderV3Activity.class);
+						intent.putExtra("leaderId", model.leaderId);
+						startActivity(intent);
+					}
 					break;
 			}
 		}
@@ -209,7 +260,7 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -284,6 +335,18 @@ public class HeaderCenterActivity extends BaseActivity implements FavoriateProdu
 							tv_regison.setText("绑定社区：" + model.region);
 							tv_yongjin.setText("总佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.allMoney)));
 							tv_weidaozhang.setText("当前佣金：￥" + MoneyUtils.formatAmountAsString(new BigDecimal(model.nowMoney)));
+							if(model.type.equals("0")){
+								tv_status.setText("状态：审核中");
+								flag=0;
+							}else if(model.type.equals("1"))
+							{
+								tv_status.setText("状态：已通过");
+								flag=1;
+							}else if(model.type.equals("2"))
+							{
+								tv_status.setText("状态：停团");
+								flag=2;
+							}
 							questionurl=jsonObject.getString("questionurl");
 							kftel=jsonObject.getString("kftel");
 							xsphurl=jsonObject.getString("xsphurl");

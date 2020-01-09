@@ -14,6 +14,8 @@ import com.liuwa.shopping.view.LKAlertDialog;
 import org.apache.http.client.HttpResponseException;
 import org.json.JSONObject;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public abstract class LKAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
 	
 	private LKHttpRequest request;
@@ -53,6 +55,7 @@ public abstract class LKAsyncHttpResponseHandler extends AsyncHttpResponseHandle
 				successAction(content);
 				Context context=(Context) ApplicationEnvironment.getInstance().getApplication();
 				Intent intent =new Intent(context, LoginActivity.class);
+				intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent);
 			}else{
 				successAction(content);

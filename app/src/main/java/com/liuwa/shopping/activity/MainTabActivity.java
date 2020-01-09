@@ -1,4 +1,5 @@
 package com.liuwa.shopping.activity;
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.TabActivity;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -18,6 +20,11 @@ import com.liuwa.shopping.R;
 
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
+import com.liuwa.shopping.permission.PermissionUtils;
+import com.liuwa.shopping.permission.request.IRequestPermissions;
+import com.liuwa.shopping.permission.request.RequestPermissions;
+import com.liuwa.shopping.permission.requestresult.IRequestPermissionsResult;
+import com.liuwa.shopping.permission.requestresult.RequestPermissionsResultSetApp;
 import com.liuwa.shopping.util.TabsUtil;
 
 @SuppressWarnings("deprecation")
@@ -40,16 +47,55 @@ public class MainTabActivity extends TabActivity {
 			setContentView(R.layout.main_tab_activity);
 			this.context=this;
 			init();
-			initTabHost();
+			//initTabHost();
 			mTabReceiver = new TabReceiver();
 			IntentFilter filter = new IntentFilter(ACTION_TAB_INDEX);
 			registerReceiver(mTabReceiver, filter);
+			requestPermissions();
+			initTabHost();
 		//	checkVersionUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	IRequestPermissions requestPermissions = RequestPermissions.getInstance();//动态权限请求
+	IRequestPermissionsResult requestPermissionsResult = RequestPermissionsResultSetApp.getInstance();//动态权限请求结果处理
+	//请求权限
+	private boolean requestPermissions(){
+		//需要请求的权限
+		/**
+		 * Manifest.permission.ACCESS_COARSE_LOCATION,
+		 Manifest.permission.ACCESS_FINE_LOCATION,
+		 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+		 Manifest.permission.READ_EXTERNAL_STORAGE,
+		 Manifest.permission.READ_PHONE_STATE
+		 * **/
+		String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
+				Manifest.permission.ACCESS_FINE_LOCATION};
+		//开始请求权限
+		return requestPermissions.requestPermissions(
+				this,
+				permissions,
+				PermissionUtils.ResultCode1);
+	}
 
+	//用户授权操作结果（可能授权了，也可能未授权）
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		//用户给APP授权的结果
+		//判断grantResults是否已全部授权，如果是，执行相应操作，如果否，提醒开启权限
+		if(requestPermissionsResult.doRequestPermissionsResult(this, permissions, grantResults)){
+			//请求的权限全部授权成功，此处可以做自己想做的事了
+			//输出授权结果
+		}else{
+			//输出授权结果
+			Toast.makeText(context,"请给APP授权，否则部分功能无法正常使用！",Toast.LENGTH_LONG).show();
+		}
+		Intent intb=new Intent();
+		intb.setAction(IndexActivity.ACTION_LOCATION);
+		sendBroadcast(intb);//发送标准广播
+	}
 	
 	public void init(){
 		 token=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.TOKEN, "");
@@ -192,7 +238,17 @@ public class MainTabActivity extends TabActivity {
 		public void onReceive(Context ctx, Intent intent) {
 			int index = intent.getIntExtra(TAB_INDEX_KEY, 0);
 			if (index <= maxTabIndex) {
-				mTabHost.setCurrentTab(index);
+				if(index==1){
+//					int position=intent.getIntExtra("position",0);
+//					Intent intb=new Intent();
+//					intb.setAction(ProductShowByCategroyActivity.ACTION_POSATION);
+//					intb.putExtra("position",position);
+//					sendBroadcast(intb);//发送标准广播
+					mTabHost.setCurrentTab(index);
+				}else{
+					mTabHost.setCurrentTab(index);
+				}
+
 			}
 		}
 

@@ -1,8 +1,6 @@
 package com.liuwa.shopping.activity;
 
 import android.Manifest;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -35,6 +35,7 @@ import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.UserModel;
+import com.liuwa.shopping.model.VersionModel;
 import com.liuwa.shopping.permission.PermissionUtils;
 import com.liuwa.shopping.permission.request.IRequestPermissions;
 import com.liuwa.shopping.permission.request.RequestPermissions;
@@ -62,7 +63,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 	private RelativeLayout rl_address,rl_applay_head,rl_integral_shop,rl_money,rl_connect,rl_logout;
 	private TextView tv_my_integral,tv_my_money;
 	private RelativeLayout rl_my_order;
-	private UserModel userModel;
+	//private UserModel userModel;
 	private TextView tv_nickname,tv_id;
 	private TextView tv_dfk_dot,tv_dfh_dot,tv_dth_dot,tv_pj;
 	private TextView tv_show;
@@ -73,6 +74,8 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 	public String kftel;
 	public RelativeLayout rl_question;
 	public RelativeLayout rl_sys_message;
+	public RelativeLayout rl_update;
+	public TextView tv_version;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,8 +107,11 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		tv_dfh_dot=(TextView)findViewById(R.id.tv_dfh_dot);
 		tv_dth_dot=(TextView)findViewById(R.id.tv_dth_dot);
 		tv_pj=(TextView)findViewById(R.id.tv_pj);
+		tv_version=(TextView)findViewById(R.id.tv_version);
 		img_qr=(ImageView)findViewById(R.id.img_qr);
 		rl_question=(RelativeLayout)findViewById(R.id.rl_question);
+		rl_update=(RelativeLayout)findViewById(R.id.rl_update);
+		tv_version.setText("当前版本:"+Constants.VERSION);
 
 	}
 	public void initEvent(){
@@ -125,6 +131,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		rl_question.setOnClickListener(onClickListener);
 		rl_sys_message.setOnClickListener(onClickListener);
 		tv_nickname.setOnClickListener(onClickListener);
+		rl_update.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -134,7 +141,13 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 			switch (v.getId()) {
 				case R.id.tv_my_integral:
 					intent=new Intent(context,IntegralActivity.class);
-					//intent=new Intent(context,HeaderOrderByCategroyActivity.class);
+//					intent=new Intent(context,UpdateActivity.class);
+//					VersionModel model=new VersionModel();
+//					model.isUpdate="1";
+//					model.forceUpdate="0";
+//					model.apkurl="http://ygwl9ht.xinliushangmao.com/upload/app-zs1021.apk";
+//					intent.putExtra("versionModel",model);
+//					intent.putExtra("apkurl","http://ygwl9ht.xinliushangmao.com/upload/app-zs1021.apk");
 					startActivity(intent);
 					break;
 				case R.id.rl_logout:
@@ -174,6 +187,9 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 					intent=new Intent(context,MyMoneyActivity.class);
 					startActivity(intent);
 					break;
+				case R.id.rl_update:
+					getVersionDatas();
+					break;
 			    case R.id.rl_address:
 			    	intent=new Intent(context,MyAddressActivity.class);
 			    	startActivity(intent);
@@ -208,13 +224,66 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 			}
 		}
 	};
+	private void getVersionDatas(){
+		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
+		categorymap1.put("currentVersion", Constants.VERSION);
+		categorymap1.put("timespan", System.currentTimeMillis()+"");
+		categorymap1.put("sign",Md5SecurityUtil.getSignature(categorymap1));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.GetVersion);
+		requestCategoryMap.put(Constants.kPARAMNAME, categorymap1);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, versionHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler versionHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  jobObject= new JSONObject(json);
+					int code =	jobObject.getInt("code");
+					if(code==Constants.CODE) {
+						JSONObject job=jobObject.getJSONObject("data");
+						int  newVersion=	job.getInt("newVersion");
+						String isUpdate  =  job.getString("isUpdate");
+						String 	forceUpdate=job.getString("forceUpdate");
+						String apkurl=job.getString("apkurl");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						VersionModel versionModel=localGson.fromJson(job.toString(), VersionModel.class);
+						if(versionModel.isUpdate.equals("1")){
+							Intent intent =new Intent(context,UpdateActivity.class);
+							intent.putExtra("versionModel",versionModel);
+							startActivity(intent);
+						}else if(isUpdate.equals("0")) {
+							Toast.makeText(context,"当前暂无版本更新",Toast.LENGTH_SHORT).show();
+						}
+					} else {
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	private void DialogFragmentFromBottom() {
 		showDialog();
 	}
 	void showDialog() {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -227,8 +296,8 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 
 	public void showNameDialog(String name) {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -255,7 +324,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		Map.put(Constants.kPARAMNAME, Param);
 		LKHttpRequest Req = new LKHttpRequest(Map, getCountHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
 						super.onComplete();
@@ -276,10 +345,10 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 						JSONObject jsonObject = job.getJSONObject("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						userModel = localGson.fromJson(jsonObject.toString(),UserModel.class);
-						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-						editor.putString(Constants.USER,localGson.toJson(userModel));
-						editor.commit();
+						UserModel userModel = localGson.fromJson(jsonObject.toString(),UserModel.class);
+//						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+//						editor.putString(Constants.USER,localGson.toJson(userModel));
+//						editor.commit();
 						tv_nickname.setText(userModel.nickname);
 						tv_id.setText("用户 ID:"+userModel.memberId);
 						tv_my_integral.setText("我的积分："+userModel.score+">");
@@ -420,6 +489,8 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 						editor.putString(Constants.TOKEN, "");
 						editor.putString(Constants.USER,"");
 						editor.putString(Constants.flag,"");
+						editor.putString(Constants.USER_PHONE,"");
+						editor.putString(Constants.USER_PASS,"");
 						boolean flag =editor.commit();
 						if(flag){
 							Intent intent=new Intent();

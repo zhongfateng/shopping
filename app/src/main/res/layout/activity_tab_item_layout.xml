@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:id="@+id/ll_tuangou"
     android:layout_marginTop="23dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content">
@@ -18,15 +19,20 @@
                 android:layout_width="wrap_content"
                 android:src="@mipmap/qianggou"
                 android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
             <android.support.design.widget.TabLayout
                 android:id="@+id/tb_time"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 app:tabMode="fixed"
                 android:layout_marginLeft="10dp"
                 app:tabIndicatorHeight="0dp"
                 app:tabBackground="@drawable/bg_tab"
                 android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
+            </LinearLayout>
         </LinearLayout>
 
     <LinearLayout

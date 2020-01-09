@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -20,6 +22,8 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.activity.fragment.DialogFragmentSelectBottom;
+import com.liuwa.shopping.activity.fragment.DialogFragmentSelectTimeBottom;
 import com.liuwa.shopping.adapter.FavoriateProductAdapter;
 import com.liuwa.shopping.adapter.OrderProductAdapter;
 import com.liuwa.shopping.client.Constants;
@@ -31,9 +35,11 @@ import com.liuwa.shopping.model.AddressModel;
 import com.liuwa.shopping.model.BaseDataModel;
 import com.liuwa.shopping.model.OrderModel;
 import com.liuwa.shopping.model.OrderProductItem;
+import com.liuwa.shopping.model.PeiSongTime;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.MyGridView;
 import com.liuwa.shopping.view.MyListView;
 
@@ -42,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +56,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class ConfirmOrderActivity extends BaseActivity{
+public class ConfirmOrderActivity extends BaseActivity implements  DialogFragmentSelectTimeBottom.OnFragmentInteractionListener{
 	private Context context;
 	private ImageView img_back;
 	private ListView gv_favoriate_list;
@@ -59,6 +66,8 @@ public class ConfirmOrderActivity extends BaseActivity{
 	private LinearLayout rl_address;
 	MyListView lv_show_list;
 	private ArrayList<OrderProductItem> orderProductItems =new ArrayList<OrderProductItem>();
+
+	private ArrayList<PeiSongTime> peiSongTimes=new ArrayList<>();
 	private String order_id;
 	private TextView tv_pay;
 	private TextView tv_shouhuoren,tv_tel,tv_detail,tv_head_name,tv_didian;
@@ -113,6 +122,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 		rl_add.setOnClickListener(onClickListener);
 		rl_address.setOnClickListener(onClickListener);
 		ll_goto_address.setOnClickListener(onClickListener);
+		tv_tip.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -122,6 +132,9 @@ public class ConfirmOrderActivity extends BaseActivity{
 			switch (v.getId()) {
 			case R.id.img_back:
 				ConfirmOrderActivity.this.finish();
+				break;
+			case R.id.tv_tip:
+				DialogFragmentFromBottom();
 				break;
 			case R.id.rl_address:
 				intent =new Intent(context,MyAddressActivity.class);
@@ -138,6 +151,11 @@ public class ConfirmOrderActivity extends BaseActivity{
 					Toast.makeText(context,"请添加收货地址",Toast.LENGTH_SHORT).show();
 					return;
 				}
+				if(psid.length()==0){
+					DialogFragmentFromBottom();
+					return;
+				}
+
 				comitAddress();
 				break;
 			case R.id.rl_add:
@@ -147,6 +165,22 @@ public class ConfirmOrderActivity extends BaseActivity{
 			}
 		}
 	};
+	private void DialogFragmentFromBottom() {
+		showDialog();
+	}
+	void showDialog() {
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		DialogFragmentSelectTimeBottom newFragment = DialogFragmentSelectTimeBottom.newInstance(peiSongTimes);
+		newFragment.show(ft, "dialog");
+	}
 
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
@@ -157,7 +191,18 @@ public class ConfirmOrderActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kMETHODNAME,Constants.ORDERDETAIL);
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getOrderHandler());
-		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+
+
+
+		TreeMap<String, Object> Param = new TreeMap<String, Object>();
+		Param.put("timespan", System.currentTimeMillis()+"");
+		Param.put("sign", Md5SecurityUtil.getSignature(Param));
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put(Constants.kMETHODNAME,Constants.orderpslist);
+		Map.put(Constants.kPARAMNAME, Param);
+		LKHttpRequest Req = new LKHttpRequest(Map, Handler());
+
+		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
 				.executeQueue(null, new LKHttpRequestQueueDone(){
 
 					@Override
@@ -167,6 +212,38 @@ public class ConfirmOrderActivity extends BaseActivity{
 
 				});
 
+	}
+	private LKAsyncHttpResponseHandler Handler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONArray jsonObject = job.getJSONArray("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						peiSongTimes.clear();
+						peiSongTimes.addAll(localGson.fromJson(jsonObject.toString(),
+								new TypeToken<ArrayList<PeiSongTime>>() {
+								}.getType()));
+
+					}
+					else
+					{
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
 	}
 
 
@@ -182,6 +259,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 					{
 						JSONObject jsonObject=job.getJSONObject("data");
 						tv_tip.setText(jsonObject.getString("yjps"));
+						tv_tip.setText("请选择配送时间");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
 						OrderModel orderModel=localGson.fromJson(jsonObject.getJSONObject("order_head").toString(), OrderModel.class);
@@ -234,6 +312,7 @@ public class ConfirmOrderActivity extends BaseActivity{
 		TreeMap<String, Object> param = new TreeMap<String, Object>();
 		param.put("addressid",addressid);
 		param.put("orderid",order_id);
+		param.put("peisong",psid);
 		param.put("timespan", System.currentTimeMillis()+"");
 		param.put("sign", Md5SecurityUtil.getSignature(param));
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -292,5 +371,10 @@ public class ConfirmOrderActivity extends BaseActivity{
 			}
 		}
 	}
-
+	public String psid="";
+	@Override
+	public void onFragmentInteraction(PeiSongTime.ChildModel model) {
+		tv_tip.setText(model.psday+","+model.pstime);
+		psid=model.orderpsId;
+	}
 }

@@ -150,7 +150,7 @@ public class BuyTogetherActivity extends BaseActivity{
 		Map.put(Constants.kPARAMNAME, Param);
 		LKHttpRequest Req = new LKHttpRequest(Map, getImageHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {

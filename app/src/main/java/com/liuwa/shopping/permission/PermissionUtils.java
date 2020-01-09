@@ -70,6 +70,7 @@ public class PermissionUtils {
         permissions.put("android.permission.RECEIVE_SMS","--短信");
         permissions.put("android.permission.SEND_SMS","--短信");
         permissions.put("android.permission.READ_CELL_BROADCASTS","--短信");
+        permissions.put("android.permission.REQUEST_INSTALL_PACKAGES","--应用内安装");
     }
 
     /**

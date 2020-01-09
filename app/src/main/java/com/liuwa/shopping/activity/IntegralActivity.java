@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -88,6 +89,7 @@ public class IntegralActivity extends BaseActivity implements IntegralFragment.O
 
 	public void initEvent() {
 		img_back.setOnClickListener(onClickListener);
+		tv_duihuan.setOnClickListener(onClickListener);
 	}
 
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -96,6 +98,11 @@ public class IntegralActivity extends BaseActivity implements IntegralFragment.O
 		public void onClick(View v) {
 			switch (v.getId()) {
 				case R.id.img_back:
+					IntegralActivity.this.finish();
+					break;
+				case R.id.tv_duihuan:
+					Intent intent=new Intent(context,IntegralShopActivity.class);
+					startActivity(intent);
 					IntegralActivity.this.finish();
 					break;
 			}

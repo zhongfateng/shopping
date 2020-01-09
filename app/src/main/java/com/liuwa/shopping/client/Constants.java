@@ -4,19 +4,23 @@ public class Constants {
 	//1 团购 3秒杀 5积分 猜你喜欢 7 热销 9
 	// 要相应的更新string.xml中的 versionstr 字段
 	// 当前系统的版本号
-	public static final String VERSION					= "1.0";
+	public static final String VERSION					= "1.7";
 	public static final String FavoriteType				= "7";
 	public static final String IntegralType				= "5";
 	public static final String RXType				    = "9";
 	public static final String TGType				    = "1";
 	public static final String MXType				    = "3";
 	//微信key
-	public static final String APP_ID                   = "wxdcd80da641faa3ae";
+	public static final String APP_ID                   = "wx32fce07e42cb9a50";
 	public static final String DESCRIPTOR              = "com.liuwa.shopping";
-	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
 	public static final String IMAGEHOSTPRE             = "http://ht.xingyf.com/upload/";
+	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
+//	public static final String DEFAULTHOST             = "http://mslx6ap.xinliushangmao.com/";
+//	public static final String IMAGEHOSTPRE             = "http://ygwl9ht.xinliushangmao.com/upload/";
 	public static final String USER_ID					= "user_id";
 	public static final String USER					    = "user";
+	public static final String USER_PHONE					= "user_phone";
+	public static final String USER_PASS					= "user_pass";
 	public static final String kHOSTNAME 				= "hostName";
 	public static final String kREALHOST				= "RealHost"; // 存储真正的连网地址
 	public static final String kMETHODNAME 				= "methodName";
@@ -29,12 +33,14 @@ public class Constants {
 	public static final String flag                     = "flag";
 	//用户手机号
 	public static final String Phone                  	= "phone";
+	public static final int  Padding                  	= 200;
 	//联系人
 	public static final String CONNECTNUM               = "40089191919";
 	//签名key值
 	public static final String keySecret               	= "keySecret";
 	//签名value值
-	public static final String VALUE                    = "jklw";
+	public static final String VALUE                    = "jklwxlgy66";
+	//public static final String VALUE                    = "jklw";
 	//信息返回CODE值 100表示正确
 	public static final int CODE                        = 100;
 	//信息返回CODE值 token生路失效表示正确
@@ -60,6 +66,8 @@ public class Constants {
 	public static final String SPECIALPRODUCTLIST      = "productlisttjson";
 	//分类商品列表
 	public static final String PRODUCTLIST      		 = "productlistjson";
+	//配送时间
+	public static final String orderpslist      		 = "orderpslist";
 	//分类商品列表
 	public static final String PRODUCTDETAIL      		 = "productinfojson";
 	//登录接口
@@ -163,6 +171,8 @@ public class Constants {
 	public static final String ADDLEADERFU                      = "addleaderfujson";
 	//佣金记录
 	public static final String leaderyjhdlistjson               = "leaderyjhdlistjson";
+	//佣金提现使用
+	public static final String leaderyjtxlistjson               = "leaderyjtxlistjson";
 	//积分下单
 	public static final String ScoreOrder                        = "addscoreorder";
 	//版本更新
@@ -171,6 +181,8 @@ public class Constants {
 	public static final String DeleteCart                         = "delcartjson";
 	//团长申请
 	public static final String HeadApply                         = "addleaderjson";
+	//确认收货
+	public static final String MEMBERSHDO                         = "membershdo";
 	//设置
 	public static final String SETTING                           = "settingjson";
 	//充值item获取
@@ -185,7 +197,8 @@ public class Constants {
 	public static final String COmment                           = "addevaulation";
 	//修改昵称
 	public static final String UPDATENAME                         = "updatememnick";
-
+	//修改昵称
+	public static final String NOMOREDATA                         = "无更多数据";
 
 
 

@@ -7,10 +7,13 @@
     android:layout_height="wrap_content">
     <CheckBox
         android:id="@+id/ck_chose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_marginLeft="5dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:checked="true"
+        android:clickable="false"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="11dp"
         android:button="@drawable/check_box_style"
         android:scaleX="1"
         android:scaleY="1" />

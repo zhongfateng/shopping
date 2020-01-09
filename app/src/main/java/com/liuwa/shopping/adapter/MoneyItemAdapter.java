@@ -75,6 +75,11 @@ public class MoneyItemAdapter extends BaseAdapter {
 			viewHolder.tv_detail.setText("退款" + model.money + "元");
 			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
 			viewHolder.tv_money.setText("+" + model.money);
+		}else if(model.type.equals("4"))
+		{
+			viewHolder.tv_detail.setText("团购返还" + model.money + "元");
+			viewHolder.tv_time.setText(TimeUtil.getFormatTimeFromTimestamp(model.createDate.time, ""));
+			viewHolder.tv_money.setText("+" + model.money);
 		}
 		return convertView;
 	}

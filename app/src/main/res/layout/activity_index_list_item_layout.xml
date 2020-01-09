@@ -16,7 +16,7 @@
         android:layout_width="88dp"
         android:layout_margin="3dp"
         android:src="@mipmap/img_show"
-        android:scaleType="centerInside"
+        android:scaleType="fitXY"
         android:layout_height="88dp" />
     </LinearLayout>
     <LinearLayout
@@ -57,6 +57,7 @@
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:textSize="9sp"
+                android:visibility="invisible"
                 android:layout_marginLeft="8dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>

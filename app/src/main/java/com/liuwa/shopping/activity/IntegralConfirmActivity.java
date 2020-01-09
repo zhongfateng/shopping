@@ -153,7 +153,7 @@ public class IntegralConfirmActivity extends BaseActivity {
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getAreaHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -178,9 +178,11 @@ public class IntegralConfirmActivity extends BaseActivity {
 						intent.putExtra("key",1);
 						startActivity(intent);
 						IntegralConfirmActivity.this.finish();
-					} else
+					} else if(code==200)
 					{
 						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}else
+					{
 					}
 
 				} catch (JSONException e) {

@@ -2,11 +2,11 @@ package com.liuwa.shopping.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -41,6 +43,9 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.liuwa.shopping.R;
+import com.liuwa.shopping.ShoppingApplication;
+import com.liuwa.shopping.activity.fragment.ChangeAreaFragment;
+import com.liuwa.shopping.activity.fragment.DialogFragmentSelectBottom;
 import com.liuwa.shopping.activity.fragment.LogoutDialogFragment;
 import com.liuwa.shopping.activity.fragment.UpdateDialogFragment;
 import com.liuwa.shopping.adapter.IndexProductAdapter;
@@ -60,6 +65,7 @@ import com.liuwa.shopping.model.SheQuModel;
 import com.liuwa.shopping.model.SpecialModel;
 import com.liuwa.shopping.model.TuanModel;
 import com.liuwa.shopping.model.TuanProductModel;
+import com.liuwa.shopping.model.VersionModel;
 import com.liuwa.shopping.permission.PermissionUtils;
 import com.liuwa.shopping.permission.request.IRequestPermissions;
 import com.liuwa.shopping.permission.request.RequestPermissions;
@@ -98,7 +104,7 @@ import java.util.TreeMap;
 
 
 
-public class IndexActivity extends BaseActivity implements IndexProductAdapter.OnCartClick,UpdateDialogFragment.OnFragmentInteractionListener{
+public class IndexActivity extends BaseActivity implements IndexProductAdapter.OnCartClick,UpdateDialogFragment.OnFragmentInteractionListener,ChangeAreaFragment.OnFragmentInteractionListener{
 	private Context context;
 	private PullToRefreshScrollView pullToRefreshScrollView;
 	private AutoScrollViewPager     index_auto_scroll_view;
@@ -108,7 +114,6 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	private LinearLayout                tv_go_search;
 	private TabLayout               tb_time;
 	private MyGridView              mgw_guangou;
-	public String apkurl;
 	private TextView tv_title;
 	private IndexTuanGouProductAdapter indexTuanGouProductAdapter;
 	private ArrayList<TuanProductModel> tuanItemList=new ArrayList<TuanProductModel>();
@@ -138,16 +143,33 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	public static  final  int ReqShequ= 67;
 	public TextView show_more;
 	public String tuanId;
-	public int tag;
+	public int key;
+	public LinearLayout ll_tuangou;
+	public TextView tv_name_f;
+	public TextView tv_rx;
+	public TextView tv_time_name;
+	public static int pos;
+	public TabReceiver mTabReceiver;
+	IRequestPermissions requestPermissions = RequestPermissions.getInstance();//动态权限请求
+	IRequestPermissionsResult requestPermissionsResult = RequestPermissionsResultSetApp.getInstance();//动态权限请求结果处理
+	public static String ACTION_LOCATION = "ACTION_LOCATION";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_index_layout);
 		this.context=this;
+		// DemoIntentService 为第三方自定义的推送服务事件接收类
+		com.igexin.sdk.PushManager.getInstance().registerPushIntentService(getApplicationContext(), com.liuwa.shopping.activity.DemoIntentService.class);
 		initViews();
 		initEvent();
 		doGetDatas();
 		getTuangou();
+		mTabReceiver = new TabReceiver();
+		IntentFilter filter = new IntentFilter(ACTION_LOCATION);
+		registerReceiver(mTabReceiver, filter);
+		if(!requestPermissions()){
+			return;
+		}
 		startLocation();
 	}
 	public void initViews()
@@ -181,8 +203,8 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		ll_content=(LinearLayout)findViewById(R.id.ll_content);
 		//定位
 		tv_dingwei=(TextView)findViewById(R.id.tv_dingwei);
-
-
+		//ll_tuangou
+		ll_tuangou=(LinearLayout)findViewById(R.id.ll_tuangou);
 		//团购tab实现
 		tb_time=(TabLayout)findViewById(R.id.tb_time);
 		mgw_guangou=(MyGridView)findViewById(R.id.mgw_guangou);
@@ -236,9 +258,12 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				startActivity(intent);
 			}
 		});
+		tv_name_f=(TextView)findViewById(R.id.tv_name_f);
+		tv_rx=(TextView)findViewById(R.id.tv_rx);
 		img_xihua=(ImageView)findViewById(R.id.img_xihua);
 		tv_ce=(ImageView)findViewById(R.id.tv_ce);
 		img_show_left=(ImageView)findViewById(R.id.img_show_left);
+		tv_time_name=(TextView)findViewById(R.id.tv_time_name);
 		go_shequ=(LinearLayout)findViewById(R.id.go_shequ);
 		show_more=(TextView)findViewById(R.id.show_more);
 	}
@@ -247,18 +272,18 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
 				getProduct();
-				refreshView.onRefreshComplete();
+				doGetDatas();
+				getTuangou();
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page++;
-				if(page>baseModel.totalpage){
-					Toast.makeText(context,"暂无更多商品",Toast.LENGTH_SHORT).show();
-				}else{
+				if(baseModel.nowpage<baseModel.totalpage){
 					getMoreProduct();
+				}else{
+					Toast.makeText(context,"暂无更多商品",Toast.LENGTH_SHORT).show();
+					refreshView.onRefreshComplete();
 				}
-				refreshView.onRefreshComplete();
 			}
 		});
 		index_category_type.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -273,6 +298,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
 				intent.putExtra(MainTabActivity.TAB_INDEX_KEY,1);
 				intent.putExtra("position",position);
+				pos=position;
 				intent.putExtra("cateList",cateList);
 				sendBroadcast(intent);//发送标准广播
 			}
@@ -316,12 +342,13 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(tag!=0) {
+		if(key!=0) {
 			SheQuModel model = SPUtils.getShequMode(context, Constants.AREA);
 			tv_dingwei.setText(model.region);
 		}
-		String flag=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.flag,"");
-		if(!flag.equals("1")) {
+		ShoppingApplication app=(ShoppingApplication)getApplication();
+		int tag=app.getTag();
+		if(tag!=1) {
 			getVersionDatas();
 		}
 	}
@@ -339,7 +366,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				break;
 			case R.id.ll_left:
 				intent=new Intent(context,TimeBuyActivity.class);
-				intent.putExtra("classesid",(String)v.getTag());
+				//intent.putExtra("classesid",(String)v.getTag());
 				startActivity(intent);
 				break;
 			case R.id.show_more:
@@ -348,7 +375,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				startActivity(intent);
 				break;
 			case R.id.go_shequ:
-				tag=1;
+				key=1;
 				intent=new Intent(context,SheQuListActivity.class);
 				//startActivityForResult(intent,ReqShequ);
 				startActivity(intent);
@@ -356,6 +383,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			case R.id.ll_content:
 				intent=new Intent(context,FavoriateActivity.class);
 				SpecialModel model=(SpecialModel) v.getTag();
+				intent.putExtra("key",0);
 				intent.putExtra("classesid",model.proClassesId);
 				intent.putExtra("name",model.proClassesName);
 				startActivity(intent);
@@ -363,23 +391,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			case R.id.ll_down:
 				intent=new Intent(context,FavoriateActivity.class);
 				SpecialModel model2=(SpecialModel) v.getTag();
+				intent.putExtra("key",1);
 				intent.putExtra("classesid",model2.proClassesId);
 				intent.putExtra("name",model2.proClassesName);
 				startActivity(intent);
 				break;
-			case R.id.tv_dingwei:
-//				if(!requestPermissions()){
-//					return;
-//				}
-//				startLocation();
-//
-			if(checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)){
-					startLocation();
-			}else {
-				SetPermissions.openAppDetails(IndexActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-			}
-				break;
-				
 			}
 		}
 	};
@@ -407,25 +423,6 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context,permission);
 	}
 
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		switch (requestCode){
-			case PERMISSION_REQUEST_CODE:
-				if (grantResults.length >0 &&
-						grantResults[0] == PackageManager.PERMISSION_GRANTED){
-					//得到了授权
-					Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show();
-					startLocation();
-				}else {
-					//未授权
-					Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
-				}
-				break;
-			default:
-				break;
-		}
-	}
 	//
 	private void updateDatas(String lon,String lat){
 		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
@@ -462,13 +459,31 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						JSONObject array=job.getJSONObject("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						SheQuModel sheQuModel=localGson.fromJson(array.toString(), SheQuModel.class);
-						tv_dingwei.setText(sheQuModel.region);
-						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-						editor.putString(Constants.AREA, localGson.toJson(sheQuModel));
-						editor.commit();
-						//待定
-						getProduct();
+						SheQuModel sheQuModel = localGson.fromJson(array.toString(), SheQuModel.class);
+
+						SheQuModel bendiModel=SPUtils.getShequMode(context,Constants.AREA);
+						if(bendiModel==null) {
+							SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+							editor.putString(Constants.AREA, localGson.toJson(sheQuModel));
+							editor.commit();
+							tv_dingwei.setText(sheQuModel.region);
+							//待定
+							getProduct();
+						}else
+						{
+							if(!bendiModel.leaderId.equals(sheQuModel.leaderId)){
+								ShoppingApplication app=(ShoppingApplication)getApplication();
+								int flag=app.changeFlag;
+								//弹窗提示
+								if(flag!=1){
+									tv_dingwei.setText(bendiModel.region);
+									DialogFragmentFromBottom(bendiModel,sheQuModel);
+								}
+							}else{
+								tv_dingwei.setText(sheQuModel.region);
+								getProduct();
+							}
+						}
 					} else {
 					}
 
@@ -480,6 +495,23 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 			}
 		};
 	}
+	private void DialogFragmentFromBottom(SheQuModel model1,SheQuModel model2) {
+		showAreaDialog(model1,model2);
+	}
+	void showAreaDialog(SheQuModel model1,SheQuModel model2) {
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		ChangeAreaFragment newFragment = ChangeAreaFragment.newInstance(model1,model2);
+		newFragment.show(ft, "dialog");
+	}
+
 	private void getVersionDatas(){
 		TreeMap<String, Object> categorymap1 = new TreeMap<String, Object>();
 		categorymap1.put("currentVersion", Constants.VERSION);
@@ -512,8 +544,13 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 					String isUpdate  =  job.getString("isUpdate");
 					String 	forceUpdate=job.getString("forceUpdate");
 					String apkurl=job.getString("apkurl");
-						if(isUpdate.equals("1")){
-							//DialogFragmentFromBottom(forceUpdate);
+					Gson localGson = new GsonBuilder().disableHtmlEscaping()
+							.create();
+					VersionModel versionModel=localGson.fromJson(job.toString(), VersionModel.class);
+						if(versionModel.isUpdate.equals("1")){
+							Intent intent =new Intent(context,UpdateActivity.class);
+							intent.putExtra("versionModel",versionModel);
+							startActivity(intent);
 						}else if(isUpdate.equals("0")) {
 
 						}
@@ -534,8 +571,8 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	}
 	void showUpdateDialog(String flag) {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -576,7 +613,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		specialMap.put(Constants.kPARAMNAME, specilCategory);
 		LKHttpRequest specialCategoryReq = new LKHttpRequest(specialMap, getSpeicalCagegoryHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,specialCategoryReq,noticeReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍后", new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
 						super.onComplete();
@@ -584,6 +621,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 				});
 	}
 	public void getProduct(){
+		page=1;
 		TreeMap<String, Object> baseProductParam = new TreeMap<String, Object>();
 		baseProductParam.put("page",1);
 		baseProductParam.put("rows",pageSize);
@@ -605,7 +643,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 	}
 	public void getMoreProduct(){
 		TreeMap<String, Object> baseProductParam = new TreeMap<String, Object>();
-		baseProductParam.put("page",page);
+		baseProductParam.put("page",++page);
 		baseProductParam.put("rows",pageSize);
 		baseProductParam.put("type","1");
 		baseProductParam.put("area",SPUtils.getShequMode(context,Constants.AREA).area);
@@ -659,7 +697,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 								}.getType());
 						productList.addAll(baseModel.list);
 						indexProductAdapter.notifyDataSetChanged();
-
+						pullToRefreshScrollView.onRefreshComplete();
 					}
 					else
 					{
@@ -693,7 +731,7 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 								}.getType());
 						productList.addAll(baseModel.list);
 						indexProductAdapter.notifyDataSetChanged();
-
+						pullToRefreshScrollView.onRefreshComplete();
 					}
 					else
 					{
@@ -746,20 +784,26 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 					int code =	job.getInt("code");
 					if(code==Constants.CODE) {
 						JSONArray array=job.getJSONArray("data");
-						tuanList.clear();
-						Gson localGson = new GsonBuilder().disableHtmlEscaping()
-								.create();
-						tuanList.addAll((Collection<? extends TuanModel<TuanProductModel>>)(localGson.fromJson(array.toString(),
-								new TypeToken<ArrayList<TuanModel<TuanProductModel>>>() {
-								}.getType())));
-						for(TuanModel<TuanProductModel> model:tuanList){
-							String tuancode=model.tuan.tuanCode;
-							tb_time.addTab(tb_time.newTab().setText(TimeUtil.getFormatimestamp(model.tuan.beginTime.time,model.tuan.endTime.time,"HH:mm")+""));
+						if(array.length()==0){
+							ll_tuangou.setVisibility(View.GONE);
+						}else {
+							ll_tuangou.setVisibility(View.VISIBLE);
+							tuanList.clear();
+							tb_time.removeAllTabs();
+							Gson localGson = new GsonBuilder().disableHtmlEscaping()
+									.create();
+							tuanList.addAll((Collection<? extends TuanModel<TuanProductModel>>) (localGson.fromJson(array.toString(),
+									new TypeToken<ArrayList<TuanModel<TuanProductModel>>>() {
+									}.getType())));
+							for (TuanModel<TuanProductModel> model : tuanList) {
+								String tuancode = model.tuan.tuanCode;
+								tb_time.addTab(tb_time.newTab().setText(TimeUtil.getFormatimestamp(model.tuan.beginTime.time, model.tuan.endTime.time, "HH:mm") + ""));
+							}
+							tb_time.getTabAt(0).select();
+							tuanItemList.clear();
+							tuanItemList.addAll(tuanList.get(0).tuaninfolist);
+							indexTuanGouProductAdapter.notifyDataSetChanged();
 						}
-						tb_time.getTabAt(0).select();
-                        tuanItemList.clear();
-						tuanItemList.addAll(tuanList.get(0).tuaninfolist);
-						indexTuanGouProductAdapter.notifyDataSetChanged();
 					}
 					else {
 					}
@@ -817,14 +861,18 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 						ArrayList<SpecialModel> list=localGson.fromJson(array.toString(),
 								new TypeToken<ArrayList<SpecialModel>>() {
 								}.getType());
-						ImageShowUtil.showImage(list.get(1).imgPath,img_xihua);
-						ll_down.setTag(list.get(1));
-
-						ImageShowUtil.showImage(list.get(0).imgPath,tv_ce);
-						ll_content.setTag(list.get(0));
-//
-//						ImageShowUtil.showImage(list.get(0).imgPath,img_show_left);
-//						ll_left.setTag(list.get(0).proClassesId);
+						SpecialModel model=list.get(2);
+						ImageShowUtil.showImage(model.imgPath,img_xihua);
+						ll_down.setTag(model);
+						tv_name_f.setText(model.proClassesName);
+						SpecialModel model0=list.get(1);
+						ImageShowUtil.showImage(model0.imgPath,tv_ce);
+						ll_content.setTag(model0);
+						tv_rx.setText(model0.proClassesName);
+						SpecialModel model00=list.get(0);
+						ImageShowUtil.showImage(model00.imgPath,img_show_left);
+						ll_left.setTag(model00);
+						tv_time_name.setText(model00.proClassesName);
 					}
 					else {
 					}
@@ -847,15 +895,35 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 
 	@Override
 	public void onOk() {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkurl));
+		Intent intent =new Intent(context,UpdateActivity.class);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onCancle() {
+//		SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+//		editor.putString(Constants.flag, "1");
+//		editor.commit();
+		ShoppingApplication app=(ShoppingApplication)getApplication();
+		app.setTag(1);
+	}
+
+	@Override
+	public void onFragmentInteraction(SheQuModel model) {
+		//选中的社区切换
 		SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
-		editor.putString(Constants.flag, "1");
+		editor.putString(Constants.AREA, new Gson().toJson(model));
 		editor.commit();
+		tv_dingwei.setText(model.region);
+		//待定
+		getProduct();
+	}
+
+	@Override
+	public void onCancel() {
+		ShoppingApplication app=(ShoppingApplication)getApplication();
+		app.setTag(1);
+		getProduct();
 	}
 
 
@@ -1046,6 +1114,43 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 		if (null != locationClient) {
 			locationClient.onDestroy();
 		}
+		if (mTabReceiver != null) {
+			unregisterReceiver(mTabReceiver);
+		}
+	}
+	//请求权限
+	private boolean requestPermissions(){
+		//需要请求的权限
+		/**
+		 * Manifest.permission.ACCESS_COARSE_LOCATION,
+		 Manifest.permission.ACCESS_FINE_LOCATION,
+		 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+		 Manifest.permission.READ_EXTERNAL_STORAGE,
+		 Manifest.permission.READ_PHONE_STATE
+		 * **/
+		String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
+				Manifest.permission.ACCESS_FINE_LOCATION};
+		//开始请求权限
+		return requestPermissions.requestPermissions(
+				this,
+				permissions,
+				PermissionUtils.ResultCode1);
+	}
+
+	//用户授权操作结果（可能授权了，也可能未授权）
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		//用户给APP授权的结果
+		//判断grantResults是否已全部授权，如果是，执行相应操作，如果否，提醒开启权限
+		if(requestPermissionsResult.doRequestPermissionsResult(this, permissions, grantResults)){
+			//请求的权限全部授权成功，此处可以做自己想做的事了
+			//输出授权结果
+
+		}else{
+			//输出授权结果
+
+		}
 	}
 //	@Override
 //	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1060,4 +1165,11 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 //			}
 //		}
 //	}
+	class TabReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context ctx, Intent intent) {
+			startLocation();
+		}
+		}
+
 }

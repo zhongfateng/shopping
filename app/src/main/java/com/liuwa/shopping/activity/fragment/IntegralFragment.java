@@ -108,7 +108,7 @@ public class IntegralFragment extends Fragment{
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-             loadData();
+                loadData();
                 pullToRefreshListView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -119,7 +119,11 @@ public class IntegralFragment extends Fragment{
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                loadMoreData();
+                if(page>baseModel.totalpage){
+                    Toast.makeText(getActivity(),Constants.NOMOREDATA,Toast.LENGTH_SHORT).show();
+                }else {
+                    loadMoreData();
+                }
                 pullToRefreshListView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -203,8 +207,9 @@ public class IntegralFragment extends Fragment{
 
     //根据分类加载商品列表
     private void loadData(){
+        page=1;
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page","1");
+        productParam.put("page",page);
         productParam.put("rows",pageSize);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
@@ -213,7 +218,7 @@ public class IntegralFragment extends Fragment{
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
-                .executeQueue(null, new LKHttpRequestQueueDone(){
+                .executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
                     @Override
                     public void onComplete() {
@@ -284,7 +289,7 @@ public class IntegralFragment extends Fragment{
     //根据分类加载商品列表
     private void loadMoreData(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page",page++);
+        productParam.put("page",++page);
         productParam.put("rows",pageSize);
         productParam.put("timespan", System.currentTimeMillis()+"");
         productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
@@ -293,7 +298,7 @@ public class IntegralFragment extends Fragment{
         requestCategoryMap.put(Constants.kPARAMNAME, productParam);
         LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getMoreHandler());
         new LKHttpRequestQueue().addHttpRequest(categoryReq)
-                .executeQueue(null, new LKHttpRequestQueueDone(){
+                .executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
                     @Override
                     public void onComplete() {

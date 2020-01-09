@@ -49,6 +49,7 @@ import com.liuwa.shopping.permission.request.RequestPermissions;
 import com.liuwa.shopping.permission.requestresult.IRequestPermissionsResult;
 import com.liuwa.shopping.permission.requestresult.RequestPermissionsResultSetApp;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.SPUtils;
 import com.liuwa.shopping.view.MyGridView;
 
 import org.json.JSONArray;
@@ -90,7 +91,9 @@ public class SheQuListActivity extends BaseActivity{
 		this.context=this;
 		initViews();
 		initEvent();
-		requestPermissions();
+		if(!requestPermissions()) {
+			return;
+		};
 		startLocation();
 	}
 
@@ -127,6 +130,11 @@ public class SheQuListActivity extends BaseActivity{
 		tv_name=(TextView)findViewById(R.id.tv_name);
 		tv_regison=(TextView)findViewById(R.id.tv_regison);
 		tv_detail=(TextView)findViewById(R.id.tv_detail);
+
+		SheQuModel sheQuModel= SPUtils.getShequMode(context,Constants.AREA);
+		tv_name.setText(sheQuModel.tname);
+		tv_regison.setText(sheQuModel.region);
+		tv_detail.setText(sheQuModel.shiname+" "+sheQuModel.areaname+" "+sheQuModel.region);
 	}
 	
 	public void initEvent(){
@@ -142,8 +150,12 @@ public class SheQuListActivity extends BaseActivity{
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page++;
-				doGetDatas(region);
+				if(baseModel.nowpage<baseModel.totalpage){
+					page++;
+					doGetDatas(region);
+				}else{
+					Toast.makeText(context,Constants.NOMOREDATA,Toast.LENGTH_SHORT).show();
+				}
 				pullToRefreshScrollView.onRefreshComplete();
 			}
 		});
@@ -200,9 +212,9 @@ public class SheQuListActivity extends BaseActivity{
 							location = loc;
 							lat=location.getLatitude()+"";
 							lon=location.getLongitude()+"";
-							updateDatas(lon,lat);
+							proList.clear();
+							page=1;
 							doGetDatas(region);
-
 						} else {
 							//定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
 							Log.e("AmapError", "location Error, ErrCode:"
@@ -362,7 +374,6 @@ public class SheQuListActivity extends BaseActivity{
 								}.getType());
 						proList.addAll(baseModel.list);
 						fpAdapter.notifyDataSetChanged();
-
 					}
 					else
 					{
@@ -404,7 +415,6 @@ public class SheQuListActivity extends BaseActivity{
 		if(requestPermissionsResult.doRequestPermissionsResult(this, permissions, grantResults)){
 			//请求的权限全部授权成功，此处可以做自己想做的事了
 			//输出授权结果
-			Toast.makeText(context,"授权成功，请重新点击刚才的操作！",Toast.LENGTH_LONG).show();
 			startLocation();
 		}else{
 			//输出授权结果

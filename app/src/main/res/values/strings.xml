@@ -43,6 +43,7 @@
     <string name="goumai">购买更多实惠</string>
     <string name="thanksbuy">感谢您的购买，我们会尽快为您处理。</string>
     <string name="bgiang">必抢</string>
+    <string name="empty">暂无数据</string>
     <string name="daifukuan">待付款</string>
     <string name="daitihuo">待提货</string>
     <string name="daifahuo">待发货</string>
@@ -57,6 +58,10 @@
     <string name="ceshi"></string>
     <string name="long_ceshi">这个界面用于显示第三方app通过微信支付的结果</string>
     <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 
 </resources>

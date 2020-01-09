@@ -12,7 +12,7 @@ import java.util.Date;
 public class TimeUtil {
     public final static String FORMAT_DATE = "yyyy-MM-dd";
     public final static String FORMAT_TIME = "hh:mm";
-    public final static String FORMAT_DATE_TIME = "yyyy-MM-dd hh:mm";
+    public final static String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm";
     public final static String FORMAT_MONTH_DAY_TIME = "MM月dd日 hh:mm";
     private static SimpleDateFormat sdf = new SimpleDateFormat();
     private static final int YEAR = 365 * 24 * 60 * 60;// 年
@@ -96,7 +96,7 @@ public class TimeUtil {
         }
         long currentTime=new Date().getTime();
         if(currentTime>=startTime&&currentTime<=endTime){
-            return  sdf.format(startTime)+"\n"+"进行中";
+            return  sdf.format(startTime)+"\n"+"正在抢购";
         }else if(currentTime<startTime){
             return  sdf.format(startTime)+"\n"+"即将开始";
         }else if(currentTime>endTime){

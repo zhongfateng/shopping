@@ -64,6 +64,7 @@ public class MyMoneyActivity extends BaseActivity{
 	private RadioButton weixin;
 	private String zhifu_type="";
 	private static final int SDK_PAY_FLAG = 1;
+	public static final String  CHONGZHI = "com.liuwa.shopping.activity.MyMoneyActivity";
 	private String uid;
 	private String token;
 	private IWXAPI api;
@@ -127,6 +128,56 @@ public class MyMoneyActivity extends BaseActivity{
 
 
 	}
+
+	private void doMoneyDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.USERCENTER);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, moneyHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler moneyHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						UserModel userModel = localGson.fromJson(jsonObject.toString(),UserModel.class);
+//						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+//						editor.putString(Constants.USER,localGson.toJson(userModel));
+//						editor.commit();
+						if(userModel!=null){
+							tv_money.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(userModel.yuE))+"");
+						}
+
+					}
+					else {
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
 	//微信支付详情
 	private void getMoney(){
 
@@ -180,23 +231,17 @@ public class MyMoneyActivity extends BaseActivity{
 	}
 	//微信支付详情
 	private void payWEIXINOrder(){
-
 		TreeMap<String, Object> map = new TreeMap<String, Object>();
-		map.put("timestamp",System.currentTimeMillis()/1000+"");
-		map.put("uid", uid);
-		map.put("pay_type", zhifu_type);
-		map.put("order_id", order_id);
-		map.put("token", token);
-		map.put("sign", Md5SecurityUtil.getSignatureValueMap(map));
-
+		map.put("payment", "2");
+		map.put("total",selectModel);
+		map.put("timespan", System.currentTimeMillis()+"");
+		map.put("sign", Md5SecurityUtil.getSignature(map));
 		HashMap<String, Object> mapend = new HashMap<String, Object>();
-		mapend.put(Constants.kMETHODNAME,Constants.PayOrder);
+		mapend.put(Constants.kMETHODNAME,Constants.PAYMoney);
 		mapend.put(Constants.kPARAMNAME, map);
-
 		LKHttpRequest req1 = new LKHttpRequest(mapend, getWeixinPayHandler());
 		new LKHttpRequestQueue().addHttpRequest(req1)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
-
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
 						super.onComplete();
@@ -218,27 +263,18 @@ public class MyMoneyActivity extends BaseActivity{
 				JSONObject jobj;
 				try {
 					jobj = new JSONObject(json);
-					String code =	jobj.getString("code");
+					int  code =	jobj.getInt("code");
 					String msg  =	jobj.getString("msg");
-					if(code.equals("0"))
+					if(code==Constants.CODE)
 					{
-						Bundle bundle = new Bundle();
-						bundle.putString("orderid",order_id);
-						Message message = WXPayEntryActivity.handler2.obtainMessage();
-						message.what = 1;
-						message.setData(bundle);
-						message.sendToTarget();
-						String pay_str=	jobj.getString("rs");
-
-						JSONObject ob=new JSONObject(pay_str);
-
+						JSONObject data=jobj.getJSONObject("data");
+						JSONObject ob=data.getJSONObject("payparam");
 						String prepayId=ob.getString("prepayid");
 						String nonceStr=ob.getString("noncestr");
 						String timeStamp=ob.getString("timestamp");
 						String packageValue=ob.getString("package");
-						String sign        =ob.getString("sign");
+						String sign        =ob.getString("paySign");
 						String partnerId	=ob.getString("partnerid");
-
 
 						PayReq req = new PayReq();
 						req.appId = Constants.APP_ID;
@@ -247,18 +283,19 @@ public class MyMoneyActivity extends BaseActivity{
 						req.nonceStr = nonceStr;
 						req.timeStamp = String.valueOf(timeStamp);
 						req.packageValue = packageValue;
-
-
 						req.sign = sign;
-
+						JSONObject oo=new JSONObject();
+						oo.put("key",CHONGZHI);
+						req.extData=oo.toString();
 						// 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
 						boolean flag=	api.sendReq(req);
-						if(flag) {
-							MyMoneyActivity.this.finish();
-						}
+
+					}else if(code==200)
+					{
+						Toast.makeText(MyMoneyActivity.this, msg, Toast.LENGTH_SHORT).show();
 					}
 					else {
-						Toast.makeText(MyMoneyActivity.this, msg, Toast.LENGTH_SHORT).show();
+
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -317,7 +354,7 @@ public class MyMoneyActivity extends BaseActivity{
 		mapend.put(Constants.kPARAMNAME, map);
 		LKHttpRequest req1 = new LKHttpRequest(mapend, getPayHandler());
 		new LKHttpRequestQueue().addHttpRequest(req1)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
 						super.onComplete();
@@ -480,11 +517,6 @@ public class MyMoneyActivity extends BaseActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
-		String userStr=pre.getString(Constants.USER,"");
-		if(userStr!=null||userStr.length()!=0) {
-			UserModel model = new Gson().fromJson(userStr, UserModel.class);
-			tv_money.setText("￥" + model.yuE + "");
-		}
+		doMoneyDatas();
 	}
 }

@@ -94,22 +94,24 @@ public class RefundAdapter extends BaseAdapter {
         }else{
             holder.ckOneChose.setChecked(false);
         }
+//        holder.ckOneChose.setChecked(true);
+//        holder.ckOneChose.setClickable(false);
 
         holder.tvCommodityAttr.setText(shoppingCartModel.guiGe+"");
         holder.tvCommodityName.setText(shoppingCartModel.proName);
         holder.tvCommodityPrice.setText("￥"+shoppingCartModel.buyPrice+"");
-        holder.tvCommodityShowNum.setText("x"+shoppingCartModel.buyNum);
-        ImageLoader.getInstance().displayImage(Constants.IMAGEHOSTPRE+shoppingCartModel.fristimg, holder.ivShowPic);
+        holder.tvCommodityNum.setText("x"+shoppingCartModel.buyNum);
+        ImageShowUtil.showImage(shoppingCartModel.fristimg,holder.ivShowPic);
         //单选框按钮
-        holder.ckOneChose.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        shoppingCartModel.setChoosed(((CheckBox) v).isChecked());
-                        checkInterface.checkGroup(position, ((CheckBox) v).isChecked());//向外暴露接口
-                    }
-                }
-        );
+//        holder.ckOneChose.setOnClickListener(
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        shoppingCartModel.setChoosed(((CheckBox) v).isChecked());
+//                        checkInterface.checkGroup(position, ((CheckBox) v).isChecked());//向外暴露接口
+//                    }
+//                }
+//        );
 
         //删除弹窗
         holder.tvCommodityDelete.setOnClickListener(new View.OnClickListener() {

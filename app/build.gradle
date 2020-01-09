@@ -6,10 +6,20 @@ android {
         useLibrary 'org.apache.http.legacy'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "0NCMCDEsBJ8ccyhpe1JkX5",
+                GETUI_APP_KEY   : "gJvDDUMkoM9Uiyd5klm4D6",
+                GETUI_APP_SECRET: "gJvDDUMkoM9Uiyd5klm4D6"
+        ]
+
+        ndk {
+            // 添加项目所需CPU类型的最小集
+            abiFilters "armeabi", "armeabi-v7a", "x86_64"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -22,6 +32,7 @@ android {
         }
     }
     buildToolsVersion '26.0.2'
+
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -47,4 +58,6 @@ dependencies {
     // 添加下面的内容
     compile(name: 'alipaySdk-15.6.5-20190718211148', ext: 'aar')
     implementation 'com.android.support:design:26.1.0'
+    compile 'com.getui:sdk:2.13.3.0'
+    //implementation 'com.google.code.gson:gson:2.2.4'
 }

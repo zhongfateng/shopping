@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
@@ -18,6 +21,7 @@ import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
 import com.liuwa.shopping.client.LKHttpRequest;
 import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
+import com.liuwa.shopping.model.UserModel;
 import com.liuwa.shopping.util.MD5;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 
@@ -53,7 +57,7 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 
 	public void initViews()
 	{
-		time = new TimeCount(9000, 1000);//构造CountDownTimer对象
+		time = new TimeCount(90000, 1000);//构造CountDownTimer对象
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		et_register_input_phone=(EditText) findViewById(R.id.et_register_input_phone);
 		et_register_input_code=(EditText) findViewById(R.id.et_register_input_code);
@@ -176,7 +180,7 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 			{
 				TreeMap<String, Object> map = new TreeMap<String, Object>();
 				map.put("tel", intput_phone_num);
-				map.put("code", "1234");
+				map.put("code", input_code_num);
 				map.put("password", MD5.GetMD5Code(input_password));
 				map.put("timespan",System.currentTimeMillis()+"");
 				map.put("sign",Md5SecurityUtil.getSignature(map));
@@ -209,18 +213,26 @@ public class RegisterAndGetPassWordActivity extends BaseActivity {
 					JSONObject object=new JSONObject(str);
 					int  code=  object.getInt("code");
 					if(code==Constants.CODE) {
-						String token = object.getString("data");
+						JSONObject oo=object.getJSONObject("data");
+						String token = oo.getString("token");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						UserModel userModel = localGson.fromJson(oo.getJSONObject("member").toString(),UserModel.class);
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
 						editor.putString(Constants.TOKEN, token);
+						editor.putString(Constants.USER,localGson.toJson(userModel));
+						editor.putString(Constants.flag,"");
+						editor.putString(Constants.USER_PHONE,intput_phone_num);
+						editor.putString(Constants.USER_PASS,input_password);
 						boolean flag =editor.commit();
 						if(flag==true) {
 							if(tag==LoginActivity.CodeRegister){
-								Toast.makeText(context,"注册成功，请登录",Toast.LENGTH_SHORT).show();
+								Toast.makeText(context,"注册成功",Toast.LENGTH_SHORT).show();
 							}else if(tag==LoginActivity.CodeForget){
-								Toast.makeText(context,"修改成功，请登录",Toast.LENGTH_SHORT).show();
+								Toast.makeText(context,"修改成功",Toast.LENGTH_SHORT).show();
 							}
-							RegisterAndGetPassWordActivity.this.finish();
 						}
+						RegisterAndGetPassWordActivity.this.finish();
 					}
 					else if(code==200){
 						Toast.makeText(context,object.getString("msg"),Toast.LENGTH_SHORT).show();

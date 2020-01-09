@@ -172,10 +172,10 @@ public class OrderShowByCategroyActivity extends BaseActivity implements OrderSh
 					if(code== Constants.CODE)
 					{
 						JSONObject jsonObject = job.getJSONObject("data");
-						list_Title.add("待付款"+"("+jsonObject.getString("count1")+")");
-						list_Title.add("待发货"+"("+jsonObject.getString("count2")+")");
-						list_Title.add("待提货"+"("+jsonObject.getString("count3")+")");
-						list_Title.add("评价"+"("+jsonObject.getString("count4")+")");
+						list_Title.add("待付款");
+						list_Title.add("待发货");
+						list_Title.add("待提货");
+						list_Title.add("评  价");
 						fragmentList.add(OrderShowByCategoryFragment.newInstance("0"));
 						fragmentList.add(OrderShowByCategoryFragment.newInstance("1"));
 						fragmentList.add(OrderShowByCategoryFragment.newInstance("2"));

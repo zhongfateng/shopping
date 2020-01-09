@@ -124,7 +124,7 @@ public class CommentActivity extends BaseActivity{
 	private void doGetDatas(String detail){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("content",detail);
-		productParam.put("productheadid",model.orderChildId);
+		productParam.put("productheadid",model.proHeadId);
 		productParam.put("score1",num);
 		productParam.put("score2",num1);
 		productParam.put("score3",num2);
@@ -136,7 +136,7 @@ public class CommentActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {

@@ -1,7 +1,5 @@
 package com.liuwa.shopping.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,14 +7,18 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,6 +99,8 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	private ArrayList fragmentList= new ArrayList<>();;
 	private ArrayList list_Title = new ArrayList<>();;
 	private MyPagerAdapter pageradapter;
+	public RelativeLayout rl_guige;
+	public TextView tv_guige;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -115,14 +119,20 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
 		list_Title.add("详情");
 		list_Title.add("评价");
-		list_Title.add("售后");
+		list_Title.add("服务");
 	}
 
 	public void initViews() {
 		img_back = (ImageView) findViewById(R.id.img_back);
 		tv_title = (TextView) findViewById(R.id.tv_title);
 		tv_title.setText("商品详情");
+		rl_guige=(RelativeLayout)findViewById(R.id.rl_guige);
+		tv_guige=(TextView)findViewById(R.id.tv_guige);
 		index_auto_scroll_view  = (AutoScrollViewPager)findViewById(R.id.index_auto_scroll_view);
+		double height = getScreenPixel().widthPixels / (100 / 100.0);
+		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
+		params.height = (int) (height);
+		index_auto_scroll_view.setLayoutParams(params);
 		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);
 		imageAdatper=new ImagePagerAdapter(context, imgs);
 		index_auto_scroll_view.setAdapter(imageAdatper);
@@ -209,6 +219,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		rl_cart.setOnClickListener(onClickListener);
 		tv_add_cart.setOnClickListener(onClickListener);
 		tv_buy.setOnClickListener(onClickListener);
+		rl_guige.setOnClickListener(onClickListener);
 	}
 
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -219,6 +230,16 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 			switch (v.getId()) {
 				case R.id.img_back:
 					ProductDetailActivity.this.finish();
+					break;
+				case R.id.rl_guige:
+					//立即购买
+					if(token==null||token.length()==0){
+						intent =new Intent(context,LoginActivity.class);
+						startActivity(intent);
+						return;
+					}
+					tag="3";
+					DialogFragmentFromBottom();
 					break;
 				case R.id.ll_left:
 					//返回首页
@@ -264,8 +285,8 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 	}
 	void showDialog() {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -273,7 +294,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 
 		// Create and show the dialog.
 		DialogFragmentFromBottom	newFragment = DialogFragmentFromBottom.newInstance(model.proName,productChildModels,model.fristimg);
-		newFragment.show(ft, "dialog");
+		newFragment.show(ft,"dialog");
 	}
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
@@ -304,7 +325,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		LKHttpRequest Req = new LKHttpRequest(Map, getTuiJianHandler());
 
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,neiborReq, Req)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -331,7 +352,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						ProductModel model = localGson.fromJson(oo.toString(),
 							ProductModel.class);
 						tv_name.setText(model.proName+"");
-						tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.showprice)));
+
 						tv_market_price.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 						tv_market_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(model.price)));
 
@@ -348,6 +369,9 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						productChildModels.addAll((Collection<? extends ProductChildModel>)localGson.fromJson(jsonObject.getJSONArray("prochildlist").toString(),
 								new TypeToken<ArrayList<ProductChildModel>>() {
 								}.getType()));
+						ProductChildModel mm=productChildModels.get(0);
+						tv_guige.setText(mm.guiGe);
+						tv_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(mm.showprice)));
 						init(model);
 						pageradapter.notifyDataSetChanged();
 					}
@@ -376,7 +400,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		LKHttpRequest cartReq = new LKHttpRequest(requestMap, buyHandler());
 
 		new LKHttpRequestQueue().addHttpRequest(cartReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍后", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -400,9 +424,11 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
 					}
-					else  if(code==402)
+					else if(code==200)
 					{
 						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}else {
+
 					}
 
 				} catch (JSONException e) {
@@ -426,7 +452,7 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		LKHttpRequest cartReq = new LKHttpRequest(requestMap, addHandler());
 
 		new LKHttpRequestQueue().addHttpRequest(cartReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍后", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -447,9 +473,11 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 					if(code== Constants.CODE) {
 						Toast.makeText(context,"添加购物车成功!!!",Toast.LENGTH_SHORT).show();
 					}
-					else if(code==402)
+					else if(code==200)
 					{
 						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+					}else{
+
 					}
 
 				} catch (JSONException e) {
@@ -551,6 +579,9 @@ public class ProductDetailActivity extends BaseActivity implements FavoriateProd
 		}else if(tag.equals("1")){
 			//加入购物车
 			doAddCart(prochildid,num);
+		}else if(tag.equals("3"))
+		{
+			doBuy(prochildid,num);
 		}
 	}
 

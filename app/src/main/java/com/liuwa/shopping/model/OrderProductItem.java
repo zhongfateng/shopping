@@ -28,8 +28,9 @@ public class OrderProductItem implements Serializable{
     public String guiGe;
     public double total;
     public String orderChildId;
-    public boolean isChoosed;
+    public boolean isChoosed=true;
     public String typename;
+    public String proHeadId;
     public String type;
     public boolean isChoosed() {
         return isChoosed;

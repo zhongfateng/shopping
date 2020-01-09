@@ -40,7 +40,6 @@ public class LKHttpRequestQueue {
 		
 		if (null != prompt) {
 			BaseActivity.getTopActivity().showDialog(BaseActivity.Loading_DIALOG, prompt);
-			//LKMagicToast.showToast(prompt);
 		}
 		
 		this.queueDone = queueDone;

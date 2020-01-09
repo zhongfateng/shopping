@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,6 +61,7 @@ public class LoginActivity extends BaseActivity {
 		btn_login_commit=(TextView) findViewById(R.id.btn_login_commit);
 		tv_btn_register=(TextView)findViewById(R.id.tv_btn_register);
 		tv_btn_forget=(TextView)findViewById(R.id.tv_btn_forget);
+
 	}
 	
 	public void initEvent(){
@@ -170,6 +172,8 @@ public class LoginActivity extends BaseActivity {
 						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
 						editor.putString(Constants.USER,localGson.toJson(userModel));
 						editor.putString(Constants.TOKEN, token);
+						editor.putString(Constants.USER_PHONE,intput_phone_num);
+						editor.putString(Constants.USER_PASS,input_password);
 						boolean flag =editor.commit();
 						if(flag==true) {
 							LoginActivity.this.finish();
@@ -184,6 +188,20 @@ public class LoginActivity extends BaseActivity {
 				}
 			}
 		};
+	}
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		SharedPreferences sp = ApplicationEnvironment.getInstance().getPreferences();
+		et_login_input_phone.setText(sp.getString(Constants.USER_PHONE,""));
+		et_login_input_pass.setText(sp.getString(Constants.USER_PASS,""));
+	}
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		Log.i("msg","销毁了");
 	}
 
 }

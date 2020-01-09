@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="40dp"
+            android:textSize="14sp"
+            android:textColor="@color/detail_address_color"
+            android:text="取消"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="40dp"
+            android:textSize="14sp"
+            android:textColor="@color/tab_line"
+            android:text="确定"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <com.liuwa.shopping.view.WheelView.ModelWheelView
+            android:id="@+id/ww_view"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></com.liuwa.shopping.view.WheelView.ModelWheelView>
+        <com.liuwa.shopping.view.WheelView.ModelWheelView
+            android:id="@+id/ww_view_child"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"></com.liuwa.shopping.view.WheelView.ModelWheelView>
+    </LinearLayout>
+</LinearLayout>

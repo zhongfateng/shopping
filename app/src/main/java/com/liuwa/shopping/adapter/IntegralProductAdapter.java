@@ -13,6 +13,7 @@ import com.liuwa.shopping.R;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.ScreenUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class IntegralProductAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		ScreenUtil.resizeImage(context,viewHolder.img_show);
 		final ProductModel  productModel=productList.get(position);
 		viewHolder.tv_name.setText(productModel.proName);
 		int jifen=(int)productModel.showprice;

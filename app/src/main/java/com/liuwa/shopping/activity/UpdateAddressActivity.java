@@ -1,9 +1,10 @@
 package com.liuwa.shopping.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -234,8 +235,8 @@ public class UpdateAddressActivity extends BaseActivity implements DialogFragmen
 	}
 	void showDialog() {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}

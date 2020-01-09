@@ -2,13 +2,14 @@ package com.liuwa.shopping.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -195,8 +196,8 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 	}
 	void showDialog() {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -223,7 +224,7 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -349,8 +350,8 @@ public class HeadApplyActivity extends BaseActivity implements DialogFragmentSho
 			if(resultCode == Activity.RESULT_OK){ // 对应B里面的标志为成功
 				PoiItem poiItem=(PoiItem)i.getParcelableExtra("item"); // 拿到B中存储的数据
 				tv_address.setText(poiItem.getTitle()+"");
-				x=poiItem.getLatLonPoint().getLatitude();
-				y=poiItem.getLatLonPoint().getLongitude();
+				y=poiItem.getLatLonPoint().getLatitude();
+				x=poiItem.getLatLonPoint().getLongitude();
 			}
 		}
 	}

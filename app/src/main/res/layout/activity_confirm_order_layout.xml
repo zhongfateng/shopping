@@ -162,7 +162,7 @@
                         <TextView
                             android:id="@+id/tv_tip"
                             android:layout_width="wrap_content"
-                            android:textColor="@color/gray_d"
+                            android:textColor="@color/b_color"
                             android:textSize="12sp"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"

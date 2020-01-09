@@ -111,12 +111,14 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 loadData();
-                pullToRefreshScrollView.onRefreshComplete();
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                page++;
-                loadDataMore();
+                if(baseModel.nowpage<baseModel.totalpage){
+                    loadDataMore();
+                }else {
+                    Toast.makeText(getActivity(),Constants.NOMOREDATA,Toast.LENGTH_SHORT).show();
+                }
                 pullToRefreshScrollView.onRefreshComplete();
             }
         });
@@ -206,7 +208,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
     //根据分类加载商品列表
     private void loadDataMore(){
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
-        productParam.put("page",page);
+        productParam.put("page",++page);
         productParam.put("rows",pageSize);
         productParam.put("classesid",mParam1.getProClassesId());
         productParam.put("type",1);
@@ -230,6 +232,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
 
     //根据分类加载商品列表
     private void loadData(){
+        page=1;
         TreeMap<String, Object> productParam = new TreeMap<String, Object>();
         productParam.put("page",1);
         productParam.put("rows",pageSize);
@@ -272,7 +275,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
                                 }.getType());
                         proList.addAll(baseModel.list);
                         fpAdapter.notifyDataSetChanged();
-
+                        pullToRefreshScrollView.onRefreshComplete();
                     }
                     else
                     {
@@ -307,7 +310,7 @@ public class ProductShowByCategoryFragment extends Fragment implements Favoriate
                                 }.getType());
                         proList.addAll(baseModel.list);
                         fpAdapter.notifyDataSetChanged();
-
+                        pullToRefreshScrollView.onRefreshComplete();
                     }
                     else
                     {

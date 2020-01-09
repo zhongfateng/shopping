@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@color/bg_favorite"
         ptr:ptrAnimationStyle="rotate"
-        ptr:ptrMode="disabled">
+        ptr:ptrMode="pullDownFromTop">
     <LinearLayout android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical">

@@ -12,4 +12,5 @@ public class HeaderCenterModel {
     public String region;
     public String tname;
     public String leaderId;
+    public String type;
 }

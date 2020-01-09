@@ -63,6 +63,7 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 	private String classesid;
 	private ImageView img_top;
 	private String name;
+	public int key;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,6 +71,7 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 		this.context=this;
 		classesid=getIntent().getStringExtra("classesid");
 		name=getIntent().getStringExtra("name");
+		key=getIntent().getIntExtra("key",0);
 		initViews();
 		initEvent();
 		doGetDatas();
@@ -107,13 +109,17 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 				page=1;
 				proList.clear();
 				doGetDatas();
-				pullToRefreshScrollView.onRefreshComplete();
+
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-				page++;
-				doGetDatas();
+				if(baseModel.nowpage<baseModel.totalpage){
+					page++;
+					doGetDatas();
+				}else{
+					Toast.makeText(context,Constants.NOMOREDATA,Toast.LENGTH_SHORT).show();
+				}
 				pullToRefreshScrollView.onRefreshComplete();
 			}
 		});
@@ -149,7 +155,13 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 
 
 		TreeMap<String, Object> Param = new TreeMap<String, Object>();
-		Param.put("type",Constants.FavoriteType);
+		if(key==0) {
+			Param.put("type", Constants.RXType);
+		}else if(key==1)
+		{
+			Param.put("type", Constants.FavoriteType);
+		}
+
 		Param.put("timespan", System.currentTimeMillis()+"");
 		Param.put("sign", Md5SecurityUtil.getSignature(Param));
 		HashMap<String, Object> Map = new HashMap<String, Object>();
@@ -210,7 +222,7 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 								}.getType());
 						proList.addAll(baseModel.list);
 						fpAdapter.notifyDataSetChanged();
-
+						pullToRefreshScrollView.onRefreshComplete();
 					}
 					else
 					{

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class TimeBuyActivity extends BaseActivity{
 	private LinearLayout ll_right;
 	public String classesid;
 	public ImageView img_top;
+	public RelativeLayout rl_show;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,6 +87,7 @@ public class TimeBuyActivity extends BaseActivity{
 		img_back=(ImageView)findViewById(R.id.img_back);
 		tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("限时秒杀");
+		rl_show=(RelativeLayout)findViewById(R.id.rl_show);
 		img_top=(ImageView)findViewById(R.id.img_top);
 		double height = ScreenUtil.resize(this);
 		final ViewGroup.LayoutParams params = img_top.getLayoutParams();
@@ -149,8 +152,14 @@ public class TimeBuyActivity extends BaseActivity{
 		try {
 			long timeDQ = new Date().getTime();
 			if(timeDQ<startTime){
-				tv_tag.setText("活动尚未开启");
-				ll_right.setVisibility(View.GONE);
+				tv_tag.setText("未开启:");
+				long validTimes = endTime;
+				long date = startTime - timeDQ;
+				day = date / (1000 * 60 * 60 * 24);
+				hour = (date / (1000 * 60 * 60) - day * 24);
+				min = ((date / (60 * 1000)) - day * 24 * 60 - hour * 60);
+				mSecond = (date / 1000) - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60;
+				startRun2();
 			}else if(timeDQ>startTime&&timeDQ<endTime) {
 				long validTimes = endTime;
 				long date = validTimes - timeDQ;
@@ -160,7 +169,7 @@ public class TimeBuyActivity extends BaseActivity{
 				mSecond = (date / 1000) - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60;
 				startRun();
 			}else if(timeDQ>endTime){
-				tv_tag.setText("活动已结束");
+				tv_tag.setText("已结束");
 				ll_right.setVisibility(View.GONE);
 			}
 		}catch (Exception e){
@@ -198,6 +207,46 @@ public class TimeBuyActivity extends BaseActivity{
 					}
 			ll_right.setVisibility(View.VISIBLE);
 					tv_tag.setText("距结束：");
+					tv_day.setText(day + "");
+					tv_hour.setText(hour + "");
+					tv_min.setText(min + "");
+					tv_second.setText(mSecond + "");
+					break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+	private boolean isRun2 = true;
+	private void startRun2() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				while (isRun2) {
+					try {
+						Thread.sleep(1000); // sleep 1000ms
+						Message message = Message.obtain();
+						message.what = 3;
+						handler2.sendMessage(message);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
+	private Handler handler2 = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case 3:
+					computeTime();
+					if (day < 0 && hour < 0 && min < 0) {
+						ll_right.setVisibility(View.GONE);
+						tv_tag.setText("已开始");
+					}
+					ll_right.setVisibility(View.VISIBLE);
+					tv_tag.setText("距开始：");
 					tv_day.setText(day + "");
 					tv_hour.setText(hour + "");
 					tv_min.setText(min + "");
@@ -246,7 +295,7 @@ public class TimeBuyActivity extends BaseActivity{
 		Map.put(Constants.kPARAMNAME, Param);
 		LKHttpRequest Req = new LKHttpRequest(Map, getImageHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq,Req)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("請稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -322,14 +371,26 @@ public class TimeBuyActivity extends BaseActivity{
 						JSONObject jsonObject = job.getJSONObject("data");
 						Gson localGson = new GsonBuilder().disableHtmlEscaping()
 								.create();
-						proList.clear();
-						proList.addAll(localGson.fromJson(jsonObject.getJSONArray("miaoinfolist").toString(),
-								new TypeToken<ArrayList<ProductModel>>() {
-								}.getType()));
-						long startTime=jsonObject.getJSONObject("miao").getJSONObject("beginTime").getLong("time");
-						long endTime=jsonObject.getJSONObject("miao").getJSONObject("endTime").getLong("time");
-						timeBuyAdapter.notifyDataSetChanged();
-						doShowTime(startTime,endTime);
+						JSONArray array=jsonObject.getJSONArray("miaoinfolist");
+						if(array.length()!=0) {
+							rl_show.setVisibility(View.VISIBLE);
+							proList.clear();
+							proList.addAll(localGson.fromJson(array.toString(),
+									new TypeToken<ArrayList<ProductModel>>() {
+									}.getType()));
+							long startTime = jsonObject.getJSONObject("miao").getJSONObject("beginTime").getLong("time");
+							long endTime = jsonObject.getJSONObject("miao").getJSONObject("endTime").getLong("time");
+							timeBuyAdapter.notifyDataSetChanged();
+							doShowTime(startTime, endTime);
+						}
+						else {
+							rl_show.setVisibility(View.GONE);
+							Toast.makeText(context,"活动尚未开始",Toast.LENGTH_SHORT).show();
+						}
+					}else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
+						rl_show.setVisibility(View.GONE);
 					}
 					else
 					{

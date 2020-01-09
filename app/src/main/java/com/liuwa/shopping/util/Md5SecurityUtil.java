@@ -94,8 +94,8 @@ public class Md5SecurityUtil {
 
 		List<NameValuePair> nameValuePairs=new ArrayList<NameValuePair>();
 		for (String key : map.keySet()) {
-			NameValuePair pair=new NameValuePair(key, map.get(key));
-			nameValuePairs.add(pair);
+				NameValuePair pair = new NameValuePair(key, map.get(key));
+				nameValuePairs.add(pair);
 		}
 		String signatureValue=null;
 		String signatureBaseValue;

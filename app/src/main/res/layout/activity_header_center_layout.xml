@@ -35,21 +35,21 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="26dp"
             android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:src="@mipmap/touxiang"
+            <com.liuwa.shopping.view.CircleImageView
+                android:layout_width="58dp"
+                android:src="@mipmap/ic_launcher"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/img_left"
                 android:layout_centerVertical="true"
-                android:layout_height="wrap_content" />
+                android:layout_height="58dp" />
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/ll_top"
                 android:layout_toRightOf="@+id/img_left"
-                android:layout_alignBottom="@+id/img_left"
-                android:layout_alignTop="@+id/img_left"
                 android:orientation="vertical"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
@@ -75,10 +75,20 @@
                     android:layout_width="wrap_content"
                     android:textSize="12sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="8dp"
                     android:text="绑定社区：安侨国际写字楼A座101"
                     android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_toRightOf="@+id/img_left"
+                    android:layout_alignBottom="@+id/img_left"
+                    android:layout_below="@+id/ll_top"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
+
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

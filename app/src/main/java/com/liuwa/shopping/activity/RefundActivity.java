@@ -1,11 +1,13 @@
 package com.liuwa.shopping.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -73,6 +75,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	public double totalPrice;
 	public String reasonStr;
 	public String mark;
+	public EditText et_remark;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,7 +112,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 		tv_commit=(TextView)findViewById(R.id.tv_commit);
 		rl_select=(RelativeLayout)findViewById(R.id.rl_select);
 		tv_reason=(TextView)findViewById(R.id.tv_reason);
-
+		et_remark=(EditText)findViewById(R.id.et_remark);
 		tv_total=(TextView)findViewById(R.id.tv_total);
 	}
 	
@@ -141,8 +144,8 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	}
 	void showDialog() {
 
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
@@ -250,7 +253,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	}
 	private void lementOnder() {
 		reasonStr=tv_reason.getText().toString();
-		mark=tv_total.getText().toString();
+		mark=et_remark.getText().toString();
 		//选中的需要提交的商品清单
 		StringBuffer proids = new StringBuffer();
 		int i=0;
@@ -300,8 +303,12 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 	private void tuikuanDatas(String orderchildids){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("orderchildids",orderchildids);
-		productParam.put("remark1",reasonStr);
-		productParam.put("remark2",mark);
+		if(reasonStr!=null&&reasonStr.length()!=0) {
+			productParam.put("remark1", reasonStr);
+		}
+		if(mark!=null&&mark.length()!=0) {
+			productParam.put("remark2", mark);
+		}
 		productParam.put("timespan", System.currentTimeMillis()+"");
 		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
 		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
@@ -309,7 +316,7 @@ public class RefundActivity extends BaseActivity implements FavoriateProductAdap
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getNoticeHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {

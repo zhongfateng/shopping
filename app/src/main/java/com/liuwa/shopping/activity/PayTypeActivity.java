@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
@@ -27,12 +28,17 @@ import com.liuwa.shopping.client.LKHttpRequestQueue;
 import com.liuwa.shopping.client.LKHttpRequestQueueDone;
 import com.liuwa.shopping.model.UserModel;
 import com.liuwa.shopping.util.Md5SecurityUtil;
+import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.PayResult;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -47,17 +53,24 @@ public class PayTypeActivity extends BaseActivity{
 	public String payment;
 	public TextView tv_pay;
 	private static final int SDK_PAY_FLAG = 1;
+	public static final String PAYORDER = "com.liuwa.shopping.activity.PayTypeActivity";
 	public TextView tv_yue;
 	public TextView tv_chongzhi;
+	private IWXAPI api;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pay_type_layout);
 		this.context=this;
 		order_id=getIntent().getStringExtra("order_id");
+		init();
 		initViews();
 		initEvent();
 		//doGetDatas();
+	}
+	public void init(){
+		api = WXAPIFactory.createWXAPI(this, Constants.APP_ID);
+		api.registerApp(Constants.APP_ID);
 	}
 
 	public void initViews()
@@ -134,6 +147,9 @@ public class PayTypeActivity extends BaseActivity{
 						doMoneyDatas();
 					}else if(payment.equals("2"))
 					{
+						if(isWXAppInstalledAndSupported(context,api)) {
+							doWxDatas();
+						}
 
 					}
 					break;
@@ -141,6 +157,17 @@ public class PayTypeActivity extends BaseActivity{
 		}
 	};
 
+	private  boolean isWXAppInstalledAndSupported(Context context,
+												  IWXAPI api) {
+		// LogOutput.d(TAG, "isWXAppInstalledAndSupported");
+		boolean	sIsWXAppInstalledAndSupported = api.isWXAppInstalled()
+				&& api.isWXAppSupportAPI();
+		if (!sIsWXAppInstalledAndSupported) {
+			Toast.makeText(context, "尚未安装微信客户端或者微信版本不支持", Toast.LENGTH_SHORT).show();
+		}
+
+		return sIsWXAppInstalledAndSupported;
+	}
 	//加载特殊分类商品 例如猜你喜欢！
 	private void doAlipayDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
@@ -155,7 +182,7 @@ public class PayTypeActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getProductHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -219,6 +246,9 @@ public class PayTypeActivity extends BaseActivity{
 						// 必须异步调用
 						Thread payThread = new Thread(payRunnable);
 						payThread.start();
+					}else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 					else
 					{
@@ -232,16 +262,61 @@ public class PayTypeActivity extends BaseActivity{
 			}
 		};
 	}
+	private void doDatas(){
+		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
+		productParam.put("timespan", System.currentTimeMillis()+"");
+		productParam.put("sign", Md5SecurityUtil.getSignature(productParam));
+		HashMap<String, Object> requestCategoryMap = new HashMap<String, Object>();
+		requestCategoryMap.put(Constants.kMETHODNAME,Constants.USERCENTER);
+		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
+		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, moneyHandler());
+		new LKHttpRequestQueue().addHttpRequest(categoryReq)
+				.executeQueue(null, new LKHttpRequestQueueDone(){
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+	}
+	private LKAsyncHttpResponseHandler moneyHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String json=(String)obj;
+				try {
+					JSONObject  job= new JSONObject(json);
+					int code =	job.getInt("code");
+					if(code==Constants.CODE)
+					{
+						JSONObject jsonObject = job.getJSONObject("data");
+						Gson localGson = new GsonBuilder().disableHtmlEscaping()
+								.create();
+						UserModel userModel = localGson.fromJson(jsonObject.toString(),UserModel.class);
+//						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+//						editor.putString(Constants.USER,localGson.toJson(userModel));
+//						editor.commit();
+						if(userModel!=null){
+							tv_yue.setText("￥"+ MoneyUtils.formatAmountAsString(new BigDecimal(userModel.yuE))+"");
+						}
+
+					}
+					else {
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+	}
+
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		SharedPreferences pre = ApplicationEnvironment.getInstance().getPreferences();
-		String userStr=pre.getString(Constants.USER,"");
-		if(userStr!=null){
-			UserModel model =new Gson().fromJson(userStr, UserModel.class);
-			tv_yue.setText("￥"+model.yuE+"");
-		}
+		doDatas();
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -291,7 +366,7 @@ public class PayTypeActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getMoneyHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -314,6 +389,9 @@ public class PayTypeActivity extends BaseActivity{
 						intent.putExtra("order_id",order_id);
 						startActivity(intent);
 						PayTypeActivity.this.finish();
+					}else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 					else
 					{
@@ -340,7 +418,7 @@ public class PayTypeActivity extends BaseActivity{
 		requestCategoryMap.put(Constants.kPARAMNAME, productParam);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getWxHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -359,10 +437,32 @@ public class PayTypeActivity extends BaseActivity{
 					JSONObject  job= new JSONObject(json);
 					int code =	job.getInt("code");
 					if(code==Constants.CODE) {
-						Intent intent=new Intent(context,PaySuccessActivity.class);
-						intent.putExtra("order_id",order_id);
-						startActivity(intent);
-						PayTypeActivity.this.finish();
+						JSONObject data=job.getJSONObject("data");
+						JSONObject ob=data.getJSONObject("payparam");
+						String prepayId=ob.getString("prepayid");
+						String nonceStr=ob.getString("noncestr");
+						String timeStamp=ob.getString("timestamp");
+						String packageValue=ob.getString("package");
+						String sign        =ob.getString("paySign");
+						String partnerId	=ob.getString("partnerid");
+
+						PayReq req = new PayReq();
+						req.appId = Constants.APP_ID;
+						req.partnerId = partnerId;
+						req.prepayId = prepayId;
+						req.nonceStr = nonceStr;
+						req.timeStamp = String.valueOf(timeStamp);
+						req.packageValue = packageValue;
+						req.sign = sign;
+						JSONObject oo=new JSONObject();
+						oo.put("key",PAYORDER);
+						oo.put("order_id",order_id);
+						req.extData=oo.toString();
+						// 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+						boolean flag=	api.sendReq(req);
+					}else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 					else
 					{

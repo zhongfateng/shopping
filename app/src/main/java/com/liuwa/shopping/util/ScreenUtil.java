@@ -4,6 +4,10 @@ package com.liuwa.shopping.util;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.liuwa.shopping.client.Constants;
 
 public class ScreenUtil {
 
@@ -37,6 +41,14 @@ public class ScreenUtil {
 		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
 		return dm.widthPixels/ (360 / 148.0);
 	}
-	
+	public  static void resizeImage(Context context, ImageView img_show) {
+		double height = (ScreenUtil.getWindowsWidth((Activity) context)- Constants.Padding)/ (100 / 100.0);
+		ViewGroup.LayoutParams params = img_show.getLayoutParams();
+		params.height = (int) (height)/2;
+		params.width=(int)(height)/2;
+		img_show.setLayoutParams(params);
+	}
+
+
 
 }

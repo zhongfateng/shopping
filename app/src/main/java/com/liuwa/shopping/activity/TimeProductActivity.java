@@ -96,7 +96,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		fragmentList.add(WebFragment.newInstance("dsaf",model.shcontent));
 		list_Title.add("详情");
 		list_Title.add("评价");
-		list_Title.add("售后");
+		list_Title.add("服务");
 	}
 	private void doGetDatas(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
@@ -182,7 +182,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		index_auto_scroll_view  = (AutoScrollViewPager)findViewById(R.id.index_auto_scroll_view);
 		cpi_indicator				= (CirclePageIndicator)findViewById(R.id.cpi_indicator);
 		//修改了为了16：9的比例
-		double height = getScreenPixel().widthPixels / (480 / 270.0);
+		double height = getScreenPixel().widthPixels / (100 / 100.0);
 		ViewGroup.LayoutParams params = index_auto_scroll_view.getLayoutParams();
 		params.height = (int) (height);
 		index_auto_scroll_view.setLayoutParams(params);
@@ -236,7 +236,7 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 		LKHttpRequest cartReq = new LKHttpRequest(requestMap, buyHandler());
 
 		new LKHttpRequestQueue().addHttpRequest(cartReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 
 					@Override
 					public void onComplete() {
@@ -282,6 +282,9 @@ public class TimeProductActivity extends BaseActivity implements WebFragment.OnF
 					}
 					else if(code==102){
 						Toast.makeText(context,"当前抢购人数较多请稍后再试",Toast.LENGTH_SHORT).show();
+					}else if(code==200)
+					{
+						Toast.makeText(context,job.getString("msg"),Toast.LENGTH_SHORT).show();
 					}
 
 				} catch (JSONException e) {

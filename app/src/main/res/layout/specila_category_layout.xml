@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:textSize="@dimen/sp_15"
             android:text="@string/buy_in_time"
+            android:id="@+id/tv_time_name"
             android:textColor="@color/le_color"
             android:drawableLeft="@mipmap/miaosha"
             android:drawablePadding="8dp"
@@ -31,12 +32,12 @@
             android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/img_show_left"
-            android:layout_width="wrap_content"
+            android:layout_width="76dp"
             android:src="@mipmap/icon_time"
             android:layout_marginTop="8dp"
-            android:scaleType="center"
+            android:scaleType="centerInside"
             android:layout_marginBottom="8dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="45dp" />
         <TextView
             android:layout_width="wrap_content"
             android:background="@mipmap/zhuanshu"
@@ -72,6 +73,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:text="@string/rexiao"
+                        android:id="@+id/tv_rx"
                         android:textColor="@color/rexiao_color"
                         android:textSize="14sp"
                         android:drawableLeft="@mipmap/rexiao"
@@ -102,10 +104,10 @@
                     android:layout_height="match_parent">
                     <ImageView
                         android:id="@+id/tv_ce"
-                        android:layout_width="wrap_content"
+                        android:layout_width="58dp"
                         android:src="@mipmap/icon_rexiao"
                         android:scaleType="centerInside"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="58dp" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -124,10 +126,10 @@
                     android:layout_height="wrap_content">
                     <ImageView
                         android:id="@+id/img_xihua"
-                        android:layout_width="wrap_content"
+                        android:layout_width="58dp"
                         android:src="@mipmap/icon_rexiao"
                         android:scaleType="centerInside"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="58dp" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,6 +138,7 @@
                     android:gravity="center"
                     android:layout_height="match_parent">
                     <TextView
+                        android:id="@+id/tv_name_f"
                         android:layout_width="wrap_content"
                         android:text="@string/guess_like"
                         android:textColor="@color/guess_like_color"

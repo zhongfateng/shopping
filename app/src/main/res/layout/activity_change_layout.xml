@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="250dp"
+        android:background="@drawable/bg_favoriate_item"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/gray"
+                android:text="您选择的社区为"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_select"
+                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:text=""
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/gray"
+                android:text="当前定位社区为"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_current"
+                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:text=""
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="31dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:background="@mipmap/log_cancel"
+                android:textSize="16sp"
+                android:id="@+id/tv_cancel"
+                android:layout_alignParentLeft="true"
+                android:text="暂不切换"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"
+                android:textColor="@color/tab_line"
+                android:gravity="center"
+                android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:background="@mipmap/log_confirm"
+                android:textSize="16sp"
+                android:id="@+id/tv_confirm"
+                android:text="立即切换"
+                android:gravity="center"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

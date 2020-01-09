@@ -1,5 +1,6 @@
 package com.liuwa.shopping.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.ProductShowByCategoryFragment;
+import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.model.CategoryModel;
 import com.liuwa.shopping.model.ProductModel;
 import com.liuwa.shopping.util.ImageShowUtil;
 import com.liuwa.shopping.util.MoneyUtils;
+import com.liuwa.shopping.util.ScreenUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -74,6 +77,12 @@ public class FavoriateProductAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+//		double height = (ScreenUtil.getWindowsWidth((Activity) context)- Constants.Padding)/ (100 / 100.0);
+//		ViewGroup.LayoutParams params = viewHolder.img_show.getLayoutParams();
+//		params.height = (int) (height)/2;
+//		params.width=(int)(height)/2;
+//		viewHolder.img_show.setLayoutParams(params);
+		ScreenUtil.resizeImage(context,viewHolder.img_show);
 		final ProductModel  productModel=productList.get(position);
 		viewHolder.tv_name.setText(productModel.proName);
 		viewHolder.tv_show_price.setText("￥"+MoneyUtils.formatAmountAsString(new BigDecimal(productModel.showprice)));

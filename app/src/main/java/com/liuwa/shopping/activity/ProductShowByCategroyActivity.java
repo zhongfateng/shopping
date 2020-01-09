@@ -1,6 +1,9 @@
 package com.liuwa.shopping.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -58,15 +61,20 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 	private ArrayList<CategoryModel> cateList=new ArrayList<>();
 	private ArrayList<Fragment> fragments=new ArrayList<>();
 	public MyPagerAdapter adapter;
+	public TabReceiver mTabReceiver;
+	public static String ACTION_POSATION = "ACTION_POSATION";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_product_show_by_category_layout);
 		this.context=this;
 		//init();
+		mTabReceiver = new TabReceiver();
+		IntentFilter filter = new IntentFilter(ACTION_POSATION);
+		registerReceiver(mTabReceiver, filter);
 		initViews();
 		initEvent();
-		doGetData();
+
 	}
 	public void init(){
 		position=getParent().getIntent().getIntExtra("position",0);
@@ -130,7 +138,7 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 		requestCategoryMap.put(Constants.kPARAMNAME, categorymap1);
 		LKHttpRequest categoryReq = new LKHttpRequest(requestCategoryMap, getCagegoryHandler());
 		new LKHttpRequestQueue().addHttpRequest(categoryReq)
-				.executeQueue(null, new LKHttpRequestQueueDone(){
+				.executeQueue("请稍候", new LKHttpRequestQueueDone(){
 					@Override
 					public void onComplete() {
 						super.onComplete();
@@ -158,8 +166,8 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 							fragments.add(ProductShowByCategoryFragment.newInstance(model));
 						}
 						adapter.notifyDataSetChanged();
-//						tl_tabs.getTabAt(position).select();
-//						vp_category.setCurrentItem(position);
+						tl_tabs.getTabAt(IndexActivity.pos).select();
+						vp_category.setCurrentItem(IndexActivity.pos);
 					} else {
 					}
 
@@ -203,5 +211,27 @@ public class ProductShowByCategroyActivity extends BaseActivity implements Produ
 		public CharSequence getPageTitle(int position) {
 			return list_Title.get(position).getProClassesName();
 		}
+	}
+	class TabReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context ctx, Intent intent) {
+			position = intent.getIntExtra("position", 0);
+			tl_tabs.getTabAt(position).select();
+			vp_category.setCurrentItem(position);
+		}
+
+	}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (mTabReceiver != null) {
+			unregisterReceiver(mTabReceiver);
+		}
+	}
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		doGetData();
 	}
 }

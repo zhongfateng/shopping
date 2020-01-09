@@ -11,10 +11,10 @@
         android:layout_height="150dp">
         <ImageView
             android:id="@+id/img_show"
-            android:layout_width="wrap_content"
+            android:layout_width="135dp"
             android:src="@mipmap/img_show_demo"
-            android:scaleType="centerInside"
-            android:layout_height="wrap_content" />
+            android:scaleType="fitXY"
+            android:layout_height="135dp" />
     </LinearLayout>
     <TextView
         android:id="@+id/tv_name"

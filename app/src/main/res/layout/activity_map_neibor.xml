@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -50,12 +50,12 @@
         <TextView
             android:id="@+id/bt_send"
             android:layout_width="78dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="8dp"
             android:background="@color/tab_line"
             android:gravity="center"
-            android:text="发 送"
+            android:text="确定"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             />

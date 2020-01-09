@@ -53,6 +53,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:src="@mipmap/icon_user"
+                    android:scaleType="centerInside"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/et_txtruename"
+                    android:layout_width="match_parent"
+                    android:textSize="14sp"
+                    android:background="@null"
+                    android:textColorHint="#7D838C"
+                    android:layout_marginLeft="11dp"
+                    android:layout_weight="1"
+                    android:hint="请输入真实姓名"
+                    android:inputType="text"
+                    android:textColor="@color/tixian"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"></View>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:gravity="center_vertical"
