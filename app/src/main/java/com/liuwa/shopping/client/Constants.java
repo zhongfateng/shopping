@@ -13,10 +13,10 @@ public class Constants {
 	//微信key
 	public static final String APP_ID                   = "wx32fce07e42cb9a50";
 	public static final String DESCRIPTOR              = "com.liuwa.shopping";
-	public static final String IMAGEHOSTPRE             = "http://ht.xingyf.com/upload/";
-	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
-//	public static final String DEFAULTHOST             = "http://mslx6ap.xinliushangmao.com/";
-//	public static final String IMAGEHOSTPRE             = "http://ygwl9ht.xinliushangmao.com/upload/";
+//	public static final String IMAGEHOSTPRE             = "http://ht.xingyf.com/upload/";
+//	public static final String DEFAULTHOST             = "http://lw.xingyf.com/";
+	public static final String DEFAULTHOST             = "http://mslx6ap.xinliushangmao.com/";
+	public static final String IMAGEHOSTPRE             = "http://ygwl9ht.xinliushangmao.com/upload/";
 	public static final String USER_ID					= "user_id";
 	public static final String USER					    = "user";
 	public static final String USER_PHONE					= "user_phone";
