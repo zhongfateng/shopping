@@ -1,6 +1,7 @@
 package com.liuwa.shopping.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,7 +97,9 @@ public class FavoriateActivity extends BaseActivity implements FavoriateProductA
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ProductModel model=(ProductModel)parent.getAdapter().getItem(position);
-				Toast.makeText(context,"item"+model.proName,Toast.LENGTH_SHORT).show();
+				Intent intent=new Intent(context, ProductDetailActivity.class);
+				intent.putExtra("model",model);
+				startActivity(intent);
 			}
 		});
 	}
