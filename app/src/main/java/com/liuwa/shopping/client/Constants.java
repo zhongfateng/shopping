@@ -72,6 +72,10 @@ public class Constants {
 	public static final String PRODUCTDETAIL      		 = "productinfojson";
 	//登录接口
 	public static final String LOGIN      				 =  "logindo";
+
+	//注销接口
+	public static final String ZHUXIAO      				 =  "zhuxiaodo";
+
 	//注册接口
 	public static final String REGISTER      			 =  "zhucedo";
 	//修改密码

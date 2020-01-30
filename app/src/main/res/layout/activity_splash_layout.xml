@@ -7,6 +7,7 @@
     android:background="@mipmap/splash"
     >
     <LinearLayout
+        android:id="@+id/ll_show"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
@@ -23,11 +24,30 @@
                 android:button="@drawable/check_box_style"
                 android:layout_height="wrap_content" />
             <TextView
+                android:layout_width="wrap_content"
+                android:text="请查阅并同意"
+                android:textSize="12sp"
+                android:textColor="@color/hint_color"
+                android:layout_height="wrap_content" />
+            <TextView
                 android:id="@+id/tv_xy"
                 android:layout_width="wrap_content"
-                android:text="请勾选用户协议"
+                android:text="用户协议"
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="@color/m_color"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="及"
+                android:textSize="12sp"
+                android:textColor="@color/hint_color"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_ys"
+                android:layout_width="wrap_content"
+                android:text="隐私协议"
+                android:textSize="12sp"
+                android:textColor="@color/m_color"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>

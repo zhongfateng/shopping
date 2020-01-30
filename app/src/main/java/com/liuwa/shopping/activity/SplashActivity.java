@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +25,10 @@ import com.liuwa.shopping.util.SPUtils;
 public class SplashActivity extends AppCompatActivity {
     public CheckBox checkBox;
 
-    public TextView tv_xy;
+    public TextView tv_xy,tv_ys;
 
     public TextView go_to;
+    public LinearLayout ll_show;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +43,10 @@ public class SplashActivity extends AppCompatActivity {
        String is_agress= ApplicationEnvironment.getInstance().getPreferences().getString("is_agress","0");
        if(is_agress.equals("0"))
        {
-
+           ll_show.setVisibility(View.VISIBLE);
        }else
        {
+           ll_show.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 Intent intent = new Intent();
@@ -57,10 +60,13 @@ public class SplashActivity extends AppCompatActivity {
 
     public void initView()
     {
+        ll_show=(LinearLayout)findViewById(R.id.ll_show);
         checkBox=(CheckBox)findViewById(R.id.checkBox);
         tv_xy=(TextView)findViewById(R.id.tv_xy);
+        tv_ys=(TextView)findViewById(R.id.tv_ys);
         go_to=(TextView)findViewById(R.id.go_to);
         tv_xy.setOnClickListener(onClickListener);
+        tv_ys.setOnClickListener(onClickListener);
         go_to.setOnClickListener(onClickListener);
 
     }
@@ -72,6 +78,11 @@ public class SplashActivity extends AppCompatActivity {
                 case  R.id.tv_xy:
                     Intent intent2 =new Intent(SplashActivity.this,UserAgreeActivity.class);
                     startActivity(intent2);
+                    break;
+
+                case  R.id.tv_ys:
+                    Intent intent3 =new Intent(SplashActivity.this,UserAgree1Activity.class);
+                    startActivity(intent3);
                     break;
                 case  R.id.go_to:
                     if(checkBox.isChecked())

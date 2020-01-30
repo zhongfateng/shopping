@@ -28,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import com.liuwa.shopping.R;
 import com.liuwa.shopping.activity.fragment.LogoutDialogFragment;
 import com.liuwa.shopping.activity.fragment.UpdateNameFragment;
+import com.liuwa.shopping.activity.fragment.ZhuXiaoDialogFragment;
 import com.liuwa.shopping.client.ApplicationEnvironment;
 import com.liuwa.shopping.client.Constants;
 import com.liuwa.shopping.client.LKAsyncHttpResponseHandler;
@@ -41,6 +42,7 @@ import com.liuwa.shopping.permission.request.IRequestPermissions;
 import com.liuwa.shopping.permission.request.RequestPermissions;
 import com.liuwa.shopping.permission.requestresult.IRequestPermissionsResult;
 import com.liuwa.shopping.permission.requestresult.RequestPermissionsResultSetApp;
+import com.liuwa.shopping.util.MD5;
 import com.liuwa.shopping.util.Md5SecurityUtil;
 import com.liuwa.shopping.util.MoneyUtils;
 import com.liuwa.shopping.util.QrCodeUtil;
@@ -58,7 +60,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 
-public class MySelfActivity extends BaseActivity implements LogoutDialogFragment.OnFragmentInteractionListener,UpdateNameFragment.OnFragmentInteractionListener {
+public class MySelfActivity extends BaseActivity implements LogoutDialogFragment.OnFragmentInteractionListener,ZhuXiaoDialogFragment.OnFragmentInteractionListener,UpdateNameFragment.OnFragmentInteractionListener {
 	private Context context;
 	private RelativeLayout rl_address,rl_applay_head,rl_integral_shop,rl_money,rl_connect,rl_logout;
 	private TextView tv_my_integral,tv_my_money;
@@ -76,6 +78,7 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 	public RelativeLayout rl_sys_message;
 	public RelativeLayout rl_update;
 	public TextView tv_version;
+	public RelativeLayout rl_user_agress,rl_ys,rl_zhuxiao;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,6 +92,13 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		rl_dfk=(LinearLayout)findViewById(R.id.rl_dfk);
 		rl_dfh=(LinearLayout)findViewById(R.id.rl_dfh);
 		rl_dth=(LinearLayout)findViewById(R.id.rl_dth);
+
+		rl_user_agress=(RelativeLayout) findViewById(R.id.rl_user_agress);
+		rl_ys=(RelativeLayout)findViewById(R.id.rl_ys);
+
+		rl_zhuxiao=(RelativeLayout)findViewById(R.id.rl_zhuxiao);
+
+
 		pj=(LinearLayout)findViewById(R.id.pj);
 		rl_my_order=(RelativeLayout)findViewById(R.id.rl_my_order);
 		tv_my_integral=(TextView)findViewById(R.id.tv_my_integral);
@@ -132,6 +142,9 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 		rl_sys_message.setOnClickListener(onClickListener);
 		tv_nickname.setOnClickListener(onClickListener);
 		rl_update.setOnClickListener(onClickListener);
+		rl_user_agress.setOnClickListener(onClickListener);
+		rl_ys.setOnClickListener(onClickListener);
+		rl_zhuxiao.setOnClickListener(onClickListener);
 	}
 	
 	private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -150,8 +163,16 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 //					intent.putExtra("apkurl","http://ygwl9ht.xinliushangmao.com/upload/app-zs1021.apk");
 					startActivity(intent);
 					break;
+				case R.id.rl_user_agress:
+					intent=new Intent(context,UserAgreeActivity.class);
+					startActivity(intent);
+					break;
 				case R.id.rl_logout:
 					DialogFragmentFromBottom();
+					break;
+				case R.id.rl_ys:
+					intent=new Intent(context,UserAgree1Activity.class);
+					startActivity(intent);
 					break;
 				case R.id.tv_nickname:
 					String name=tv_nickname.getText().toString();
@@ -205,6 +226,9 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 				case R.id.rl_money:
 					intent=new Intent(context,MyMoneyActivity.class);
 					startActivity(intent);
+					break;
+				case R.id.rl_zhuxiao:
+					ZDialogFragmentFromBottom();
 					break;
 				case R.id.rl_question:
 					intent=new Intent(context,WebActivity.class);
@@ -291,6 +315,23 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 
 		// Create and show the dialog.
 		LogoutDialogFragment newFragment = LogoutDialogFragment.newInstance();
+		newFragment.show(ft, "dialog");
+	}
+
+	private void ZDialogFragmentFromBottom() {
+		showZDialog();
+	}
+	void showZDialog() {
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		ZhuXiaoDialogFragment newFragment = ZhuXiaoDialogFragment.newInstance();
 		newFragment.show(ft, "dialog");
 	}
 
@@ -458,6 +499,70 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 	public void onFragmentInteraction() {
 		logout();
 	}
+
+	private void zhuxiao()
+	{
+		String intput_phone_num=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.USER_PHONE,"");
+		String input_password=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.USER_PASS,"");
+		String token=ApplicationEnvironment.getInstance().getPreferences().getString(Constants.TOKEN, "");
+		TreeMap<String, Object> map = new TreeMap<String, Object>();
+		map.put("tel", intput_phone_num);
+		map.put("password", MD5.GetMD5Code(input_password));
+		map.put("token",token);
+		map.put("timespan",System.currentTimeMillis()+"");
+		map.put("sign", Md5SecurityUtil.getSignature(map));
+		HashMap<String, Object> mapend2 = new HashMap<String, Object>();
+		mapend2.put(Constants.kMETHODNAME,Constants.ZHUXIAO);
+		mapend2.put(Constants.kPARAMNAME, map);
+		LKHttpRequest req1 = new LKHttpRequest(mapend2, loginHandler());
+		new LKHttpRequestQueue().addHttpRequest(req1)
+				.executeQueue("正在注册请稍候...", new LKHttpRequestQueueDone(){
+
+					@Override
+					public void onComplete() {
+						super.onComplete();
+					}
+				});
+
+	}
+
+	private LKAsyncHttpResponseHandler loginHandler(){
+		return new LKAsyncHttpResponseHandler(){
+
+			@Override
+			public void successAction(Object obj) {
+				String str=(String)obj;
+				try {
+					JSONObject object=new JSONObject(str);
+					int  code=  object.getInt("code");
+					if(code==Constants.CODE) {
+						SharedPreferences.Editor editor = ApplicationEnvironment.getInstance().getPreferences().edit();
+						editor.putString(Constants.TOKEN, "");
+						editor.putString(Constants.USER,"");
+						editor.putString(Constants.flag,"");
+						editor.putString(Constants.USER_PHONE,"");
+						editor.putString(Constants.USER_PASS,"");
+						boolean flag =editor.commit();
+						if(flag){
+							Intent intent=new Intent();
+							intent.setAction(MainTabActivity.ACTION_TAB_INDEX);
+							intent.putExtra(MainTabActivity.TAB_INDEX_KEY,0);
+							context.sendBroadcast(intent);//发送标准广播
+						}
+						Toast.makeText(context,"已经注销当前用户",Toast.LENGTH_SHORT).show();
+
+					}
+					else if(code==200){
+						Toast.makeText(context, object.getString("msg"), Toast.LENGTH_SHORT).show();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+	}
+
 	private void logout(){
 		TreeMap<String, Object> productParam = new TreeMap<String, Object>();
 		productParam.put("timespan", System.currentTimeMillis()+"");
@@ -560,5 +665,10 @@ public class MySelfActivity extends BaseActivity implements LogoutDialogFragment
 	@Override
 	public void onCancle() {
 
+	}
+
+	@Override
+	public void onFragmentZInteraction() {
+		zhuxiao();
 	}
 }

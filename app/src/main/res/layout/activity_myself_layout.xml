@@ -519,6 +519,107 @@
                 android:background="@color/view_line"
                 android:layout_height="1dp"></View>
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/rl_user_agress"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="用户协议"
+                    android:textSize="12sp"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/pay_success_color"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:text=""
+
+                    android:textSize="10sp"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/gray"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/view_line"
+                android:layout_height="1dp"></View>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/rl_ys"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="用户隐私"
+                    android:textSize="12sp"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/pay_success_color"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:text=""
+                    android:textSize="10sp"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/gray"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/view_line"
+                android:layout_height="1dp"></View>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/rl_zhuxiao"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="注销账户"
+                    android:textSize="12sp"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/pay_success_color"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:text=""
+                    android:textSize="10sp"
+                    android:drawablePadding="12dp"
+                    android:textColor="@color/gray"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/view_line"
+                android:layout_height="1dp"></View>
+            <RelativeLayout
                 android:id="@+id/rl_logout"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
