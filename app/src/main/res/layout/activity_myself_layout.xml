@@ -526,6 +526,7 @@
                     android:layout_width="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/icon_xy"
                     android:text="用户协议"
                     android:textSize="12sp"
                     android:drawablePadding="12dp"
@@ -561,6 +562,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="用户隐私"
+                    android:drawableLeft="@drawable/icon_ys"
                     android:textSize="12sp"
                     android:drawablePadding="12dp"
                     android:textColor="@color/pay_success_color"
@@ -596,6 +598,7 @@
                     android:layout_centerVertical="true"
                     android:text="注销账户"
                     android:textSize="12sp"
+                    android:drawableLeft="@drawable/icon_logout"
                     android:drawablePadding="12dp"
                     android:textColor="@color/pay_success_color"
                     android:layout_height="wrap_content" />
