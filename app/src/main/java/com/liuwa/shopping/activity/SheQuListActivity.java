@@ -210,8 +210,10 @@ public class SheQuListActivity extends BaseActivity{
 						stopLocation();
 						if (loc.getErrorCode() == 0) {//可在其中解析amapLocation获取相应内容。
 							location = loc;
-							lat=location.getLatitude()+"";
-							lon=location.getLongitude()+"";
+//							lat=location.getLatitude()+"";
+//							lon=location.getLongitude()+"";
+							lat="0";
+							lon="0";
 							proList.clear();
 							page=1;
 							doGetDatas(region);

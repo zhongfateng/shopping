@@ -321,13 +321,13 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 							lat=location.getLatitude()+"";
 							lon=location.getLongitude()+"";
 							//SPUtils.putString(context, DatasKey.LOCATION_INFO, gson.toJson(location));
-							updateDatas(lon,lat);
+							updateDatas("0","0");
 						} else {
 							//定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
 							Log.e("AmapError", "location Error, ErrCode:"
 									+ loc.getErrorCode() + ", errInfo:"
 									+ loc.getErrorInfo());
-							updateDatas(lon,lat);
+							updateDatas("0","0");
 						}
 
 					}
@@ -467,22 +467,23 @@ public class IndexActivity extends BaseActivity implements IndexProductAdapter.O
 							editor.putString(Constants.AREA, localGson.toJson(sheQuModel));
 							editor.commit();
 							tv_dingwei.setText(sheQuModel.region);
-							//待定
 							getProduct();
 						}else
 						{
-							if(!bendiModel.leaderId.equals(sheQuModel.leaderId)){
-								ShoppingApplication app=(ShoppingApplication)getApplication();
-								int flag=app.changeFlag;
-								//弹窗提示
-								if(flag!=1){
-									tv_dingwei.setText(bendiModel.region);
-									DialogFragmentFromBottom(bendiModel,sheQuModel);
-								}
-							}else{
-								tv_dingwei.setText(sheQuModel.region);
-								getProduct();
-							}
+//							if(!bendiModel.leaderId.equals(sheQuModel.leaderId)){
+//								ShoppingApplication app=(ShoppingApplication)getApplication();
+//								int flag=app.changeFlag;
+//								//弹窗提示
+//								if(flag!=1){
+//									tv_dingwei.setText(bendiModel.region);
+//									DialogFragmentFromBottom(bendiModel,sheQuModel);
+//								}
+//							}else{
+//								tv_dingwei.setText(sheQuModel.region);
+//								getProduct();
+//							}
+							tv_dingwei.setText(bendiModel.region);
+							getProduct();
 						}
 					} else {
 					}

@@ -4,7 +4,7 @@ public class Constants {
 	//1 团购 3秒杀 5积分 猜你喜欢 7 热销 9
 	// 要相应的更新string.xml中的 versionstr 字段
 	// 当前系统的版本号
-	public static final String VERSION					= "1.7";
+	public static final String VERSION					= "1.8";
 	public static final String FavoriteType				= "7";
 	public static final String IntegralType				= "5";
 	public static final String RXType				    = "9";
