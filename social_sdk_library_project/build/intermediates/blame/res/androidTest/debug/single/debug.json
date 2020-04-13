@@ -8,24 +8,24 @@
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_ynote_gray.png"
     },
     {
-        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_button_red.9.png.flat",
-        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_button_red.9.png"
-    },
-    {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_actionbar_bg.9.png.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_actionbar_bg.9.png"
+    },
+    {
+        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_button_red.9.png.flat",
+        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_button_red.9.png"
     },
     {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_messenger_button_white_bg_round.xml.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\messenger_button_white_bg_round.xml"
     },
     {
-        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_messenger_button_white_bg_selector.xml.flat",
-        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\messenger_button_white_bg_selector.xml"
-    },
-    {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_evernote.png.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_evernote.png"
+    },
+    {
+        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_messenger_button_white_bg_selector.xml.flat",
+        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\messenger_button_white_bg_selector.xml"
     },
     {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4_com_facebook_tooltip_blue_background.9.png.flat",
@@ -36,12 +36,12 @@
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\layout\\umeng_socialize_base_alert_dialog.xml"
     },
     {
-        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout_umeng_socialize_bind_select_dialog.xml.flat",
-        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\layout\\umeng_socialize_bind_select_dialog.xml"
-    },
-    {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4_com_facebook_tooltip_blue_xout.png.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\com_facebook_tooltip_blue_xout.png"
+    },
+    {
+        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout_umeng_socialize_bind_select_dialog.xml.flat",
+        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\layout\\umeng_socialize_bind_select_dialog.xml"
     },
     {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4_messenger_bubble_small_white.png.flat",
@@ -112,12 +112,12 @@
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\messenger_button_blue_bg_selector.xml"
     },
     {
-        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-sw550dp-large-v13_umeng_socialize_post_share.xml.flat",
-        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\layout-sw550dp-large-v13\\umeng_socialize_post_share.xml"
-    },
-    {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_fetch_location_disabled.png.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_fetch_location_disabled.png"
+    },
+    {
+        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-sw550dp-large-v13_umeng_socialize_post_share.xml.flat",
+        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\layout-sw550dp-large-v13\\umeng_socialize_post_share.xml"
     },
     {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_shape_solid_black.xml.flat",
@@ -176,12 +176,12 @@
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_location_mark.png"
     },
     {
-        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_com_facebook_button_background.xml.flat",
-        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\com_facebook_button_background.xml"
-    },
-    {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_shape_solid_grey.xml.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_shape_solid_grey.xml"
+    },
+    {
+        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_com_facebook_button_background.xml.flat",
+        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\com_facebook_button_background.xml"
     },
     {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_follow_off.png.flat",
@@ -208,12 +208,12 @@
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_x_button.png"
     },
     {
-        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_share_to_button.xml.flat",
-        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_share_to_button.xml"
-    },
-    {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_instagram_off.png.flat",
         "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_instagram_off.png"
+    },
+    {
+        "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_share_to_button.xml.flat",
+        "source": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\bundles\\debug\\res\\drawable\\umeng_socialize_share_to_button.xml"
     },
     {
         "merged": "E:\\shopping\\social_sdk_library_project\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable_umeng_socialize_tumblr_gray.png.flat",

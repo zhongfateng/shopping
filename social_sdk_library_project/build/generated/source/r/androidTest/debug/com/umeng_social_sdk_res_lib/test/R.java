@@ -707,6 +707,12 @@ public final class R {
   public static final class style {
     public static final int Dialog_Fullscreen=0x7f0a0000;
     public static final int MessengerButton=0x7f0a0001;
+    public static final int MessengerButton_Blue=0x7f0a0002;
+    public static final int MessengerButton_Blue_Large=0x7f0a0003;
+    public static final int MessengerButton_Blue_Small=0x7f0a0004;
+    public static final int MessengerButton_White=0x7f0a0005;
+    public static final int MessengerButton_White_Large=0x7f0a0006;
+    public static final int MessengerButton_White_Small=0x7f0a0007;
     public static final int MessengerButtonText=0x7f0a0008;
     public static final int MessengerButtonText_Blue=0x7f0a0009;
     public static final int MessengerButtonText_Blue_Large=0x7f0a000a;
@@ -714,12 +720,6 @@ public final class R {
     public static final int MessengerButtonText_White=0x7f0a000c;
     public static final int MessengerButtonText_White_Large=0x7f0a000d;
     public static final int MessengerButtonText_White_Small=0x7f0a000e;
-    public static final int MessengerButton_Blue=0x7f0a0002;
-    public static final int MessengerButton_Blue_Large=0x7f0a0003;
-    public static final int MessengerButton_Blue_Small=0x7f0a0004;
-    public static final int MessengerButton_White=0x7f0a0005;
-    public static final int MessengerButton_White_Large=0x7f0a0006;
-    public static final int MessengerButton_White_Small=0x7f0a0007;
     public static final int Notitle_Fullscreen=0x7f0a000f;
     public static final int Theme_UMDefault=0x7f0a0010;
     public static final int Theme_UMDialog=0x7f0a0011;
@@ -769,9 +769,9 @@ public final class R {
      * @see #com_facebook_like_view_com_facebook_style
      */
     public static final int[] com_facebook_like_view={
-        0x7f020000, 0x7f020002, 0x7f020003, 0x7f020007, 
-        0x7f020008, 0x7f02000a
-      };
+      0x7f020000, 0x7f020002, 0x7f020003, 0x7f020007, 
+      0x7f020008, 0x7f02000a
+    };
     /**
      * <p>This symbol is the offset where the {@link com.umeng_social_sdk_res_lib.test.R.attr#com_facebook_auxiliary_view_position}
      * attribute's value can be found in the {@link #com_facebook_like_view} array.
@@ -883,8 +883,8 @@ public final class R {
      * @see #com_facebook_login_view_com_facebook_tooltip_mode
      */
     public static final int[] com_facebook_login_view={
-        0x7f020001, 0x7f020005, 0x7f020006, 0x7f02000b
-      };
+      0x7f020001, 0x7f020005, 0x7f020006, 0x7f02000b
+    };
     /**
      * <p>This symbol is the offset where the {@link com.umeng_social_sdk_res_lib.test.R.attr#com_facebook_confirm_logout}
      * attribute's value can be found in the {@link #com_facebook_login_view} array.
@@ -947,8 +947,8 @@ public final class R {
      * @see #com_facebook_profile_picture_view_com_facebook_preset_size
      */
     public static final int[] com_facebook_profile_picture_view={
-        0x7f020004, 0x7f020009
-      };
+      0x7f020004, 0x7f020009
+    };
     /**
      * <p>This symbol is the offset where the {@link com.umeng_social_sdk_res_lib.test.R.attr#com_facebook_is_cropped}
      * attribute's value can be found in the {@link #com_facebook_profile_picture_view} array.
